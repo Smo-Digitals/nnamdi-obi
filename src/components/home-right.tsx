@@ -48,7 +48,7 @@ const GRID = [
 
 export function HomeRight() {
   return (
-    <div className="bg-[#0d0d0d] flex flex-col justify-between p-7 gap-10">
+    <div className="bg-[#060606] flex flex-col justify-between p-10 gap-10 min-h-screen">
 
       {/* Contact strip */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pb-8 border-b border-[#1c1c1c]">

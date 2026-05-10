@@ -3,7 +3,7 @@ import { HomeRight } from './home-right';
 
 export function HomeCard() {
   return (
-    <div className="w-full max-w-6xl rounded-3xl overflow-hidden grid grid-cols-1 lg:grid-cols-[36%_64%] shadow-[0_32px_80px_rgba(0,0,0,0.6)]">
+    <div className="min-h-screen grid grid-cols-1 lg:grid-cols-[42%_58%]">
       <HomeLeft />
       <HomeRight />
     </div>
