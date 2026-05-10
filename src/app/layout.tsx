@@ -1,11 +1,11 @@
 import type { Metadata } from 'next';
-import { Bebas_Neue, DM_Mono } from 'next/font/google';
+import { Montserrat, DM_Mono } from 'next/font/google';
 import './globals.css';
 
-const bebasNeue = Bebas_Neue({
-  variable: '--font-bebas',
+const montserrat = Montserrat({
+  variable: '--font-montserrat',
   subsets: ['latin'],
-  weight: '400',
+  weight: ['400', '500', '600', '700', '800', '900'],
 });
 
 const dmMono = DM_Mono({
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${bebasNeue.variable} ${dmMono.variable}`}>
+    <html lang="en" className={`${montserrat.variable} ${dmMono.variable}`}>
       <body className="min-h-screen flex flex-col bg-[#0a0a0a] text-[#f0ede8]">
         {children}
       </body>

@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme inline {
-  --font-display: var(--font-bebas);
+  --font-display: var(--font-montserrat);
   --font-body: var(--font-dm-mono);
 }
 
@@ -12,7 +12,7 @@ body {
 }
 
 body {
-  font-family: var(--font-dm-mono), 'DM Mono', monospace;
+  font-family: var(--font-montserrat), 'Montserrat', sans-serif;
   min-height: 100vh;
 }
 
