@@ -1,13 +1,12 @@
 import { createServerClient } from '@supabase/ssr';
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 
 const MEMBER_ROUTES = ['/community'];
 const ADMIN_ROUTES = ['/admin'];
 const AUTH_ROUTES = ['/login', '/signup'];
 
-export async function middleware(request: NextRequest) {
-  let response = NextResponse.next({ request: { headers: request.headers } });
+export async function proxy(request: NextRequest) {
+  let supabaseResponse = NextResponse.next({ request });
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -19,43 +18,46 @@ export async function middleware(request: NextRequest) {
         },
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
-          response = NextResponse.next({ request: { headers: request.headers } });
+          supabaseResponse = NextResponse.next({ request });
           cookiesToSet.forEach(({ name, value, options }) =>
-            response.cookies.set(name, value, options)
+            supabaseResponse.cookies.set(name, value, options)
           );
         },
       },
     }
   );
 
+  // Must call getUser() to refresh the session — do not skip this
   const { data: { user } } = await supabase.auth.getUser();
   const { pathname } = request.nextUrl;
 
+  const redirectTo = (path: string) => {
+    const url = request.nextUrl.clone();
+    url.pathname = path;
+    const res = NextResponse.redirect(url);
+    supabaseResponse.cookies.getAll().forEach((c) => res.cookies.set(c.name, c.value));
+    return res;
+  };
+
   if (user && AUTH_ROUTES.some((r) => pathname.startsWith(r))) {
-    return NextResponse.redirect(new URL('/', request.url));
+    return redirectTo('/');
   }
 
-  const needsAuth = MEMBER_ROUTES.some((r) => pathname.startsWith(r));
-  if (needsAuth && !user) {
-    return NextResponse.redirect(new URL('/login', request.url));
+  if (MEMBER_ROUTES.some((r) => pathname.startsWith(r)) && !user) {
+    return redirectTo('/login');
   }
 
-  const needsAdmin = ADMIN_ROUTES.some((r) => pathname.startsWith(r));
-  if (needsAdmin) {
-    if (!user) return NextResponse.redirect(new URL('/login', request.url));
-
+  if (ADMIN_ROUTES.some((r) => pathname.startsWith(r))) {
+    if (!user) return redirectTo('/login');
     const { data: profile } = await supabase
       .from('profiles')
       .select('role')
       .eq('id', user.id)
       .single();
-
-    if (profile?.role !== 'admin') {
-      return NextResponse.redirect(new URL('/', request.url));
-    }
+    if (profile?.role !== 'admin') return redirectTo('/');
   }
 
-  return response;
+  return supabaseResponse;
 }
 
 export const config = {
