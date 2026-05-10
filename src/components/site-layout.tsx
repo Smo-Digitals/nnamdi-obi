@@ -9,7 +9,7 @@ export function SiteLayout({ children }: Props) {
   return (
     <div className="bg-[#0a0a0a] min-h-screen flex flex-col">
       <Nav />
-      <main className="flex-1 pt-14">{children}</main>
+      <main className="flex-1 pt-24">{children}</main>
       <Footer />
     </div>
   );
