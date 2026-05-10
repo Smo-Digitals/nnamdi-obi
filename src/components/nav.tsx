@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { List, X } from 'phosphor-react';
+import { List, X } from '@/components/icons';
 
 const NAV_LINKS = [
   { href: '/about', label: 'About' },

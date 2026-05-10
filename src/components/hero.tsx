@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowRight } from 'phosphor-react';
+import { ArrowRight } from '@/components/icons';
 
 const COMPANIES = ['MANAA', 'PRATAA', 'CRAFTLY', 'SMO DIGITALS'];
 

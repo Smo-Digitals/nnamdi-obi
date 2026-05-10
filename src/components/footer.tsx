@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowUpRight } from 'phosphor-react';
+import { ArrowUpRight } from '@/components/icons';
 
 const SOCIALS = [
   { href: '#', label: 'X / Twitter' },
