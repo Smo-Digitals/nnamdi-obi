@@ -62,8 +62,11 @@ export function HomeRight() {
         ))}
       </div>
 
+      {/* Spacer pushes grid down */}
+      <div className="flex-1" />
+
       {/* Content grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 flex-1">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
         {GRID.map((col) => (
           <div key={col.heading} className="flex flex-col gap-3">
             <p className="font-body text-[10px] tracking-[0.2em] uppercase text-[#444] mb-1">
