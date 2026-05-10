@@ -7,8 +7,8 @@ export function Clock() {
 
   useEffect(() => {
     setNow(new Date());
-    const interval = setInterval(() => setNow(new Date()), 1000);
-    return () => clearInterval(interval);
+    const id = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(id);
   }, []);
 
   if (!now) return null;
@@ -28,11 +28,11 @@ export function Clock() {
   });
 
   return (
-    <div className="fixed top-6 right-8 z-50 flex flex-col items-end gap-0.5 select-none">
-      <span className="font-body text-[10px] tracking-[0.2em] text-[#444]">
+    <div className="flex flex-col items-end gap-0.5 select-none">
+      <span className="font-body text-[10px] tracking-[0.2em] text-[#555]">
         {date}
       </span>
-      <span className="font-display text-2xl font-semibold tracking-tight text-[#f0ede8] leading-none tabular-nums">
+      <span className="font-display text-3xl font-bold tracking-tight text-[#f0ede8] leading-none tabular-nums">
         {time}
       </span>
     </div>

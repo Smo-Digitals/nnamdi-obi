@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Clock } from './clock';
 
 const CONTACT_STRIP = [
   { label: 'Got something in mind?', action: 'Get in touch', href: '/contact' },
@@ -50,7 +51,10 @@ export function HomeRight() {
   return (
     <div className="bg-[#060606] flex flex-col justify-between p-10 gap-10 min-h-screen">
 
-      {/* Spacer pushes everything down */}
+      {/* Clock top-right + spacer */}
+      <div className="flex justify-end">
+        <Clock />
+      </div>
       <div className="flex-1" />
 
       {/* Contact strip */}
