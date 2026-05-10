@@ -50,18 +50,11 @@ const GRID = [
 
 export function HomeRight() {
   return (
-    <div className="bg-[#060606] flex flex-row min-h-screen">
+    <div className="bg-[#060606] flex flex-col min-h-screen p-6 sm:p-8 lg:p-10 gap-6 lg:gap-10 lg:justify-between">
 
-      {/* Dock — left edge, desktop only, vertically centred */}
-      <div className="hidden lg:flex items-center pl-6 pr-2">
-        <Dock />
-      </div>
-
-      {/* Main content column */}
-      <div className="flex flex-col flex-1 p-6 sm:p-8 lg:py-10 lg:pr-10 gap-6 lg:gap-10 lg:justify-between">
-
-        {/* Clock top-right */}
-        <div className="flex justify-end">
+        {/* Top bar: dock left, clock right */}
+        <div className="flex items-center justify-between">
+          <Dock />
           <Clock />
         </div>
 
@@ -115,7 +108,6 @@ export function HomeRight() {
           </Link>
         </div>
 
-      </div>
     </div>
   );
 }

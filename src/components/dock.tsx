@@ -5,30 +5,30 @@ import { House, PenNib, User, Envelope } from 'phosphor-react';
 import Link from 'next/link';
 
 const ITEMS = [
-  { Icon: House,   label: 'Home',    href: '/' },
-  { Icon: PenNib,  label: 'Writing', href: '/writing' },
-  { Icon: User,    label: 'About',   href: '/about' },
-  { Icon: Envelope,label: 'Contact', href: '/contact' },
+  { Icon: House,    label: 'Home',    href: '/' },
+  { Icon: PenNib,   label: 'Writing', href: '/writing' },
+  { Icon: User,     label: 'About',   href: '/about' },
+  { Icon: Envelope, label: 'Contact', href: '/contact' },
 ];
 
-const BASE = 42;
-const MAX  = 62;
-const GAP  = 8;
-const SPREAD = 90;
+const BASE   = 36;
+const MAX    = 52;
+const GAP    = 6;
+const SPREAD = 80;
 
 export function Dock() {
   const ref = useRef<HTMLDivElement>(null);
-  const [mouseY, setMouseY] = useState<number | null>(null);
+  const [mouseX, setMouseX] = useState<number | null>(null);
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!ref.current) return;
-    setMouseY(e.clientY - ref.current.getBoundingClientRect().top);
+    setMouseX(e.clientX - ref.current.getBoundingClientRect().left);
   };
 
   const itemSize = (index: number) => {
-    if (mouseY === null) return BASE;
+    if (mouseX === null) return BASE;
     const center = index * (BASE + GAP) + BASE / 2;
-    const t = Math.max(0, 1 - Math.abs(mouseY - center) / SPREAD);
+    const t = Math.max(0, 1 - Math.abs(mouseX - center) / SPREAD);
     return BASE + (MAX - BASE) * t;
   };
 
@@ -36,8 +36,8 @@ export function Dock() {
     <div
       ref={ref}
       onMouseMove={handleMouseMove}
-      onMouseLeave={() => setMouseY(null)}
-      className="flex flex-col items-center gap-2 bg-[#0e0e0e] border border-[#1c1c1c] rounded-2xl px-2 py-3"
+      onMouseLeave={() => setMouseX(null)}
+      className="flex flex-row items-center gap-1.5 bg-[#0e0e0e] border border-[#1c1c1c] rounded-2xl px-2 py-1.5"
     >
       {ITEMS.map(({ Icon, label, href }, i) => {
         const s = itemSize(i);
