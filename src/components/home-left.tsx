@@ -4,7 +4,7 @@ export function HomeLeft() {
   return (
     <div className="relative min-h-[60vh] lg:min-h-screen lg:sticky lg:top-0">
       <Image
-        src="/nnamdi.jpg"
+        src="/nnamdi1.png"
         alt="Nnamdi Obi"
         fill
         priority
