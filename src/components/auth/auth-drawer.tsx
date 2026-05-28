@@ -29,13 +29,14 @@ export function AuthDrawer({ isOpen, onClose }: Props) {
         }`}
       />
 
-      {/* Panel */}
+      {/* Panel — floating card */}
       <div
-        className={`fixed top-0 right-0 h-full w-full sm:w-[480px] z-50
-                    bg-[#060606] border-l border-[#1a1a1a]
-                    flex flex-col px-10 py-10
+        className={`fixed top-4 right-4 bottom-4 w-[calc(100%-2rem)] sm:w-[460px] z-50
+                    bg-[#080808] border border-[#1e1e1e]
+                    rounded-2xl flex flex-col px-10 py-8
+                    shadow-2xl shadow-black/60
                     transition-transform duration-300 ease-in-out
-                    ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
+                    ${isOpen ? 'translate-x-0' : 'translate-x-[calc(100%+1rem)]'}`}
       >
         {/* Top row */}
         <div className="flex items-center justify-between mb-16">

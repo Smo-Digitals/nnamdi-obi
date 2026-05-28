@@ -22,7 +22,7 @@
 }
 
 @theme inline {
-  --font-display: var(--font-montserrat);
+  --font-display: var(--font-geist-sans);
   --font-body: var(--font-dm-mono);
 
   /* shadcn color tokens → Tailwind utilities */
