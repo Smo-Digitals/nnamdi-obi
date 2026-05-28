@@ -31,7 +31,7 @@ export function AuthDrawer({ isOpen, onClose }: Props) {
 
       {/* Panel — floating card */}
       <div
-        className={`fixed top-4 right-4 bottom-4 w-[calc(100%-2rem)] sm:w-[460px] z-50
+        className={`fixed top-4 right-4 bottom-4 w-[calc(100%-2rem)] sm:w-[580px] z-50
                     bg-[#080808] border border-[#1e1e1e]
                     rounded-2xl flex flex-col px-10 py-8
                     shadow-2xl shadow-black/60
