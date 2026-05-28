@@ -24,41 +24,45 @@ export function AuthDrawer({ isOpen, onClose }: Props) {
       {/* Backdrop */}
       <div
         onClick={onClose}
-        className={`fixed inset-0 z-40 bg-black/70 backdrop-blur-sm transition-opacity duration-300 ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+        className={`fixed inset-0 z-40 bg-black/80 transition-opacity duration-400 ${
+          isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+        }`}
       />
 
       {/* Panel */}
       <div
-        className={`fixed top-0 right-0 h-full w-full sm:w-[420px] z-50 bg-[#060606] border-l border-[#1c1c1c] flex flex-col p-8 sm:p-10 transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
+        className={`fixed top-0 right-0 h-full w-full sm:w-[480px] z-50
+                    bg-[#060606] border-l border-[#1a1a1a]
+                    flex flex-col px-10 py-10
+                    transition-transform duration-300 ease-in-out
+                    ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
       >
-        {/* Header row */}
-        <div className="flex items-center justify-between mb-10">
-          <div className="flex items-center gap-4">
-            <span className="font-body text-[10px] tracking-[0.4em] text-[#677db7]">[ AUTH ]</span>
-            <div className="w-8 h-px bg-[#1c1c1c]" />
-          </div>
+        {/* Top row */}
+        <div className="flex items-center justify-between mb-16">
+          <span className="font-body text-[9px] tracking-[0.5em] text-[#677db7]">[ AUTH ]</span>
           <button
             onClick={onClose}
-            className="text-[#444] hover:text-[#f0ede8] transition-colors"
             aria-label="Close"
+            className="text-[#333] hover:text-[#f0ede8] transition-colors"
           >
-            <X size={18} />
+            <X size={16} />
           </button>
         </div>
 
         {/* Heading */}
-        <h2 className="font-display text-[52px] leading-[0.9] tracking-tight text-[#f0ede8] mb-2">
-          SIGN IN
-        </h2>
-        <p className="font-body text-[10px] tracking-[0.35em] text-[#333] mb-10">
-          ACCESS YOUR ACCOUNT
-        </p>
+        <div className="mb-12">
+          <h2
+            className="font-display text-[80px] leading-[0.85] tracking-tight text-[#f0ede8]"
+          >
+            SIGN<br />IN.
+          </h2>
+        </div>
 
-        {/* Form */}
-        <form action={login} className="flex flex-col gap-5">
+        {/* Form — bottom-border inputs, no box */}
+        <form action={login} className="flex flex-col gap-8 flex-1">
           <div className="flex flex-col gap-2">
-            <label className="font-body text-[9px] tracking-[0.35em] uppercase text-[#444]">
-              Email Address
+            <label className="font-body text-[9px] tracking-[0.4em] uppercase text-[#444]">
+              Email
             </label>
             <input
               type="email"
@@ -66,27 +70,42 @@ export function AuthDrawer({ isOpen, onClose }: Props) {
               required
               autoComplete="email"
               placeholder="you@example.com"
-              className="bg-transparent border border-[#1c1c1c] focus:border-[#677db7] px-4 py-3 font-body text-sm text-[#f0ede8] outline-none transition-colors placeholder:text-[#2a2a2a]"
+              className="bg-transparent border-b border-[#222] focus:border-[#677db7]
+                         py-3 font-body text-[13px] text-[#f0ede8]
+                         outline-none transition-colors placeholder:text-[#2a2a2a]
+                         rounded-none"
             />
           </div>
 
           <div className="flex flex-col gap-2">
-            <label className="font-body text-[9px] tracking-[0.35em] uppercase text-[#444]">
-              Password
-            </label>
+            <div className="flex items-center justify-between">
+              <label className="font-body text-[9px] tracking-[0.4em] uppercase text-[#444]">
+                Password
+              </label>
+              <Link
+                href="/forgot-password"
+                className="font-body text-[9px] tracking-[0.15em] text-[#333] hover:text-[#677db7] transition-colors"
+              >
+                Forgot?
+              </Link>
+            </div>
             <PasswordInput name="password" />
           </div>
 
-          <SubmitButton label="Sign In" pendingLabel="Signing in..." />
+          <div className="mt-2">
+            <SubmitButton label="Sign In" pendingLabel="Signing in..." />
+          </div>
         </form>
 
         {/* Footer */}
-        <div className="mt-8 pt-6 border-t border-[#1c1c1c] flex items-center justify-between">
-          <p className="font-body text-[9px] text-[#333] tracking-[0.2em]">No account yet?</p>
+        <div className="flex items-center justify-between pt-8 border-t border-[#111]">
+          <span className="font-body text-[9px] tracking-[0.2em] text-[#2a2a2a]">
+            No account yet?
+          </span>
           <Link
             href="/signup"
             onClick={onClose}
-            className="font-body text-[9px] tracking-[0.25em] uppercase text-[#677db7] hover:text-[#f0ede8] transition-colors"
+            className="font-body text-[9px] tracking-[0.3em] uppercase text-[#677db7] hover:text-[#f0ede8] transition-colors"
           >
             Create one →
           </Link>
