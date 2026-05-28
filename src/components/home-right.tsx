@@ -1,6 +1,5 @@
 import Link from 'next/link';
-import { Clock } from './clock';
-import { Dock } from './dock';
+import { HomeTopBar } from './home-top-bar';
 
 const CONTACT_STRIP = [
   { label: 'Got something in mind?', action: 'Get in touch', href: '/contact' },
@@ -52,11 +51,7 @@ export function HomeRight() {
   return (
     <div className="bg-[#060606] flex flex-col min-h-screen p-6 sm:p-8 lg:p-10 gap-6 lg:gap-10 lg:justify-between">
 
-        {/* Top bar: dock left, clock right */}
-        <div className="flex items-center justify-between">
-          <Dock />
-          <Clock />
-        </div>
+        <HomeTopBar />
 
         {/* Spacer — desktop only so clock stays pinned to top */}
         <div className="hidden lg:block lg:flex-1" />
