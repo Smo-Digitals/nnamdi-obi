@@ -16,7 +16,7 @@ export async function login(formData: FormData) {
     redirect('/login?error=' + encodeURIComponent(error.message));
   }
 
-  redirect('/');
+  redirect('/home');
 }
 
 export async function signup(formData: FormData) {
@@ -71,7 +71,7 @@ export async function verifyOtp(formData: FormData) {
     );
   }
 
-  redirect('/');
+  redirect('/home');
 }
 
 export async function loginWithGoogle() {
