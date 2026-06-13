@@ -99,13 +99,15 @@ function AvatarDropdown() {
 }
 
 export function AdminHeader() {
-  const [notifOpen, setNotifOpen] = useState(false);
-  const [msgOpen, setMsgOpen]     = useState(false);
+  const [notifOpen, setNotifOpen]   = useState(false);
+  const [msgOpen, setMsgOpen]       = useState(false);
+  const [notifCount, setNotifCount] = useState(3);
+  const [msgCount, setMsgCount]     = useState(3);
 
   return (
     <>
-    <NotificationsPanel open={notifOpen} onClose={() => setNotifOpen(false)} />
-    <MessagesPanel open={msgOpen} onClose={() => setMsgOpen(false)} />
+    <NotificationsPanel open={notifOpen} onClose={() => setNotifOpen(false)} onRead={(n) => setNotifCount((c) => Math.max(0, c - n))} />
+    <MessagesPanel open={msgOpen} onClose={() => setMsgOpen(false)} onRead={(n) => setMsgCount((c) => Math.max(0, c - n))} />
     <header className="h-16 shrink-0 flex items-center gap-6 px-8 border-b border-white/[0.06] bg-[#050505]">
 
       {/* Greeting */}
@@ -131,7 +133,11 @@ export function AdminHeader() {
           className="relative w-9 h-9 flex items-center justify-center rounded-xl text-[#444] hover:text-white hover:bg-white/5 transition-colors"
         >
           <ChatCircle size={18} />
-          <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-[#DC5B17]" />
+          {msgCount > 0 && (
+            <span className="absolute -top-1 -right-1 min-w-[16px] h-4 px-1 rounded-full bg-[#DC5B17] text-white text-[9px] font-bold flex items-center justify-center">
+              {msgCount}
+            </span>
+          )}
         </button>
 
         {/* Notifications */}
@@ -140,7 +146,11 @@ export function AdminHeader() {
           className="relative w-9 h-9 flex items-center justify-center rounded-xl text-[#444] hover:text-white hover:bg-white/5 transition-colors"
         >
           <Bell size={18} />
-          <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-[#DC5B17]" />
+          {notifCount > 0 && (
+            <span className="absolute -top-1 -right-1 min-w-[16px] h-4 px-1 rounded-full bg-[#DC5B17] text-white text-[9px] font-bold flex items-center justify-center">
+              {notifCount}
+            </span>
+          )}
         </button>
 
         <AvatarDropdown />

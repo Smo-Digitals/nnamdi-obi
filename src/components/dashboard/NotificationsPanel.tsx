@@ -33,18 +33,23 @@ const iconMap = {
 interface Props {
   open: boolean;
   onClose: () => void;
+  onRead: (count: number) => void;
 }
 
-export function NotificationsPanel({ open, onClose }: Props) {
+export function NotificationsPanel({ open, onClose, onRead }: Props) {
   const [items, setItems] = useState<Notification[]>(INITIAL);
 
   const unreadCount = items.filter((n) => !n.read).length;
 
   function markRead(id: string) {
+    const item = items.find((n) => n.id === id);
+    if (item && !item.read) onRead(1);
     setItems((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)));
   }
 
   function markAllRead() {
+    const unread = items.filter((n) => !n.read).length;
+    onRead(unread);
     setItems((prev) => prev.map((n) => ({ ...n, read: true })));
   }
 

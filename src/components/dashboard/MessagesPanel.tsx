@@ -61,9 +61,10 @@ const INITIAL_CONVOS: Conversation[] = [
 interface Props {
   open: boolean;
   onClose: () => void;
+  onRead: (count: number) => void;
 }
 
-export function MessagesPanel({ open, onClose }: Props) {
+export function MessagesPanel({ open, onClose, onRead }: Props) {
   const [convos, setConvos]       = useState<Conversation[]>(INITIAL_CONVOS);
   const [search, setSearch]       = useState('');
   const [activeId, setActiveId]   = useState<string | null>(null);
@@ -81,6 +82,8 @@ export function MessagesPanel({ open, onClose }: Props) {
   }, [active?.messages.length]);
 
   function openConvo(id: string) {
+    const convo = convos.find((c) => c.id === id);
+    if (convo && convo.unread > 0) onRead(convo.unread);
     setActiveId(id);
     setConvos((prev) => prev.map((c) => (c.id === id ? { ...c, unread: 0 } : c)));
   }
