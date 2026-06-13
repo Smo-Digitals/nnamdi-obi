@@ -34,7 +34,7 @@ export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="w-[260px] shrink-0 h-screen flex flex-col bg-[#111] border-r border-white/5 overflow-y-auto">
+    <aside className="w-[260px] shrink-0 h-screen flex flex-col bg-[#080808] border-r border-white/[0.06] overflow-y-auto">
       {/* Brand */}
       <div className="flex items-center gap-3 px-5 py-5 border-b border-white/5">
         <div className="w-8 h-8 rounded-lg bg-[#DC5B17] flex items-center justify-center shrink-0">

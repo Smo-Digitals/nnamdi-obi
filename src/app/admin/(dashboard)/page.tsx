@@ -45,7 +45,7 @@ export default function DashboardPage() {
         {stats.map(({ label, value, icon: Icon, delta }) => {
           const positive = delta.startsWith('+');
           return (
-            <div key={label} className="bg-[#111] border border-white/5 rounded-2xl p-5">
+            <div key={label} className="bg-[#0e0e0e] border border-white/5 rounded-2xl p-5">
               <div className="flex items-center justify-between mb-4">
                 <p className="text-[#555] text-xs font-medium">{label}</p>
                 <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center">
@@ -64,7 +64,7 @@ export default function DashboardPage() {
       {/* Chart + Recent members */}
       <div className="grid grid-cols-1 xl:grid-cols-5 gap-4 mb-8">
         {/* Chart */}
-        <div className="xl:col-span-3 bg-[#111] border border-white/5 rounded-2xl p-6">
+        <div className="xl:col-span-3 bg-[#0e0e0e] border border-white/5 rounded-2xl p-6">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-white font-semibold text-sm">Member growth</h2>
             <span className="text-[#555] text-xs px-3 py-1 rounded-full bg-white/5">Jan – Jul</span>
@@ -73,7 +73,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Recent members */}
-        <div className="xl:col-span-2 bg-[#111] border border-white/5 rounded-2xl p-6">
+        <div className="xl:col-span-2 bg-[#0e0e0e] border border-white/5 rounded-2xl p-6">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-white font-semibold text-sm">Recent members</h2>
             <button className="text-[#DC5B17] text-xs hover:underline">View all</button>
@@ -105,7 +105,7 @@ export default function DashboardPage() {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
           {courses.map(({ title, members, status, color }) => (
-            <div key={title} className="bg-[#111] border border-white/5 rounded-2xl p-5 hover:border-white/10 transition-colors cursor-pointer group">
+            <div key={title} className="bg-[#0e0e0e] border border-white/5 rounded-2xl p-5 hover:border-white/10 transition-colors cursor-pointer group">
               {/* Thumbnail placeholder */}
               <div className="w-full h-24 rounded-xl bg-white/5 mb-4 flex items-center justify-center">
                 <BookOpen size={28} style={{ color }} weight="duotone" />
