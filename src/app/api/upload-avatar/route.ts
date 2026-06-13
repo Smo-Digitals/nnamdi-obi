@@ -33,8 +33,7 @@ export async function POST(req: NextRequest) {
     ContentType: file.type,
   }));
 
-  const accountId = process.env.CLOUDFLARE_ACCOUNT_ID!;
-  const publicUrl = `https://pub-${accountId}.r2.dev/${key}`;
+  const publicUrl = `${process.env.CLOUDFLARE_R2_PUBLIC_URL}/${key}`;
 
   return NextResponse.json({ url: publicUrl });
 }
