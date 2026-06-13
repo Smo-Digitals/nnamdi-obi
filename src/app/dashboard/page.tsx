@@ -1,3 +1,5 @@
+'use client';
+
 import { GrowthChart } from '@/components/dashboard/GrowthChart';
 import { Users, BookOpen, CurrencyDollar, Bell } from 'phosphor-react';
 
