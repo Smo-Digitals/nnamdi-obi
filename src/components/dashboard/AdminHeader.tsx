@@ -169,7 +169,7 @@ export function AdminHeader() {
     <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
     <NotificationsPanel open={notifOpen} onClose={() => setNotifOpen(false)} onRead={(n) => setNotifCount((c) => Math.max(0, c - n))} />
     <MessagesPanel open={msgOpen} onClose={() => setMsgOpen(false)} onRead={(n) => setMsgCount((c) => Math.max(0, c - n))} />
-    <header className="h-16 shrink-0 flex items-center px-8 border-b border-white/[0.06] bg-[#050505]">
+    <header className="h-20 shrink-0 flex items-center px-8 border-b border-white/[0.06] bg-[#050505]">
 
       {/* Greeting — left */}
       <div className="flex-1 min-w-0">
