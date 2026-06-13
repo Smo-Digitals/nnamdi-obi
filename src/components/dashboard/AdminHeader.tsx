@@ -1,12 +1,98 @@
 'use client';
 
-import { MagnifyingGlass, Bell, ChatCircle, UserCircle } from 'phosphor-react';
+import { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
+import { MagnifyingGlass, Bell, ChatCircle, UserCircle, Wallet, Gear, CaretRight, SignOut } from 'phosphor-react';
+import { adminLogout } from '@/app/(auth)/actions';
 
 function getGreeting() {
   const h = new Date().getHours();
   if (h < 12) return 'Good morning';
   if (h < 17) return 'Good afternoon';
   return 'Good evening';
+}
+
+const menuItems = [
+  { label: 'Profile',  icon: UserCircle, href: '/admin/profile' },
+  { label: 'Settings', icon: Gear,        href: '/admin/settings' },
+  { label: 'Wallet',   icon: Wallet,      href: '/admin/wallet' },
+];
+
+function AvatarDropdown() {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handle(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    }
+    document.addEventListener('mousedown', handle);
+    return () => document.removeEventListener('mousedown', handle);
+  }, []);
+
+  return (
+    <div ref={ref} className="relative ml-1">
+      {/* Avatar button */}
+      <button
+        onClick={() => setOpen((o) => !o)}
+        className="w-8 h-8 rounded-full bg-[#DC5B17] flex items-center justify-center text-white text-xs font-bold hover:bg-[#c44f13] transition-colors"
+      >
+        N
+      </button>
+
+      {/* Dropdown */}
+      {open && (
+        <div className="absolute right-0 top-11 w-64 rounded-2xl bg-[#111] border border-white/[0.08] shadow-2xl shadow-black/60 overflow-hidden z-50">
+
+          {/* Profile header */}
+          <div className="flex items-center gap-3 p-4 border-b border-white/[0.06]">
+            <div className="relative shrink-0">
+              <div className="w-11 h-11 rounded-full bg-[#DC5B17] flex items-center justify-center text-white font-bold text-base">
+                N
+              </div>
+              <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-green-500 border-2 border-[#111]" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-white text-sm font-semibold truncate">Nnamdi Obi</p>
+              <p className="text-[#555] text-xs truncate">sellwithsmo@gmail.com</p>
+            </div>
+            <span className="shrink-0 text-[10px] font-bold px-2 py-0.5 rounded-md bg-[#DC5B17]/15 text-[#DC5B17] border border-[#DC5B17]/20">
+              ADMIN
+            </span>
+          </div>
+
+          {/* Menu items */}
+          <div className="p-2">
+            {menuItems.map(({ label, icon: Icon, href }) => (
+              <Link
+                key={label}
+                href={href}
+                onClick={() => setOpen(false)}
+                className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-[#888] hover:text-white hover:bg-white/5 transition-colors group"
+              >
+                <Icon size={17} />
+                <span className="flex-1 text-sm">{label}</span>
+                <CaretRight size={13} className="text-[#333] group-hover:text-[#555] transition-colors" />
+              </Link>
+            ))}
+          </div>
+
+          {/* Sign out */}
+          <div className="p-2 pt-0 border-t border-white/[0.06]">
+            <form action={adminLogout}>
+              <button
+                type="submit"
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[#555] hover:text-red-400 hover:bg-white/5 transition-colors text-sm"
+              >
+                <SignOut size={17} />
+                Sign out
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
 
 export function AdminHeader() {
@@ -42,10 +128,7 @@ export function AdminHeader() {
           <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-[#DC5B17]" />
         </button>
 
-        {/* Avatar */}
-        <button className="ml-1 w-8 h-8 rounded-full bg-[#DC5B17] flex items-center justify-center text-white text-xs font-bold hover:bg-[#c44f13] transition-colors">
-          N
-        </button>
+        <AvatarDropdown />
       </div>
 
     </header>
