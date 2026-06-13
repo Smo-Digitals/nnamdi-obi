@@ -6,6 +6,7 @@ import { MagnifyingGlass, Bell, ChatCircle, UserCircle, Wallet, Gear, CaretRight
 import { adminLogout } from '@/app/(auth)/actions';
 import { NotificationsPanel } from '@/components/dashboard/NotificationsPanel';
 import { MessagesPanel } from '@/components/dashboard/MessagesPanel';
+import { SearchModal } from '@/components/dashboard/SearchModal';
 
 function getGreeting() {
   const h = new Date().getHours();
@@ -134,13 +135,26 @@ function AvatarDropdown() {
 }
 
 export function AdminHeader() {
-  const [notifOpen, setNotifOpen]   = useState(false);
-  const [msgOpen, setMsgOpen]       = useState(false);
+  const [notifOpen,  setNotifOpen]  = useState(false);
+  const [msgOpen,    setMsgOpen]    = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const [notifCount, setNotifCount] = useState(3);
-  const [msgCount, setMsgCount]     = useState(3);
+  const [msgCount,   setMsgCount]   = useState(3);
+
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setSearchOpen((o) => !o);
+      }
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
 
   return (
     <>
+    <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
     <NotificationsPanel open={notifOpen} onClose={() => setNotifOpen(false)} onRead={(n) => setNotifCount((c) => Math.max(0, c - n))} />
     <MessagesPanel open={msgOpen} onClose={() => setMsgOpen(false)} onRead={(n) => setMsgCount((c) => Math.max(0, c - n))} />
     <header className="h-16 shrink-0 flex items-center px-8 border-b border-white/[0.06] bg-[#050505]">
@@ -154,11 +168,14 @@ export function AdminHeader() {
       </div>
 
       {/* Search — centre */}
-      <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2.5 px-4 py-2 rounded-xl bg-white/[0.04] border border-white/[0.06] text-[#444] w-72 hover:border-white/10 transition-colors cursor-text">
+      <button
+        onClick={() => setSearchOpen(true)}
+        className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2.5 px-4 py-2 rounded-xl bg-white/[0.04] border border-white/[0.06] text-[#444] w-72 hover:border-white/10 hover:bg-white/[0.06] transition-colors"
+      >
         <MagnifyingGlass size={15} />
-        <span className="text-sm flex-1">Search anything…</span>
+        <span className="text-sm flex-1 text-left">Search anything…</span>
         <kbd className="text-[10px] bg-white/5 px-1.5 py-0.5 rounded text-[#333]">⌘K</kbd>
-      </div>
+      </button>
 
       {/* Right — icon group + avatar in one pill container */}
       <div className="flex-1 flex justify-end">
