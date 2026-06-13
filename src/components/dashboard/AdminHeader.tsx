@@ -192,40 +192,42 @@ export function AdminHeader() {
         <kbd className="text-[10px] bg-white/5 px-1.5 py-0.5 rounded text-[#333]">⌘K</kbd>
       </button>
 
-      {/* Right — icon group + avatar in one pill container */}
-      <div className="flex-1 flex justify-end">
-        <div className="flex items-center gap-0.5 pl-2 pr-2 py-1.5 rounded-2xl border" style={{ backgroundColor: 'var(--adm-pill)', borderColor: 'var(--adm-border)' }}>
+      {/* Right */}
+      <div className="flex-1 flex justify-end items-center gap-3">
 
-          {/* Messages */}
-          <button
-            onClick={() => setMsgOpen(true)}
-            className="relative w-9 h-9 flex items-center justify-center rounded-xl text-[#555] hover:text-white hover:bg-white/[0.06] transition-colors"
-          >
-            <ChatCircle size={18} />
-            {msgCount > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 min-w-[16px] h-4 px-1 rounded-full bg-[#DC5B17] text-white text-[9px] font-bold flex items-center justify-center leading-none">
-                {msgCount}
-              </span>
-            )}
-          </button>
+        {/* Messages — outside pill */}
+        <button
+          onClick={() => setMsgOpen(true)}
+          className="relative w-9 h-9 flex items-center justify-center rounded-xl text-[#555] hover:text-white hover:bg-white/[0.06] transition-colors"
+        >
+          <ChatCircle size={19} />
+          {msgCount > 0 && (
+            <span className="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 min-w-[16px] h-4 px-1 rounded-full bg-[#DC5B17] text-white text-[9px] font-bold flex items-center justify-center leading-none">
+              {msgCount}
+            </span>
+          )}
+        </button>
 
-          {/* Notifications */}
-          <button
-            onClick={() => setNotifOpen(true)}
-            className="relative w-9 h-9 flex items-center justify-center rounded-xl text-[#555] hover:text-white hover:bg-white/[0.06] transition-colors"
-          >
-            <Bell size={18} />
-            {notifCount > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 min-w-[16px] h-4 px-1 rounded-full bg-[#DC5B17] text-white text-[9px] font-bold flex items-center justify-center leading-none">
-                {notifCount}
-              </span>
-            )}
-          </button>
+        {/* Notifications — outside pill */}
+        <button
+          onClick={() => setNotifOpen(true)}
+          className="relative w-9 h-9 flex items-center justify-center rounded-xl text-[#555] hover:text-white hover:bg-white/[0.06] transition-colors"
+        >
+          <Bell size={19} />
+          {notifCount > 0 && (
+            <span className="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 min-w-[16px] h-4 px-1 rounded-full bg-[#DC5B17] text-white text-[9px] font-bold flex items-center justify-center leading-none">
+              {notifCount}
+            </span>
+          )}
+        </button>
+
+        {/* Pill: toggle + avatar */}
+        <div className="flex items-center gap-0.5 pl-1.5 pr-1.5 py-1.5 rounded-2xl border" style={{ backgroundColor: 'var(--adm-pill)', borderColor: 'var(--adm-border)' }}>
 
           {/* Theme toggle */}
           <button
             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            className="relative w-9 h-9 flex items-center justify-center rounded-xl text-[#555] hover:text-white hover:bg-white/[0.06] transition-colors"
+            className="w-9 h-9 flex items-center justify-center rounded-xl text-[#555] hover:text-white hover:bg-white/[0.06] transition-colors"
             title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
           >
             {theme === 'dark' ? <Sun size={17} /> : <Moon size={17} />}
