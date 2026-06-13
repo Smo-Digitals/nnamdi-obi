@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import Image from 'next/image';
 import { Camera, CheckCircle, WarningCircle } from 'phosphor-react';
 import { createClient } from '@/lib/supabase/client';
 
@@ -15,8 +14,6 @@ export default function ProfilePage() {
   const fileRef  = useRef<HTMLInputElement>(null);
 
   const [avatarUrl,  setAvatarUrl]  = useState<string | null>(null);
-  const [preview,    setPreview]    = useState<string | null>(null);
-  const [file,       setFile]       = useState<File | null>(null);
   const [firstName,  setFirstName]  = useState('');
   const [lastName,   setLastName]   = useState('');
   const [email,      setEmail]      = useState('');
@@ -50,29 +47,30 @@ export default function ProfilePage() {
     load();
   }, []);
 
-  function onFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+  // Upload immediately on file pick — no waiting for Save
+  async function onFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const f = e.target.files?.[0];
     if (!f) return;
-    setFile(f);
-    setPreview(URL.createObjectURL(f));
+    e.target.value = '';
+
+    setUploading(true);
+    setStatus(null);
+
+    const form = new FormData();
+    form.append('file', f);
+    const res = await fetch('/api/upload-avatar', { method: 'POST', body: form });
+    setUploading(false);
+
+    if (!res.ok) {
+      setStatus({ type: 'error', message: 'Image upload failed. Please try again.' });
+      return;
+    }
+    const { url } = await res.json() as { url: string };
+    setAvatarUrl(url);
   }
 
   function deleteAvatar() {
-    setPreview(null);
-    setFile(null);
     setAvatarUrl(null);
-  }
-
-  async function uploadAvatar(): Promise<string | null> {
-    if (!file) return avatarUrl;
-    setUploading(true);
-    const form = new FormData();
-    form.append('file', file);
-    const res = await fetch('/api/upload-avatar', { method: 'POST', body: form });
-    setUploading(false);
-    if (!res.ok) return null;
-    const { url } = await res.json() as { url: string };
-    return url;
   }
 
   async function save() {
@@ -82,15 +80,14 @@ export default function ProfilePage() {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) { setSaving(false); return; }
 
-    const newAvatarUrl = await uploadAvatar();
-    const fullName     = [firstName, lastName].filter(Boolean).join(' ');
+    const fullName = [firstName, lastName].filter(Boolean).join(' ');
 
     const { error } = await supabase
       .from('profiles')
       .update({
         full_name: fullName,
         bio:       address,
-        ...(newAvatarUrl !== undefined ? { avatar_url: newAvatarUrl } : {}),
+        avatar_url: avatarUrl,
       })
       .eq('id', user.id);
 
@@ -98,15 +95,11 @@ export default function ProfilePage() {
     if (error) {
       setStatus({ type: 'error', message: error.message });
     } else {
-      if (newAvatarUrl) setAvatarUrl(newAvatarUrl);
-      setFile(null);
-      setPreview(null);
       setStatus({ type: 'success', message: 'Profile updated successfully.' });
     }
   }
 
-  const displayAvatar = preview ?? avatarUrl;
-  const initials      = [firstName[0], lastName[0]].filter(Boolean).join('').toUpperCase() || 'N';
+  const initials = [firstName[0], lastName[0]].filter(Boolean).join('').toUpperCase() || 'N';
 
   return (
     <div className="p-8">
@@ -121,14 +114,15 @@ export default function ProfilePage() {
         <div className="flex items-center gap-5 mb-6 pb-6 border-b border-white/[0.05]">
           <div className="relative shrink-0">
             <div className="w-16 h-16 rounded-2xl overflow-hidden bg-[#DC5B17] flex items-center justify-center">
-              {displayAvatar ? (
-                <Image src={displayAvatar} alt="Avatar" fill className="object-cover" />
+              {avatarUrl && !uploading ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
               ) : (
                 <span className="text-white text-xl font-bold">{initials}</span>
               )}
               {uploading && (
-                <div className="absolute inset-0 bg-black/60 rounded-2xl flex items-center justify-center">
-                  <svg className="animate-spin w-5 h-5 text-white" viewBox="0 0 24 24" fill="none">
+                <div className="absolute inset-0 bg-black/65 rounded-2xl flex flex-col items-center justify-center gap-1">
+                  <svg className="animate-spin w-6 h-6 text-white" viewBox="0 0 24 24" fill="none">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" />
                     <path className="opacity-90" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
                   </svg>
@@ -137,52 +131,54 @@ export default function ProfilePage() {
             </div>
             <button
               onClick={() => fileRef.current?.click()}
-              className="absolute -bottom-1 -right-1 w-6 h-6 rounded-lg bg-[#DC5B17] border-2 border-[#0e0e0e] flex items-center justify-center text-white hover:bg-[#c44f13] transition-colors"
+              disabled={uploading}
+              className="absolute -bottom-1 -right-1 w-6 h-6 rounded-lg bg-[#DC5B17] border-2 border-[#0e0e0e] flex items-center justify-center text-white hover:bg-[#c44f13] transition-colors disabled:opacity-50"
             >
               <Camera size={11} weight="fill" />
             </button>
             <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={onFileChange} />
           </div>
 
-          <div className="flex gap-2">
-            <button
-              onClick={() => fileRef.current?.click()}
-              className="px-4 py-1.5 rounded-lg bg-[#DC5B17] text-white text-xs font-semibold hover:bg-[#c44f13] transition-colors"
-            >
-              Upload New
-            </button>
-            <button
-              onClick={deleteAvatar}
-              className="px-4 py-1.5 rounded-lg bg-white/[0.05] border border-white/[0.07] text-[#777] text-xs font-medium hover:text-red-400 hover:border-red-400/20 hover:bg-red-400/5 transition-colors"
-            >
-              Delete avatar
-            </button>
+          <div className="flex flex-col gap-1">
+            <div className="flex gap-2">
+              <button
+                onClick={() => fileRef.current?.click()}
+                disabled={uploading}
+                className="px-4 py-1.5 rounded-lg bg-[#DC5B17] text-white text-xs font-semibold hover:bg-[#c44f13] transition-colors disabled:opacity-50"
+              >
+                {uploading ? 'Uploading…' : 'Upload New'}
+              </button>
+              <button
+                onClick={deleteAvatar}
+                disabled={uploading}
+                className="px-4 py-1.5 rounded-lg bg-white/[0.05] border border-white/[0.07] text-[#777] text-xs font-medium hover:text-red-400 hover:border-red-400/20 hover:bg-red-400/5 transition-colors disabled:opacity-50"
+              >
+                Delete avatar
+              </button>
+            </div>
+            <p className="text-[#3a3a3a] text-[11px]">JPG, PNG or WebP. Max 5MB.</p>
           </div>
         </div>
 
         {/* Fields grid */}
         <div className="grid grid-cols-2 gap-x-6 gap-y-4">
 
-          {/* First name */}
           <div>
             <label className={labelCls}>First Name <span className="text-[#DC5B17]">*</span></label>
             <input value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="First name" className={inputCls} />
           </div>
 
-          {/* Last name */}
           <div>
             <label className={labelCls}>Last Name <span className="text-[#DC5B17]">*</span></label>
             <input value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="Last name" className={inputCls} />
           </div>
 
-          {/* Email */}
           <div>
             <label className={labelCls}>Email</label>
             <input value={email} disabled placeholder="email@example.com"
               className="w-full px-3 py-2 rounded-lg bg-white/[0.02] border border-white/[0.04] text-[#444] text-sm cursor-not-allowed" />
           </div>
 
-          {/* Phone */}
           <div>
             <label className={labelCls}>Mobile Number <span className="text-[#DC5B17]">*</span></label>
             <div className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-white/[0.04] border border-white/[0.07] focus-within:border-[#DC5B17] focus-within:ring-1 focus-within:ring-[#DC5B17]/20 transition">
@@ -193,7 +189,6 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          {/* Gender */}
           <div>
             <label className={labelCls}>Gender</label>
             <div className="flex gap-2 mt-0.5">
@@ -216,7 +211,6 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          {/* Address */}
           <div>
             <label className={labelCls}>Residential Address</label>
             <input
