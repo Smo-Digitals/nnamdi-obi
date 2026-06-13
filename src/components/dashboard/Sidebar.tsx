@@ -144,7 +144,7 @@ export function Sidebar() {
 
   function toggle(id: string) {
     setOpenGroups((prev) =>
-      prev.includes(id) ? prev.filter((g) => g !== id) : [...prev, id]
+      prev.includes(id) ? [] : [id]
     );
   }
 
