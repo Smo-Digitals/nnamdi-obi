@@ -14,15 +14,17 @@ import {
   SignOut,
   CaretLeft,
   CaretRight,
+  Bell,
 } from 'phosphor-react';
 import { adminLogout } from '@/app/(auth)/actions';
 
 const nav = [
-  { href: '/admin',           label: 'Dashboard', icon: SquaresFour },
-  { href: '/admin/analytics', label: 'Analytics', icon: ChartBar },
-  { href: '/admin/courses',   label: 'Courses',   icon: BookOpen },
-  { href: '/admin/members',   label: 'Members',   icon: Users },
-  { href: '/admin/settings',  label: 'Settings',  icon: Gear },
+  { href: '/admin',                label: 'Dashboard',     icon: SquaresFour },
+  { href: '/admin/analytics',      label: 'Analytics',     icon: ChartBar },
+  { href: '/admin/courses',        label: 'Courses',       icon: BookOpen },
+  { href: '/admin/members',        label: 'Members',       icon: Users },
+  { href: '/admin/notifications',  label: 'Notifications', icon: Bell },
+  { href: '/admin/settings',       label: 'Settings',      icon: Gear },
 ];
 
 const folders = [
