@@ -14,7 +14,7 @@ import {
   Folder,
   SignOut,
 } from 'phosphor-react';
-import { logout } from '@/app/(auth)/actions';
+import { adminLogout } from '@/app/(auth)/actions';
 
 const nav = [
   { href: '/admin',            label: 'Dashboard',    icon: SquaresFour },
@@ -108,7 +108,7 @@ export function Sidebar() {
       </div>
 
       {/* Sign out */}
-      <form action={logout} className="px-3 pb-4">
+      <form action={adminLogout} className="px-3 pb-4">
         <button
           type="submit"
           className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-[#555] hover:text-red-400 hover:bg-white/5 transition-colors"
