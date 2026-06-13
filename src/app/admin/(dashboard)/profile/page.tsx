@@ -120,7 +120,7 @@ export default function ProfilePage() {
         {/* Avatar row */}
         <div className="flex items-center gap-5 mb-6 pb-6 border-b border-white/[0.05]">
           <div className="relative shrink-0">
-            <div className="w-16 h-16 rounded-full overflow-hidden bg-[#DC5B17] flex items-center justify-center">
+            <div className="w-16 h-16 rounded-2xl overflow-hidden bg-[#DC5B17] flex items-center justify-center">
               {displayAvatar ? (
                 <Image src={displayAvatar} alt="Avatar" fill className="object-cover" />
               ) : (
@@ -137,7 +137,7 @@ export default function ProfilePage() {
             </div>
             <button
               onClick={() => fileRef.current?.click()}
-              className="absolute bottom-0 right-0 w-6 h-6 rounded-full bg-[#DC5B17] border-2 border-[#0e0e0e] flex items-center justify-center text-white hover:bg-[#c44f13] transition-colors"
+              className="absolute -bottom-1 -right-1 w-6 h-6 rounded-lg bg-[#DC5B17] border-2 border-[#0e0e0e] flex items-center justify-center text-white hover:bg-[#c44f13] transition-colors"
             >
               <Camera size={11} weight="fill" />
             </button>
