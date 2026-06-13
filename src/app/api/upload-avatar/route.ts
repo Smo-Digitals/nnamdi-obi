@@ -11,7 +11,7 @@ const r2 = new S3Client({
   },
 });
 
-const BUCKET = 'nnamdi-obi';
+const BUCKET = 'nnamdi-obi-r2';
 
 export async function POST(req: NextRequest) {
   const supabase = await createClient();
