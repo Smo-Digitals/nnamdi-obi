@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MagnifyingGlass, Bell, ChatCircle, UserCircle, Wallet, Gear, CaretRight, SignOut } from 'phosphor-react';
+import { useTheme } from 'next-themes';
+import { MagnifyingGlass, Bell, ChatCircle, UserCircle, Wallet, Gear, CaretRight, SignOut, Sun, Moon } from 'phosphor-react';
 import { adminLogout } from '@/app/(auth)/actions';
 import { NotificationsPanel } from '@/components/dashboard/NotificationsPanel';
 import { MessagesPanel } from '@/components/dashboard/MessagesPanel';
@@ -87,7 +88,8 @@ function AvatarDropdown() {
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: -6 }}
           transition={{ duration: 0.15, ease: [0.22, 1, 0.36, 1] }}
-          className="absolute right-0 top-12 w-64 rounded-2xl bg-[#111] border border-white/[0.08] shadow-2xl shadow-black/60 overflow-hidden z-50"
+          className="absolute right-0 top-12 w-64 rounded-2xl border shadow-2xl shadow-black/60 overflow-hidden z-50"
+          style={{ backgroundColor: 'var(--adm-drop)', borderColor: 'var(--adm-border)' }}
         >
 
           {/* Profile header */}
@@ -152,6 +154,7 @@ export function AdminHeader() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [notifCount, setNotifCount] = useState(3);
   const [msgCount,   setMsgCount]   = useState(3);
+  const { theme, setTheme } = useTheme();
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -169,7 +172,7 @@ export function AdminHeader() {
     <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
     <NotificationsPanel open={notifOpen} onClose={() => setNotifOpen(false)} onRead={(n) => setNotifCount((c) => Math.max(0, c - n))} />
     <MessagesPanel open={msgOpen} onClose={() => setMsgOpen(false)} onRead={(n) => setMsgCount((c) => Math.max(0, c - n))} />
-    <header className="h-20 shrink-0 flex items-center px-8 border-b border-white/[0.06] bg-[#050505]">
+    <header className="h-20 shrink-0 flex items-center px-8 border-b" style={{ backgroundColor: 'var(--adm-header)', borderColor: 'var(--adm-border)' }}>
 
       {/* Greeting — left */}
       <div className="flex-1 min-w-0">
@@ -191,7 +194,7 @@ export function AdminHeader() {
 
       {/* Right — icon group + avatar in one pill container */}
       <div className="flex-1 flex justify-end">
-        <div className="flex items-center gap-0.5 pl-2 pr-2 py-1.5 rounded-2xl bg-white/[0.03] border border-white/[0.06]">
+        <div className="flex items-center gap-0.5 pl-2 pr-2 py-1.5 rounded-2xl border" style={{ backgroundColor: 'var(--adm-pill)', borderColor: 'var(--adm-border)' }}>
 
           {/* Messages */}
           <button
@@ -217,6 +220,15 @@ export function AdminHeader() {
                 {notifCount}
               </span>
             )}
+          </button>
+
+          {/* Theme toggle */}
+          <button
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            className="relative w-9 h-9 flex items-center justify-center rounded-xl text-[#555] hover:text-white hover:bg-white/[0.06] transition-colors"
+            title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+          >
+            {theme === 'dark' ? <Sun size={17} /> : <Moon size={17} />}
           </button>
 
           {/* Divider */}

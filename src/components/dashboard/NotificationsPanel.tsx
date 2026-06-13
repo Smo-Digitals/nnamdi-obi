@@ -73,7 +73,8 @@ export function NotificationsPanel({ open, onClose, onRead }: Props) {
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed top-0 right-0 h-full w-[400px] bg-[#0e0e0e] border-l border-white/[0.07] z-50 flex flex-col shadow-2xl shadow-black/60"
+            className="fixed top-0 right-0 h-full w-[400px] border-l z-50 flex flex-col shadow-2xl shadow-black/40"
+            style={{ backgroundColor: 'var(--adm-panel)', borderColor: 'var(--adm-border)' }}
           >
             {/* Header */}
             <div className="flex items-center justify-between px-6 py-5 border-b border-white/[0.06]">

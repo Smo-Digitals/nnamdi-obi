@@ -74,3 +74,65 @@ body {
 ::-webkit-scrollbar-thumb {
   background: #677db7;
 }
+
+/* ── Admin dashboard theme tokens ──────────────────────────────── */
+:root {
+  --adm-bg:       #050505;
+  --adm-sidebar:  #080808;
+  --adm-card:     #0e0e0e;
+  --adm-header:   #050505;
+  --adm-panel:    #0e0e0e;
+  --adm-drop:     #111111;
+  --adm-pill:     rgba(255,255,255,0.03);
+  --adm-border:   rgba(255,255,255,0.06);
+  --adm-surface:  rgba(255,255,255,0.04);
+  --adm-text:     #ffffff;
+  --adm-muted:    #555555;
+  --adm-input-bg: rgba(255,255,255,0.04);
+  --adm-input-bd: rgba(255,255,255,0.07);
+}
+
+html.light {
+  --adm-bg:       #eef0f3;
+  --adm-sidebar:  #ffffff;
+  --adm-card:     #ffffff;
+  --adm-header:   #ffffff;
+  --adm-panel:    #ffffff;
+  --adm-drop:     #ffffff;
+  --adm-pill:     rgba(0,0,0,0.05);
+  --adm-border:   rgba(0,0,0,0.08);
+  --adm-surface:  rgba(0,0,0,0.04);
+  --adm-text:     #111111;
+  --adm-muted:    #777777;
+  --adm-input-bg: rgba(0,0,0,0.04);
+  --adm-input-bd: rgba(0,0,0,0.10);
+}
+
+/* Smooth theme transition */
+.admin-ui,
+.admin-ui * {
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+/* Light mode — text & border overrides inside admin */
+html.light .admin-ui [class*="text-white"]:not([class*="bg-\[#DC5B17\]"] *):not([class*="bg-\[#DC5B17\]"]) {
+  color: var(--adm-text);
+}
+html.light .admin-ui [class*="text-\[#444\]"],
+html.light .admin-ui [class*="text-\[#555\]"],
+html.light .admin-ui [class*="text-\[#333\]"] {
+  color: var(--adm-muted);
+}
+html.light .admin-ui [class*="text-\[#888\]"],
+html.light .admin-ui [class*="text-\[#666\]"],
+html.light .admin-ui [class*="text-\[#aaa\]"] {
+  color: #999;
+}
+html.light .admin-ui [class*="border-white"] {
+  border-color: var(--adm-border);
+}
+/* Keep white text on orange */
+html.light .admin-ui [class*="bg-\[#DC5B17\]"],
+html.light .admin-ui [class*="bg-\[#DC5B17\]"] * {
+  color: #ffffff;
+}

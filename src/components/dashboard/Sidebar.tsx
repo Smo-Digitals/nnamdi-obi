@@ -41,9 +41,10 @@ export function Sidebar() {
 
   return (
     <aside
-      className={`shrink-0 h-screen flex flex-col bg-[#080808] border-r border-white/[0.06] overflow-y-auto overflow-x-hidden transition-all duration-300 ${
+      className={`shrink-0 h-screen flex flex-col border-r overflow-y-auto overflow-x-hidden transition-all duration-300 ${
         collapsed ? 'w-[64px]' : 'w-[240px]'
       }`}
+      style={{ backgroundColor: 'var(--adm-sidebar)', borderColor: 'var(--adm-border)' }}
     >
       {/* Brand + collapse toggle */}
       <div className={`flex items-center border-b border-white/5 h-20 shrink-0 ${collapsed ? 'justify-center px-0' : 'px-4 gap-3'}`}>

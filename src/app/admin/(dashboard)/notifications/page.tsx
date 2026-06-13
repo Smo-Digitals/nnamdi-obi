@@ -103,7 +103,7 @@ export default function NotificationsPage() {
       </div>
 
       {/* List */}
-      <div className="bg-[#0e0e0e] border border-white/[0.06] rounded-2xl overflow-hidden">
+      <div className="bg-[var(--adm-card)] border border-white/[0.06] rounded-2xl overflow-hidden">
         {filtered.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 text-center">
             <Bell size={32} className="text-[#333] mb-3" />

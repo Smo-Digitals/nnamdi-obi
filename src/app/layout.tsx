@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { GeistSans } from 'geist/font/sans';
 import { DM_Mono } from 'next/font/google';
+import { ThemeProvider } from '@/components/ThemeProvider';
 import './globals.css';
 
 const dmMono = DM_Mono({
@@ -23,9 +24,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${GeistSans.variable} ${dmMono.variable}`}>
+    <html lang="en" className={`${GeistSans.variable} ${dmMono.variable}`} suppressHydrationWarning>
       <body className="min-h-screen flex flex-col bg-[#0a0a0a] text-[#f0ede8]">
-        {children}
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );

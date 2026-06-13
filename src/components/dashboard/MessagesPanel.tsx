@@ -116,7 +116,8 @@ export function MessagesPanel({ open, onClose, onRead }: Props) {
           <motion.aside
             initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed top-0 right-0 h-full w-[400px] bg-[#0e0e0e] border-l border-white/[0.07] z-50 flex flex-col shadow-2xl shadow-black/60"
+            className="fixed top-0 right-0 h-full w-[400px] border-l z-50 flex flex-col shadow-2xl shadow-black/40"
+            style={{ backgroundColor: 'var(--adm-panel)', borderColor: 'var(--adm-border)' }}
           >
             {/* ── LIST VIEW ── */}
             {!active && (

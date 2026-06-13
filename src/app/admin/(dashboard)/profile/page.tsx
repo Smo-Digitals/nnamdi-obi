@@ -109,7 +109,7 @@ export default function ProfilePage() {
         <p className="text-[#444] text-sm mt-0.5">Update your personal information and photo.</p>
       </div>
 
-      <div className="bg-[#0e0e0e] border border-white/[0.06] rounded-2xl p-6">
+      <div className="bg-[var(--adm-card)] border border-white/[0.06] rounded-2xl p-6">
 
         {/* Avatar row */}
         <div className="flex items-center gap-5 mb-6 pb-6 border-b border-white/[0.05]">
