@@ -175,17 +175,17 @@ export function AdminHeader() {
     <header className="h-20 shrink-0 flex items-center px-8 border-b" style={{ backgroundColor: 'var(--adm-header)', borderColor: 'var(--adm-border)' }}>
 
       {/* Greeting — left */}
-      <div className="flex-1 min-w-0">
-        <p className="text-white font-semibold text-sm truncate">
+      <div className="shrink-0">
+        <p className="text-white font-semibold text-sm">
           {getGreeting()}, Nnamdi
         </p>
         <p className="text-[#444] text-xs">Here&apos;s what&apos;s happening today.</p>
       </div>
 
-      {/* Search — centre */}
+      {/* Search — stretches to fill middle */}
       <button
         onClick={() => setSearchOpen(true)}
-        className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2.5 px-4 py-2 rounded-xl bg-white/[0.04] border border-white/[0.06] text-[#444] w-72 hover:border-white/10 hover:bg-white/[0.06] transition-colors"
+        className="flex-1 mx-8 flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.06] text-[#444] hover:border-white/10 hover:bg-white/[0.06] transition-colors"
       >
         <MagnifyingGlass size={15} />
         <span className="text-sm flex-1 text-left">Search anything…</span>
@@ -193,7 +193,7 @@ export function AdminHeader() {
       </button>
 
       {/* Right */}
-      <div className="flex-1 flex justify-end items-center gap-5">
+      <div className="shrink-0 flex items-center gap-5">
 
         {/* Messages — icon box */}
         <div className="relative shrink-0">
