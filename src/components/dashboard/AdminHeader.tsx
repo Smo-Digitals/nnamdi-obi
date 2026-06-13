@@ -193,7 +193,7 @@ export function AdminHeader() {
       </button>
 
       {/* Right */}
-      <div className="flex-1 flex justify-end items-center gap-3">
+      <div className="flex-1 flex justify-end items-center gap-5">
 
         {/* Messages — outside pill */}
         <button
@@ -202,7 +202,7 @@ export function AdminHeader() {
         >
           <ChatCircle size={19} />
           {msgCount > 0 && (
-            <span className="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 min-w-[16px] h-4 px-1 rounded-full bg-[#DC5B17] text-white text-[9px] font-bold flex items-center justify-center leading-none">
+            <span className="absolute -top-1 -right-1 min-w-[16px] h-4 px-1 rounded-full bg-[#DC5B17] text-white text-[9px] font-bold flex items-center justify-center leading-none">
               {msgCount}
             </span>
           )}
@@ -215,7 +215,7 @@ export function AdminHeader() {
         >
           <Bell size={19} />
           {notifCount > 0 && (
-            <span className="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 min-w-[16px] h-4 px-1 rounded-full bg-[#DC5B17] text-white text-[9px] font-bold flex items-center justify-center leading-none">
+            <span className="absolute -top-1 -right-1 min-w-[16px] h-4 px-1 rounded-full bg-[#DC5B17] text-white text-[9px] font-bold flex items-center justify-center leading-none">
               {notifCount}
             </span>
           )}
