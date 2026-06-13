@@ -17,11 +17,11 @@ import {
 import { logout } from '@/app/(auth)/actions';
 
 const nav = [
-  { href: '/dashboard',            label: 'Dashboard',    icon: SquaresFour },
-  { href: '/dashboard/analytics',  label: 'Analytics',    icon: ChartBar },
-  { href: '/dashboard/courses',    label: 'Courses',      icon: BookOpen },
-  { href: '/dashboard/members',    label: 'Members',      icon: Users },
-  { href: '/dashboard/settings',   label: 'Settings',     icon: Gear },
+  { href: '/admin',            label: 'Dashboard',    icon: SquaresFour },
+  { href: '/admin/analytics',  label: 'Analytics',    icon: ChartBar },
+  { href: '/admin/courses',    label: 'Courses',      icon: BookOpen },
+  { href: '/admin/members',    label: 'Members',      icon: Users },
+  { href: '/admin/settings',   label: 'Settings',     icon: Gear },
 ];
 
 const folders = [
