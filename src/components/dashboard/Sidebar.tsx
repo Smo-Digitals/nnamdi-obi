@@ -1,178 +1,279 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
-  SquaresFour,
-  ChartBar,
-  BookOpen,
-  Users,
-  Gear,
-  Lightning,
-  Folder,
+  SquaresFour, PencilSimpleLine, BookOpen, Storefront,
+  CalendarBlank, UsersThree, CalendarCheck, CurrencyDollar,
+  EnvelopeSimple, ChartBar, Users, CaretDown, CaretRight,
   SignOut,
-  CaretLeft,
-  CaretRight,
-  Bell,
-  ChatCircle,
 } from 'phosphor-react';
 import { adminLogout } from '@/app/(auth)/actions';
 
-const nav = [
-  { href: '/admin',                label: 'Dashboard',     icon: SquaresFour },
-  { href: '/admin/analytics',      label: 'Analytics',     icon: ChartBar },
-  { href: '/admin/courses',        label: 'Courses',       icon: BookOpen },
-  { href: '/admin/members',        label: 'Members',       icon: Users },
-  { href: '/admin/messages',       label: 'Messages',      icon: ChatCircle },
-  { href: '/admin/notifications',  label: 'Notifications', icon: Bell },
-  { href: '/admin/settings',       label: 'Settings',      icon: Gear },
-];
+type SubItem = { label: string; href: string };
+type NavGroup = {
+  id:       string;
+  label:    string;
+  icon:     React.ElementType;
+  items:    SubItem[];
+  basePath: string;
+};
 
-const folders = [
-  { label: 'Free content',    color: '#DC5B17' },
-  { label: 'Paid courses',    color: '#888' },
-  { label: 'Community posts', color: '#eab308' },
+const NAV: NavGroup[] = [
+  {
+    id: 'dashboard', label: 'Dashboard', icon: SquaresFour, basePath: '/admin',
+    items: [
+      { label: 'Overview',       href: '/admin' },
+      { label: 'Announcements',  href: '/admin/announcements' },
+      { label: 'Media',          href: '/admin/media' },
+      { label: 'Homepage',       href: '/admin/homepage' },
+    ],
+  },
+  {
+    id: 'writing', label: 'Writing', icon: PencilSimpleLine, basePath: '/admin/writing',
+    items: [
+      { label: 'All Posts',     href: '/admin/writing/posts' },
+      { label: 'Create Post',   href: '/admin/writing/create' },
+      { label: 'Categories',    href: '/admin/writing/categories' },
+      { label: 'Post Metrics',  href: '/admin/writing/metrics' },
+      { label: 'Curated',       href: '/admin/writing/curated' },
+      { label: 'Comments',      href: '/admin/writing/comments' },
+      { label: 'Editors',       href: '/admin/writing/editors' },
+    ],
+  },
+  {
+    id: 'courses', label: 'Courses', icon: BookOpen, basePath: '/admin/courses',
+    items: [
+      { label: 'Roadmaps',        href: '/admin/courses/roadmaps' },
+      { label: 'All Courses',     href: '/admin/courses/all' },
+      { label: 'Curated Content', href: '/admin/courses/curated' },
+      { label: 'Categories',      href: '/admin/courses/categories' },
+      { label: 'Bundles',         href: '/admin/courses/bundles' },
+      { label: 'Files',           href: '/admin/courses/files' },
+      { label: 'Course Metrics',  href: '/admin/courses/metrics' },
+    ],
+  },
+  {
+    id: 'marketplace', label: 'Market Place', icon: Storefront, basePath: '/admin/marketplace',
+    items: [
+      { label: 'Templates',     href: '/admin/marketplace/templates' },
+      { label: 'Group Buy',     href: '/admin/marketplace/group-buy' },
+      { label: 'Partnerships',  href: '/admin/marketplace/partnerships' },
+    ],
+  },
+  {
+    id: 'events', label: 'Events', icon: CalendarBlank, basePath: '/admin/events',
+    items: [
+      { label: 'Curated',     href: '/admin/events/curated' },
+      { label: 'Private',     href: '/admin/events/private' },
+      { label: 'Live Event',  href: '/admin/events/live' },
+    ],
+  },
+  {
+    id: 'community', label: 'Community', icon: UsersThree, basePath: '/admin/community',
+    items: [
+      { label: 'Active',   href: '/admin/community/active' },
+      { label: 'Create',   href: '/admin/community/create' },
+      { label: 'Members',  href: '/admin/community/members' },
+    ],
+  },
+  {
+    id: 'booking', label: 'Booking', icon: CalendarCheck, basePath: '/admin/booking',
+    items: [
+      { label: 'Create',      href: '/admin/booking/create' },
+      { label: 'Categories',  href: '/admin/booking/categories' },
+      { label: 'Bookings',    href: '/admin/booking/all' },
+    ],
+  },
+  {
+    id: 'financials', label: 'Financials', icon: CurrencyDollar, basePath: '/admin/financials',
+    items: [
+      { label: 'Earnings',      href: '/admin/financials/earnings' },
+      { label: 'Money Metrics', href: '/admin/financials/metrics' },
+    ],
+  },
+  {
+    id: 'emails', label: 'Emails', icon: EnvelopeSimple, basePath: '/admin/emails',
+    items: [
+      { label: 'Newsletters',  href: '/admin/emails/newsletters' },
+      { label: 'All Letters',  href: '/admin/emails/all' },
+      { label: 'Issues',       href: '/admin/emails/issues' },
+      { label: 'Updates',      href: '/admin/emails/updates' },
+    ],
+  },
+  {
+    id: 'analytics', label: 'Analytics', icon: ChartBar, basePath: '/admin/analytics',
+    items: [
+      { label: 'Finance',  href: '/admin/analytics/finance' },
+      { label: 'Users',    href: '/admin/analytics/users' },
+      { label: 'App',      href: '/admin/analytics/app' },
+    ],
+  },
+  {
+    id: 'users', label: 'Users', icon: Users, basePath: '/admin/users',
+    items: [
+      { label: 'All Users',  href: '/admin/users/all' },
+      { label: 'Editors',    href: '/admin/users/editors' },
+    ],
+  },
 ];
 
 export function Sidebar() {
   const pathname = usePathname();
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed,   setCollapsed]   = useState(false);
+  const [openGroups,  setOpenGroups]  = useState<string[]>(() => {
+    const active = NAV.find((g) =>
+      g.id === 'dashboard'
+        ? pathname === '/admin' || pathname.startsWith('/admin/announcements') || pathname.startsWith('/admin/media') || pathname.startsWith('/admin/homepage')
+        : pathname.startsWith(g.basePath)
+    );
+    return active ? [active.id] : ['dashboard'];
+  });
+
+  useEffect(() => {
+    const active = NAV.find((g) =>
+      g.id === 'dashboard'
+        ? pathname === '/admin' || g.items.some((i) => pathname === i.href)
+        : pathname.startsWith(g.basePath)
+    );
+    if (active && !openGroups.includes(active.id)) {
+      setOpenGroups((prev) => [...prev, active.id]);
+    }
+  }, [pathname]);
+
+  function toggle(id: string) {
+    setOpenGroups((prev) =>
+      prev.includes(id) ? prev.filter((g) => g !== id) : [...prev, id]
+    );
+  }
 
   return (
     <aside
-      className={`shrink-0 h-screen flex flex-col border-r overflow-y-auto overflow-x-hidden transition-all duration-300 ${
-        collapsed ? 'w-[64px]' : 'w-[240px]'
-      }`}
+      className={`shrink-0 h-screen flex flex-col border-r overflow-y-auto overflow-x-hidden transition-all duration-300 ${collapsed ? 'w-[64px]' : 'w-[220px]'}`}
       style={{ backgroundColor: 'var(--adm-sidebar)', borderColor: 'var(--adm-border)' }}
     >
-      {/* Brand + collapse toggle */}
-      <div className={`flex items-center border-b border-white/5 h-20 shrink-0 ${collapsed ? 'justify-center px-0' : 'px-4 gap-3'}`}>
-        <div className="w-8 h-8 rounded-lg bg-[#DC5B17] flex items-center justify-center shrink-0">
-          <span className="text-white text-sm font-bold font-[family-name:var(--font-dm-mono)]">N</span>
-        </div>
-        {!collapsed && (
-          <span className="text-white font-semibold text-sm flex-1 truncate">Nnamdi Obi</span>
-        )}
-        {!collapsed && (
+      {/* Brand */}
+      <div
+        className={`flex items-center border-b h-20 shrink-0 ${collapsed ? 'justify-center px-0' : 'px-4 gap-3'}`}
+        style={{ borderColor: 'var(--adm-border)' }}
+      >
+        {collapsed ? (
           <button
-            onClick={() => setCollapsed(true)}
-            className="w-6 h-6 flex items-center justify-center rounded-md text-[#444] hover:text-white hover:bg-white/5 transition-colors"
+            onClick={() => setCollapsed(false)}
+            title="Expand sidebar"
+            className="w-8 h-8 rounded-lg bg-[#DC5B17] flex items-center justify-center hover:bg-[#c44f13] transition-colors"
           >
-            <CaretLeft size={13} />
+            <span className="text-white text-sm font-bold">N</span>
           </button>
+        ) : (
+          <>
+            <div className="w-8 h-8 rounded-lg bg-[#DC5B17] flex items-center justify-center shrink-0">
+              <span className="text-white text-sm font-bold">N</span>
+            </div>
+            <span className="text-white font-semibold text-sm flex-1 truncate">Nnamdi Obi</span>
+            <button
+              onClick={() => setCollapsed(true)}
+              className="w-6 h-6 flex items-center justify-center rounded-md text-[#444] hover:text-white hover:bg-white/5 transition-colors"
+              title="Collapse sidebar"
+            >
+              <CaretRight size={12} weight="bold" className="rotate-180" />
+            </button>
+          </>
         )}
       </div>
 
-      {/* Collapse toggle when collapsed */}
-      {collapsed && (
-        <button
-          onClick={() => setCollapsed(false)}
-          className="mx-auto mt-3 w-8 h-8 flex items-center justify-center rounded-lg text-[#444] hover:text-white hover:bg-white/5 transition-colors"
-        >
-          <CaretRight size={14} />
-        </button>
-      )}
-
       {/* Nav */}
-      <nav className={`flex flex-col gap-0.5 pt-4 ${collapsed ? 'px-2' : 'px-3'}`}>
+      <nav className="flex-1 py-3 px-2 space-y-0.5">
         {!collapsed && (
-          <p className="text-[10px] font-semibold text-[#333] uppercase tracking-wider px-3 mb-1">Menu</p>
+          <p className="text-[#333] text-[10px] font-semibold uppercase tracking-widest px-2 mb-2">Menu</p>
         )}
-        {nav.map(({ href, label, icon: Icon }) => {
-          const active = pathname === href;
+
+        {NAV.map((group) => {
+          const Icon     = group.icon;
+          const isOpen   = openGroups.includes(group.id);
+          const isActive = group.id === 'dashboard'
+            ? pathname === '/admin' || group.items.some((i) => i.href !== '/admin' && pathname.startsWith(i.href))
+            : pathname.startsWith(group.basePath);
+
+          if (collapsed) {
+            return (
+              <Link
+                key={group.id}
+                href={group.items[0].href}
+                title={group.label}
+                className={`flex items-center justify-center w-10 h-10 mx-auto rounded-xl transition-colors ${
+                  isActive
+                    ? 'bg-[#DC5B17]/15 text-[#DC5B17]'
+                    : 'text-[#555] hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <Icon size={18} />
+              </Link>
+            );
+          }
+
           return (
-            <Link
-              key={href}
-              href={href}
-              title={collapsed ? label : undefined}
-              className={`flex items-center rounded-lg text-sm transition-colors ${
-                collapsed ? 'justify-center w-10 h-10 mx-auto' : 'gap-3 px-3 py-2'
-              } ${
-                active
-                  ? 'bg-white/10 text-white'
-                  : 'text-[#666] hover:text-white hover:bg-white/5'
-              }`}
-            >
-              <Icon size={17} weight={active ? 'fill' : 'regular'} />
-              {!collapsed && label}
-            </Link>
+            <div key={group.id}>
+              {/* Group header */}
+              <button
+                onClick={() => toggle(group.id)}
+                className={`w-full flex items-center gap-2.5 px-2 py-2 rounded-xl text-left transition-colors ${
+                  isActive
+                    ? 'text-white'
+                    : 'text-[#555] hover:text-white hover:bg-white/[0.04]'
+                }`}
+              >
+                <Icon size={16} className={isActive ? 'text-[#DC5B17]' : ''} />
+                <span className="flex-1 text-xs font-semibold">{group.label}</span>
+                <CaretDown
+                  size={11}
+                  className={`shrink-0 transition-transform duration-200 ${isOpen ? 'rotate-0' : '-rotate-90'}`}
+                />
+              </button>
+
+              {/* Sub-items */}
+              {isOpen && (
+                <div className="mt-0.5 ml-6 border-l pl-2 mb-1" style={{ borderColor: 'var(--adm-border)' }}>
+                  {group.items.map((item) => {
+                    const itemActive = item.href === '/admin'
+                      ? pathname === '/admin'
+                      : pathname === item.href;
+                    return (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className={`block px-2 py-1.5 rounded-lg text-xs transition-colors ${
+                          itemActive
+                            ? 'text-white bg-white/[0.06] font-medium'
+                            : 'text-[#555] hover:text-white hover:bg-white/[0.04]'
+                        }`}
+                      >
+                        {item.label}
+                      </Link>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
           );
         })}
       </nav>
 
-      {/* Folders */}
-      {!collapsed && (
-        <div className="px-3 mt-6">
-          <p className="text-[10px] font-semibold text-[#333] uppercase tracking-wider px-3 mb-1">Content</p>
-          {folders.map(({ label, color }) => (
-            <button
-              key={label}
-              className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-[#666] hover:text-white hover:bg-white/5 transition-colors"
-            >
-              <Folder size={15} style={{ color }} weight="fill" />
-              {label}
-            </button>
-          ))}
-        </div>
-      )}
-
-      {collapsed && (
-        <div className="px-2 mt-6 flex flex-col gap-0.5">
-          {folders.map(({ label, color }) => (
-            <button
-              key={label}
-              title={label}
-              className="w-10 h-10 mx-auto flex items-center justify-center rounded-lg text-[#666] hover:text-white hover:bg-white/5 transition-colors"
-            >
-              <Folder size={15} style={{ color }} weight="fill" />
-            </button>
-          ))}
-        </div>
-      )}
-
-      <div className="flex-1" />
-
-      {/* Upgrade card */}
-      {!collapsed && (
-        <div className="mx-3 mb-3 p-4 rounded-xl bg-white/[0.04] border border-white/[0.07]">
-          <div className="flex items-center gap-2 mb-2">
-            <Lightning size={16} weight="fill" className="text-[#DC5B17]" />
-            <span className="text-white text-xs font-semibold">Upgrade to Pro</span>
-          </div>
-          <p className="text-[#555] text-xs mb-3 leading-relaxed">
-            Unlock unlimited members, custom domain & analytics.
-          </p>
-          <button className="w-full py-1.5 rounded-lg bg-[#DC5B17] text-white text-xs font-semibold hover:bg-[#c44f13] transition-colors">
-            Upgrade Now
-          </button>
-        </div>
-      )}
-
-      {collapsed && (
-        <div className="px-2 mb-3">
-          <button
-            title="Upgrade to Pro"
-            className="w-10 h-10 mx-auto flex items-center justify-center rounded-lg text-[#DC5B17] hover:bg-white/5 transition-colors"
-          >
-            <Lightning size={17} weight="fill" />
-          </button>
-        </div>
-      )}
-
       {/* Sign out */}
-      <form action={adminLogout} className={`pb-4 ${collapsed ? 'px-2' : 'px-3'}`}>
-        <button
-          type="submit"
-          title={collapsed ? 'Sign out' : undefined}
-          className={`flex items-center rounded-lg text-sm text-[#444] hover:text-red-400 hover:bg-white/5 transition-colors ${
-            collapsed ? 'justify-center w-10 h-10 mx-auto' : 'w-full gap-3 px-3 py-2'
-          }`}
-        >
-          <SignOut size={15} />
-          {!collapsed && 'Sign out'}
-        </button>
-      </form>
+      {!collapsed && (
+        <div className="p-3 border-t shrink-0" style={{ borderColor: 'var(--adm-border)' }}>
+          <form action={adminLogout}>
+            <button
+              type="submit"
+              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-[#444] hover:text-red-400 hover:bg-red-400/5 transition-colors text-xs"
+            >
+              <SignOut size={15} />
+              Sign out
+            </button>
+          </form>
+        </div>
+      )}
     </aside>
   );
 }
