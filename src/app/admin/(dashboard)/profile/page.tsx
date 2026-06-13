@@ -161,7 +161,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Fields grid */}
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-4">
 
           {/* First name */}
           <div>
@@ -216,7 +216,7 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          {/* Address — spans remaining column */}
+          {/* Address */}
           <div>
             <label className={labelCls}>Residential Address</label>
             <input
