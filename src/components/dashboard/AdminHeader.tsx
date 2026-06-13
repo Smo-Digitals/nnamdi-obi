@@ -58,17 +58,20 @@ function AvatarDropdown() {
 
   return (
     <div ref={ref} className="relative ml-1">
-      {/* Avatar button */}
+      {/* Avatar button + caret */}
       <button
         onClick={() => setOpen((o) => !o)}
-        className="relative w-8 h-8 rounded-xl bg-[#DC5B17] flex items-center justify-center text-white text-xs font-bold hover:bg-[#c44f13] transition-colors overflow-hidden"
+        className="flex items-center gap-1.5 pr-1 rounded-xl hover:bg-white/[0.06] transition-colors"
       >
-        {avatarUrl
-          // eslint-disable-next-line @next/next/no-img-element
-          ? <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
-          : initials
-        }
-        <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-green-500 border-2 border-[#050505]" />
+        <div className="relative w-8 h-8 rounded-xl bg-[#DC5B17] flex items-center justify-center text-white text-xs font-bold overflow-hidden shrink-0">
+          {avatarUrl
+            // eslint-disable-next-line @next/next/no-img-element
+            ? <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+            : initials
+          }
+          <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-green-500 border-2 border-[#050505]" />
+        </div>
+        <CaretRight size={11} className={`text-[#444] transition-transform ${open ? 'rotate-90' : ''}`} />
       </button>
 
       {/* Dropdown */}
@@ -140,9 +143,9 @@ export function AdminHeader() {
     <>
     <NotificationsPanel open={notifOpen} onClose={() => setNotifOpen(false)} onRead={(n) => setNotifCount((c) => Math.max(0, c - n))} />
     <MessagesPanel open={msgOpen} onClose={() => setMsgOpen(false)} onRead={(n) => setMsgCount((c) => Math.max(0, c - n))} />
-    <header className="h-16 shrink-0 flex items-center gap-6 px-8 border-b border-white/[0.06] bg-[#050505]">
+    <header className="h-16 shrink-0 flex items-center px-8 border-b border-white/[0.06] bg-[#050505]">
 
-      {/* Greeting */}
+      {/* Greeting — left */}
       <div className="flex-1 min-w-0">
         <p className="text-white font-semibold text-sm truncate">
           {getGreeting()}, Nnamdi
@@ -150,42 +153,50 @@ export function AdminHeader() {
         <p className="text-[#444] text-xs">Here&apos;s what&apos;s happening today.</p>
       </div>
 
-      {/* Search */}
-      <div className="flex items-center gap-2.5 px-4 py-2 rounded-xl bg-white/[0.04] border border-white/[0.06] text-[#444] w-64 hover:border-white/10 transition-colors cursor-text">
+      {/* Search — centre */}
+      <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2.5 px-4 py-2 rounded-xl bg-white/[0.04] border border-white/[0.06] text-[#444] w-72 hover:border-white/10 transition-colors cursor-text">
         <MagnifyingGlass size={15} />
         <span className="text-sm flex-1">Search anything…</span>
         <kbd className="text-[10px] bg-white/5 px-1.5 py-0.5 rounded text-[#333]">⌘K</kbd>
       </div>
 
-      {/* Right actions */}
-      <div className="flex items-center gap-1">
-        {/* Messages */}
-        <button
-          onClick={() => setMsgOpen(true)}
-          className="relative w-9 h-9 flex items-center justify-center rounded-xl text-[#444] hover:text-white hover:bg-white/5 transition-colors"
-        >
-          <ChatCircle size={18} />
-          {msgCount > 0 && (
-            <span className="absolute -top-1 -right-1 min-w-[16px] h-4 px-1 rounded-full bg-[#DC5B17] text-white text-[9px] font-bold flex items-center justify-center">
-              {msgCount}
-            </span>
-          )}
-        </button>
+      {/* Right — icon group + avatar in one pill container */}
+      <div className="flex-1 flex justify-end">
+        <div className="flex items-center gap-1 pl-2 pr-1 py-1 rounded-2xl bg-white/[0.03] border border-white/[0.06]">
 
-        {/* Notifications */}
-        <button
-          onClick={() => setNotifOpen(true)}
-          className="relative w-9 h-9 flex items-center justify-center rounded-xl text-[#444] hover:text-white hover:bg-white/5 transition-colors"
-        >
-          <Bell size={18} />
-          {notifCount > 0 && (
-            <span className="absolute -top-1 -right-1 min-w-[16px] h-4 px-1 rounded-full bg-[#DC5B17] text-white text-[9px] font-bold flex items-center justify-center">
-              {notifCount}
-            </span>
-          )}
-        </button>
+          {/* Messages */}
+          <button
+            onClick={() => setMsgOpen(true)}
+            className="relative w-9 h-9 flex items-center justify-center rounded-xl text-[#555] hover:text-white hover:bg-white/[0.06] transition-colors"
+          >
+            <ChatCircle size={18} />
+            {msgCount > 0 && (
+              <span className="absolute -top-0.5 -right-0.5 min-w-[15px] h-[15px] px-1 rounded-full bg-[#DC5B17] text-white text-[9px] font-bold flex items-center justify-center">
+                {msgCount}
+              </span>
+            )}
+          </button>
 
-        <AvatarDropdown />
+          {/* Notifications */}
+          <button
+            onClick={() => setNotifOpen(true)}
+            className="relative w-9 h-9 flex items-center justify-center rounded-xl text-[#555] hover:text-white hover:bg-white/[0.06] transition-colors"
+          >
+            <Bell size={18} />
+            {notifCount > 0 && (
+              <span className="absolute -top-0.5 -right-0.5 min-w-[15px] h-[15px] px-1 rounded-full bg-[#DC5B17] text-white text-[9px] font-bold flex items-center justify-center">
+                {notifCount}
+              </span>
+            )}
+          </button>
+
+          {/* Divider */}
+          <div className="w-px h-5 bg-white/[0.08] mx-1" />
+
+          {/* Avatar + caret */}
+          <AvatarDropdown />
+
+        </div>
       </div>
 
     </header>
