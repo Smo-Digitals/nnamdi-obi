@@ -195,31 +195,37 @@ export function AdminHeader() {
       {/* Right */}
       <div className="flex-1 flex justify-end items-center gap-5">
 
-        {/* Messages — outside pill */}
-        <button
-          onClick={() => setMsgOpen(true)}
-          className="relative w-9 h-9 flex items-center justify-center rounded-xl text-[#555] hover:text-white hover:bg-white/[0.06] transition-colors"
-        >
-          <ChatCircle size={19} />
+        {/* Messages — icon box */}
+        <div className="relative shrink-0">
+          <button
+            onClick={() => setMsgOpen(true)}
+            className="w-10 h-10 flex items-center justify-center rounded-xl border text-[#555] hover:text-white transition-colors"
+            style={{ backgroundColor: 'var(--adm-pill)', borderColor: 'var(--adm-border)' }}
+          >
+            <ChatCircle size={19} />
+          </button>
           {msgCount > 0 && (
-            <span className="absolute -top-1 -right-1 min-w-[16px] h-4 px-1 rounded-full bg-[#DC5B17] text-white text-[9px] font-bold flex items-center justify-center leading-none">
+            <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[#DC5B17] text-white text-[9px] font-bold flex items-center justify-center leading-none shadow-sm">
               {msgCount}
             </span>
           )}
-        </button>
+        </div>
 
-        {/* Notifications — outside pill */}
-        <button
-          onClick={() => setNotifOpen(true)}
-          className="relative w-9 h-9 flex items-center justify-center rounded-xl text-[#555] hover:text-white hover:bg-white/[0.06] transition-colors"
-        >
-          <Bell size={19} />
+        {/* Notifications — icon box */}
+        <div className="relative shrink-0">
+          <button
+            onClick={() => setNotifOpen(true)}
+            className="w-10 h-10 flex items-center justify-center rounded-xl border text-[#555] hover:text-white transition-colors"
+            style={{ backgroundColor: 'var(--adm-pill)', borderColor: 'var(--adm-border)' }}
+          >
+            <Bell size={19} />
+          </button>
           {notifCount > 0 && (
-            <span className="absolute -top-1 -right-1 min-w-[16px] h-4 px-1 rounded-full bg-[#DC5B17] text-white text-[9px] font-bold flex items-center justify-center leading-none">
+            <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[#DC5B17] text-white text-[9px] font-bold flex items-center justify-center leading-none shadow-sm">
               {notifCount}
             </span>
           )}
-        </button>
+        </div>
 
         {/* Pill: toggle + avatar */}
         <div className="flex items-center gap-0.5 pl-1.5 pr-1.5 py-1.5 rounded-2xl border" style={{ backgroundColor: 'var(--adm-pill)', borderColor: 'var(--adm-border)' }}>
