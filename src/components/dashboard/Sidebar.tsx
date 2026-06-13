@@ -15,6 +15,7 @@ import {
   CaretLeft,
   CaretRight,
   Bell,
+  ChatCircle,
 } from 'phosphor-react';
 import { adminLogout } from '@/app/(auth)/actions';
 
@@ -23,6 +24,7 @@ const nav = [
   { href: '/admin/analytics',      label: 'Analytics',     icon: ChartBar },
   { href: '/admin/courses',        label: 'Courses',       icon: BookOpen },
   { href: '/admin/members',        label: 'Members',       icon: Users },
+  { href: '/admin/messages',       label: 'Messages',      icon: ChatCircle },
   { href: '/admin/notifications',  label: 'Notifications', icon: Bell },
   { href: '/admin/settings',       label: 'Settings',      icon: Gear },
 ];

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { MagnifyingGlass, Bell, ChatCircle, UserCircle, Wallet, Gear, CaretRight, SignOut } from 'phosphor-react';
 import { adminLogout } from '@/app/(auth)/actions';
 import { NotificationsPanel } from '@/components/dashboard/NotificationsPanel';
+import { MessagesPanel } from '@/components/dashboard/MessagesPanel';
 
 function getGreeting() {
   const h = new Date().getHours();
@@ -98,10 +99,12 @@ function AvatarDropdown() {
 
 export function AdminHeader() {
   const [notifOpen, setNotifOpen] = useState(false);
+  const [msgOpen, setMsgOpen]     = useState(false);
 
   return (
     <>
     <NotificationsPanel open={notifOpen} onClose={() => setNotifOpen(false)} />
+    <MessagesPanel open={msgOpen} onClose={() => setMsgOpen(false)} />
     <header className="h-16 shrink-0 flex items-center gap-6 px-8 border-b border-white/[0.06] bg-[#050505]">
 
       {/* Greeting */}
@@ -122,7 +125,10 @@ export function AdminHeader() {
       {/* Right actions */}
       <div className="flex items-center gap-1">
         {/* Messages */}
-        <button className="relative w-9 h-9 flex items-center justify-center rounded-xl text-[#444] hover:text-white hover:bg-white/5 transition-colors">
+        <button
+          onClick={() => setMsgOpen(true)}
+          className="relative w-9 h-9 flex items-center justify-center rounded-xl text-[#444] hover:text-white hover:bg-white/5 transition-colors"
+        >
           <ChatCircle size={18} />
           <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-[#DC5B17]" />
         </button>
