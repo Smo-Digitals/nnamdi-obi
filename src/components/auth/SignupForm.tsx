@@ -3,7 +3,21 @@
 import { useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Eye, EyeSlash, Check } from 'phosphor-react';
+import { useFormStatus } from 'react-dom';
 import { signup, loginWithGoogle } from '@/app/(auth)/actions';
+
+function SubmitButton({ allRulesMet }: { allRulesMet: boolean }) {
+  const { pending } = useFormStatus();
+  return (
+    <button
+      type="submit"
+      disabled={!allRulesMet || pending}
+      className="w-full py-3 rounded-[10px] bg-[#DC5B17] hover:bg-[#c44f13] group-data-[theme=light]:bg-black group-data-[theme=light]:hover:bg-[#222] text-white text-sm font-semibold transition-colors mt-4 disabled:opacity-40 disabled:cursor-not-allowed"
+    >
+      {pending ? 'Creating account…' : 'Create account →'}
+    </button>
+  );
+}
 
 const rules = [
   { id: 'length',  label: 'At least 8 characters',       test: (p: string) => p.length >= 8 },
@@ -141,13 +155,7 @@ export function SignupForm() {
           </div>}
         </div>
 
-        <button
-          type="submit"
-          disabled={!allRulesMet}
-          className="w-full py-3 rounded-[10px] bg-[#DC5B17] hover:bg-[#c44f13] group-data-[theme=light]:bg-black group-data-[theme=light]:hover:bg-[#222] text-white text-sm font-semibold transition-colors mt-4 disabled:opacity-40 disabled:cursor-not-allowed"
-        >
-          Create account →
-        </button>
+        <SubmitButton allRulesMet={allRulesMet} />
       </form>
     </div>
   );

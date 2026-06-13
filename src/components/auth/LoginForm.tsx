@@ -3,7 +3,21 @@
 import { useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Eye, EyeSlash } from 'phosphor-react';
+import { useFormStatus } from 'react-dom';
 import { login, loginWithGoogle } from '@/app/(auth)/actions';
+
+function SignInButton() {
+  const { pending } = useFormStatus();
+  return (
+    <button
+      type="submit"
+      disabled={pending}
+      className="w-full py-3 rounded-[10px] bg-[#DC5B17] hover:bg-[#c44f13] group-data-[theme=light]:bg-black group-data-[theme=light]:hover:bg-[#222] text-white text-sm font-semibold transition-colors mt-4 flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
+    >
+      {pending ? 'Signing in…' : 'Sign In →'}
+    </button>
+  );
+}
 
 export function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -72,12 +86,7 @@ export function LoginForm() {
           </div>
         </div>
 
-        <button
-          type="submit"
-          className="w-full py-3 rounded-[10px] bg-[#DC5B17] hover:bg-[#c44f13] group-data-[theme=light]:bg-black group-data-[theme=light]:hover:bg-[#222] text-white text-sm font-semibold transition-colors mt-4 flex items-center justify-center gap-2"
-        >
-          Sign In →
-        </button>
+        <SignInButton />
       </form>
 
       <a
