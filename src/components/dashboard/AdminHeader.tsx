@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { MagnifyingGlass, Bell, ChatCircle, UserCircle, Wallet, Gear, CaretRight, SignOut } from 'phosphor-react';
 import { adminLogout } from '@/app/(auth)/actions';
+import { NotificationsPanel } from '@/components/dashboard/NotificationsPanel';
 
 function getGreeting() {
   const h = new Date().getHours();
@@ -96,7 +97,11 @@ function AvatarDropdown() {
 }
 
 export function AdminHeader() {
+  const [notifOpen, setNotifOpen] = useState(false);
+
   return (
+    <>
+    <NotificationsPanel open={notifOpen} onClose={() => setNotifOpen(false)} />
     <header className="h-16 shrink-0 flex items-center gap-6 px-8 border-b border-white/[0.06] bg-[#050505]">
 
       {/* Greeting */}
@@ -123,7 +128,10 @@ export function AdminHeader() {
         </button>
 
         {/* Notifications */}
-        <button className="relative w-9 h-9 flex items-center justify-center rounded-xl text-[#444] hover:text-white hover:bg-white/5 transition-colors">
+        <button
+          onClick={() => setNotifOpen(true)}
+          className="relative w-9 h-9 flex items-center justify-center rounded-xl text-[#444] hover:text-white hover:bg-white/5 transition-colors"
+        >
           <Bell size={18} />
           <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-[#DC5B17]" />
         </button>
@@ -132,5 +140,6 @@ export function AdminHeader() {
       </div>
 
     </header>
+    </>
   );
 }
