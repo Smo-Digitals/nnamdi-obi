@@ -203,7 +203,7 @@ export function AdminHeader() {
           >
             <ChatCircle size={18} />
             {msgCount > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 min-w-[15px] h-[15px] px-1 rounded-full bg-[#DC5B17] text-white text-[9px] font-bold flex items-center justify-center">
+              <span className="absolute -top-1.5 -right-1.5 min-w-[16px] h-4 px-1 rounded-full bg-[#DC5B17] text-white text-[9px] font-bold flex items-center justify-center leading-none">
                 {msgCount}
               </span>
             )}
@@ -216,7 +216,7 @@ export function AdminHeader() {
           >
             <Bell size={18} />
             {notifCount > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 min-w-[15px] h-[15px] px-1 rounded-full bg-[#DC5B17] text-white text-[9px] font-bold flex items-center justify-center">
+              <span className="absolute -top-1.5 -right-1.5 min-w-[16px] h-4 px-1 rounded-full bg-[#DC5B17] text-white text-[9px] font-bold flex items-center justify-center leading-none">
                 {notifCount}
               </span>
             )}
