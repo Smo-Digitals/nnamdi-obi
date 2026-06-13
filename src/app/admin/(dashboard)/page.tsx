@@ -70,7 +70,7 @@ export default function DashboardPage() {
           <div className="flex flex-col gap-4">
             {recentMembers.map(({ name, course, time }) => (
               <div key={name} className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center shrink-0">
+                <div className="w-8 h-8 rounded-xl bg-white/5 flex items-center justify-center shrink-0">
                   <span className="text-[#aaa] text-xs font-semibold">{name[0]}</span>
                 </div>
                 <div className="flex-1 min-w-0">

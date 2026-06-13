@@ -117,7 +117,7 @@ export default function MessagesPage() {
             >
               <div className="relative shrink-0">
                 <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold"
+                  className="w-10 h-10 rounded-xl flex items-center justify-center text-xs font-bold"
                   style={{ backgroundColor: `${c.color}25`, color: c.color }}
                 >
                   {c.initials}
@@ -148,7 +148,7 @@ export default function MessagesPage() {
         <div className="h-16 shrink-0 flex items-center gap-4 px-6 border-b border-white/[0.06]">
           <div className="relative shrink-0">
             <div
-              className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold"
+              className="w-9 h-9 rounded-xl flex items-center justify-center text-xs font-bold"
               style={{ backgroundColor: `${active.color}25`, color: active.color }}
             >
               {active.initials}

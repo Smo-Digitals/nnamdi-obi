@@ -151,7 +151,7 @@ export function MessagesPanel({ open, onClose, onRead }: Props) {
                       className="w-full flex items-center gap-4 px-6 py-4 border-b border-white/[0.04] hover:bg-white/[0.02] transition-colors text-left"
                     >
                       <div className="relative shrink-0">
-                        <div className="w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold"
+                        <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xs font-bold"
                           style={{ backgroundColor: `${c.color}25`, color: c.color }}>{c.initials}</div>
                         {c.online && <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-green-500 border-2 border-[#0e0e0e]" />}
                       </div>
@@ -188,7 +188,7 @@ export function MessagesPanel({ open, onClose, onRead }: Props) {
                     <ArrowLeft size={16} />
                   </button>
                   <div className="relative shrink-0">
-                    <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
+                    <div className="w-8 h-8 rounded-xl flex items-center justify-center text-xs font-bold"
                       style={{ backgroundColor: `${active.color}25`, color: active.color }}>{active.initials}</div>
                     {active.online && <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-green-500 border-2 border-[#0e0e0e]" />}
                   </div>

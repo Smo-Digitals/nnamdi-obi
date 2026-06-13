@@ -37,7 +37,7 @@ function AvatarDropdown() {
       {/* Avatar button */}
       <button
         onClick={() => setOpen((o) => !o)}
-        className="relative w-8 h-8 rounded-full bg-[#DC5B17] flex items-center justify-center text-white text-xs font-bold hover:bg-[#c44f13] transition-colors"
+        className="relative w-8 h-8 rounded-xl bg-[#DC5B17] flex items-center justify-center text-white text-xs font-bold hover:bg-[#c44f13] transition-colors"
       >
         N
         <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-green-500 border-2 border-[#050505]" />
@@ -50,7 +50,7 @@ function AvatarDropdown() {
           {/* Profile header */}
           <div className="flex items-center gap-3 p-4 border-b border-white/[0.06]">
             <div className="relative shrink-0">
-              <div className="w-11 h-11 rounded-full bg-[#DC5B17] flex items-center justify-center text-white font-bold text-base">
+              <div className="w-11 h-11 rounded-xl bg-[#DC5B17] flex items-center justify-center text-white font-bold text-base">
                 N
               </div>
               <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-green-500 border-2 border-[#111]" />
