@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import { motion, AnimatePresence } from 'framer-motion';
 import { MagnifyingGlass, Bell, ChatCircle, UserCircle, Wallet, Gear, CaretRight, SignOut } from 'phosphor-react';
 import { adminLogout } from '@/app/(auth)/actions';
 import { NotificationsPanel } from '@/components/dashboard/NotificationsPanel';
@@ -62,22 +63,32 @@ function AvatarDropdown() {
       {/* Avatar button + caret */}
       <button
         onClick={() => setOpen((o) => !o)}
-        className="flex items-center gap-1.5 pr-1 rounded-xl hover:bg-white/[0.06] transition-colors"
+        className="flex items-center gap-2 px-1 rounded-xl hover:bg-white/[0.06] transition-colors"
       >
-        <div className="relative w-8 h-8 rounded-xl bg-[#DC5B17] flex items-center justify-center text-white text-xs font-bold overflow-hidden shrink-0">
-          {avatarUrl
-            // eslint-disable-next-line @next/next/no-img-element
-            ? <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
-            : initials
-          }
+        {/* outer relative wrapper so online dot sits outside overflow-hidden */}
+        <div className="relative shrink-0">
+          <div className="w-8 h-8 rounded-xl bg-[#DC5B17] flex items-center justify-center text-white text-xs font-bold overflow-hidden">
+            {avatarUrl
+              // eslint-disable-next-line @next/next/no-img-element
+              ? <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+              : initials
+            }
+          </div>
           <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-green-500 border-2 border-[#050505]" />
         </div>
-        <CaretRight size={11} className={`text-[#444] transition-transform ${open ? 'rotate-90' : ''}`} />
+        <CaretRight size={11} className={`text-[#555] transition-transform duration-200 ${open ? 'rotate-90' : ''}`} />
       </button>
 
       {/* Dropdown */}
+      <AnimatePresence>
       {open && (
-        <div className="absolute right-0 top-11 w-64 rounded-2xl bg-[#111] border border-white/[0.08] shadow-2xl shadow-black/60 overflow-hidden z-50">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95, y: -6 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.95, y: -6 }}
+          transition={{ duration: 0.15, ease: [0.22, 1, 0.36, 1] }}
+          className="absolute right-0 top-12 w-64 rounded-2xl bg-[#111] border border-white/[0.08] shadow-2xl shadow-black/60 overflow-hidden z-50"
+        >
 
           {/* Profile header */}
           <div className="flex items-center gap-3 p-4 border-b border-white/[0.06]">
@@ -128,8 +139,9 @@ function AvatarDropdown() {
               </button>
             </form>
           </div>
-        </div>
+        </motion.div>
       )}
+      </AnimatePresence>
     </div>
   );
 }
@@ -179,7 +191,7 @@ export function AdminHeader() {
 
       {/* Right — icon group + avatar in one pill container */}
       <div className="flex-1 flex justify-end">
-        <div className="flex items-center gap-1 pl-2 pr-1 py-1 rounded-2xl bg-white/[0.03] border border-white/[0.06]">
+        <div className="flex items-center gap-0.5 pl-2 pr-2 py-1.5 rounded-2xl bg-white/[0.03] border border-white/[0.06]">
 
           {/* Messages */}
           <button
