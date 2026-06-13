@@ -62,7 +62,8 @@ export default function ProfilePage() {
     setUploading(false);
 
     if (!res.ok) {
-      setStatus({ type: 'error', message: 'Image upload failed. Please try again.' });
+      const body = await res.json().catch(() => ({})) as { error?: string };
+      setStatus({ type: 'error', message: body.error ?? 'Image upload failed. Please try again.' });
       return;
     }
     const { url } = await res.json() as { url: string };
@@ -116,7 +117,12 @@ export default function ProfilePage() {
             <div className="w-16 h-16 rounded-2xl overflow-hidden bg-[#DC5B17] flex items-center justify-center">
               {avatarUrl && !uploading ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+                <img
+                  src={avatarUrl}
+                  alt="Avatar"
+                  className="w-full h-full object-cover"
+                  onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                />
               ) : (
                 <span className="text-white text-xl font-bold">{initials}</span>
               )}
