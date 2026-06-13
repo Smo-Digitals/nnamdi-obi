@@ -46,7 +46,7 @@ export function Sidebar() {
       }`}
     >
       {/* Brand + collapse toggle */}
-      <div className={`flex items-center border-b border-white/5 h-16 shrink-0 ${collapsed ? 'justify-center px-0' : 'px-4 gap-3'}`}>
+      <div className={`flex items-center border-b border-white/5 h-20 shrink-0 ${collapsed ? 'justify-center px-0' : 'px-4 gap-3'}`}>
         <div className="w-8 h-8 rounded-lg bg-[#DC5B17] flex items-center justify-center shrink-0">
           <span className="text-white text-sm font-bold font-[family-name:var(--font-dm-mono)]">N</span>
         </div>
