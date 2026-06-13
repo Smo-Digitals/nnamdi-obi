@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, CheckCircle, Users, BookOpen, CurrencyDollar, Bell, ArrowRight } from 'phosphor-react';
 
@@ -127,9 +128,13 @@ export function NotificationsPanel({ open, onClose }: Props) {
 
             {/* Footer */}
             <div className="border-t border-white/[0.06] p-4">
-              <button className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.06] text-[#888] text-sm hover:text-white hover:bg-white/[0.07] transition-colors">
+              <Link
+                href="/admin/notifications"
+                onClick={onClose}
+                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.06] text-[#888] text-sm hover:text-white hover:bg-white/[0.07] transition-colors"
+              >
                 See all notifications <ArrowRight size={14} />
-              </button>
+              </Link>
             </div>
           </motion.aside>
         </>
@@ -143,10 +148,9 @@ function NotifItem({ n, onRead }: { n: Notification; onRead: (id: string) => voi
 
   return (
     <div
-      className={`flex gap-4 px-6 py-4 border-b border-white/[0.04] transition-colors cursor-pointer group ${
-        n.read ? 'opacity-50 hover:opacity-70' : 'hover:bg-white/[0.02]'
+      className={`flex gap-4 px-6 py-4 border-b border-white/[0.04] transition-colors group ${
+        n.read ? 'opacity-50' : 'hover:bg-white/[0.02]'
       }`}
-      onClick={() => !n.read && onRead(n.id)}
     >
       {/* Icon */}
       <div className={`w-9 h-9 rounded-xl ${bg} flex items-center justify-center shrink-0 mt-0.5`}>
@@ -162,7 +166,17 @@ function NotifItem({ n, onRead }: { n: Notification; onRead: (id: string) => voi
           )}
         </div>
         <p className="text-[#555] text-xs leading-relaxed mt-0.5">{n.body}</p>
-        <p className="text-[#383838] text-[10px] mt-1.5">{n.time}</p>
+        <div className="flex items-center justify-between mt-1.5">
+          <p className="text-[#383838] text-[10px]">{n.time}</p>
+          {!n.read && (
+            <button
+              onClick={() => onRead(n.id)}
+              className="text-[10px] text-[#DC5B17] hover:underline underline-offset-2 opacity-0 group-hover:opacity-100 transition-opacity"
+            >
+              Mark as read
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
