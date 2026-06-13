@@ -7,8 +7,8 @@ import { createClient } from '@/lib/supabase/client';
 
 type Status = { type: 'success' | 'error'; message: string } | null;
 
-const inputCls = 'w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/[0.07] text-white text-sm placeholder:text-[#444] outline-none focus:border-[#DC5B17] focus:ring-2 focus:ring-[#DC5B17]/20 transition';
-const labelCls = 'text-xs font-medium text-[#555] mb-1.5 block';
+const inputCls = 'w-full px-3 py-2 rounded-lg bg-white/[0.04] border border-white/[0.07] text-white text-sm placeholder:text-[#3a3a3a] outline-none focus:border-[#DC5B17] focus:ring-1 focus:ring-[#DC5B17]/20 transition';
+const labelCls = 'text-[11px] font-medium text-[#555] mb-1 block uppercase tracking-wide';
 
 export default function ProfilePage() {
   const supabase = createClient();
@@ -109,132 +109,136 @@ export default function ProfilePage() {
   const initials      = [firstName[0], lastName[0]].filter(Boolean).join('').toUpperCase() || 'N';
 
   return (
-    <div className="p-8 max-w-2xl">
-      <div className="mb-8">
-        <h1 className="text-white text-2xl font-bold">Profile</h1>
+    <div className="p-8">
+      <div className="mb-6">
+        <h1 className="text-white text-xl font-bold">Profile</h1>
         <p className="text-[#444] text-sm mt-0.5">Update your personal information and photo.</p>
       </div>
 
-      <div className="bg-[#0e0e0e] border border-white/[0.06] rounded-2xl p-8 flex flex-col gap-8">
+      <div className="bg-[#0e0e0e] border border-white/[0.06] rounded-2xl p-6">
 
-        {/* Avatar */}
-        <div className="flex items-center gap-6">
+        {/* Avatar row */}
+        <div className="flex items-center gap-5 mb-6 pb-6 border-b border-white/[0.05]">
           <div className="relative shrink-0">
-            <div className="w-24 h-24 rounded-full overflow-hidden bg-[#DC5B17] flex items-center justify-center">
+            <div className="w-16 h-16 rounded-full overflow-hidden bg-[#DC5B17] flex items-center justify-center">
               {displayAvatar ? (
                 <Image src={displayAvatar} alt="Avatar" fill className="object-cover" />
               ) : (
-                <span className="text-white text-3xl font-bold">{initials}</span>
+                <span className="text-white text-xl font-bold">{initials}</span>
               )}
             </div>
             <button
               onClick={() => fileRef.current?.click()}
-              className="absolute bottom-0 right-0 w-8 h-8 rounded-full bg-[#DC5B17] border-2 border-[#0e0e0e] flex items-center justify-center text-white hover:bg-[#c44f13] transition-colors"
+              className="absolute bottom-0 right-0 w-6 h-6 rounded-full bg-[#DC5B17] border-2 border-[#0e0e0e] flex items-center justify-center text-white hover:bg-[#c44f13] transition-colors"
             >
-              <Camera size={14} weight="fill" />
+              <Camera size={11} weight="fill" />
             </button>
             <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={onFileChange} />
           </div>
 
-          <div className="flex gap-3">
+          <div className="flex gap-2">
             <button
               onClick={() => fileRef.current?.click()}
-              className="px-5 py-2.5 rounded-xl bg-[#DC5B17] text-white text-sm font-semibold hover:bg-[#c44f13] transition-colors"
+              className="px-4 py-1.5 rounded-lg bg-[#DC5B17] text-white text-xs font-semibold hover:bg-[#c44f13] transition-colors"
             >
               {uploading ? 'Uploading…' : 'Upload New'}
             </button>
             <button
               onClick={deleteAvatar}
-              className="px-5 py-2.5 rounded-xl bg-white/[0.05] border border-white/[0.07] text-[#888] text-sm font-medium hover:text-red-400 hover:border-red-400/20 hover:bg-red-400/5 transition-colors"
+              className="px-4 py-1.5 rounded-lg bg-white/[0.05] border border-white/[0.07] text-[#777] text-xs font-medium hover:text-red-400 hover:border-red-400/20 hover:bg-red-400/5 transition-colors"
             >
               Delete avatar
             </button>
           </div>
         </div>
 
-        {/* First + Last name */}
-        <div className="grid grid-cols-2 gap-5">
+        {/* Fields grid */}
+        <div className="grid grid-cols-3 gap-4">
+
+          {/* First name */}
           <div>
             <label className={labelCls}>First Name <span className="text-[#DC5B17]">*</span></label>
             <input value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="First name" className={inputCls} />
           </div>
+
+          {/* Last name */}
           <div>
             <label className={labelCls}>Last Name <span className="text-[#DC5B17]">*</span></label>
             <input value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="Last name" className={inputCls} />
           </div>
-        </div>
 
-        {/* Email + Phone */}
-        <div className="grid grid-cols-2 gap-5">
+          {/* Email */}
           <div>
             <label className={labelCls}>Email</label>
-            <input value={email} disabled placeholder="examples@gmail.com"
-              className="w-full px-4 py-3 rounded-xl bg-white/[0.02] border border-white/[0.04] text-[#555] text-sm cursor-not-allowed" />
+            <input value={email} disabled placeholder="email@example.com"
+              className="w-full px-3 py-2 rounded-lg bg-white/[0.02] border border-white/[0.04] text-[#444] text-sm cursor-not-allowed" />
           </div>
+
+          {/* Phone */}
           <div>
             <label className={labelCls}>Mobile Number <span className="text-[#DC5B17]">*</span></label>
-            <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-white/[0.04] border border-white/[0.07] focus-within:border-[#DC5B17] focus-within:ring-2 focus-within:ring-[#DC5B17]/20 transition">
+            <div className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-white/[0.04] border border-white/[0.07] focus-within:border-[#DC5B17] focus-within:ring-1 focus-within:ring-[#DC5B17]/20 transition">
               <span className="text-sm shrink-0">🇳🇬</span>
               <span className="text-[#555] text-sm shrink-0">+234</span>
               <input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="0806 123 7890"
-                className="flex-1 bg-transparent text-white text-sm placeholder:text-[#444] outline-none" />
+                className="flex-1 bg-transparent text-white text-sm placeholder:text-[#3a3a3a] outline-none" />
             </div>
           </div>
-        </div>
 
-        {/* Gender */}
-        <div>
-          <label className={labelCls}>Gender</label>
-          <div className="flex gap-3">
-            {(['male', 'female'] as const).map((g) => (
-              <button
-                key={g}
-                onClick={() => setGender(g)}
-                className={`flex items-center gap-2.5 px-5 py-3 rounded-xl border text-sm font-medium transition-colors capitalize ${
-                  gender === g
-                    ? 'border-[#DC5B17] bg-[#DC5B17]/10 text-white'
-                    : 'border-white/[0.07] bg-white/[0.04] text-[#666] hover:text-white hover:border-white/20'
-                }`}
-              >
-                <span className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${gender === g ? 'border-[#DC5B17]' : 'border-[#444]'}`}>
-                  {gender === g && <span className="w-2 h-2 rounded-full bg-[#DC5B17]" />}
-                </span>
-                {g.charAt(0).toUpperCase() + g.slice(1)}
-              </button>
-            ))}
+          {/* Gender */}
+          <div>
+            <label className={labelCls}>Gender</label>
+            <div className="flex gap-2 mt-0.5">
+              {(['male', 'female'] as const).map((g) => (
+                <button
+                  key={g}
+                  onClick={() => setGender(g)}
+                  className={`flex items-center gap-2 px-3 py-2 rounded-lg border text-xs font-medium transition-colors capitalize ${
+                    gender === g
+                      ? 'border-[#DC5B17] bg-[#DC5B17]/10 text-white'
+                      : 'border-white/[0.07] bg-white/[0.04] text-[#666] hover:text-white hover:border-white/20'
+                  }`}
+                >
+                  <span className={`w-3.5 h-3.5 rounded-full border-2 flex items-center justify-center shrink-0 ${gender === g ? 'border-[#DC5B17]' : 'border-[#444]'}`}>
+                    {gender === g && <span className="w-1.5 h-1.5 rounded-full bg-[#DC5B17]" />}
+                  </span>
+                  {g.charAt(0).toUpperCase() + g.slice(1)}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
 
-        {/* Residential Address */}
-        <div>
-          <label className={labelCls}>Residential Address</label>
-          <textarea
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            rows={3}
-            placeholder="e.g. 12 Broad Street, Lagos Island, Lagos"
-            className="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/[0.07] text-white text-sm placeholder:text-[#444] outline-none focus:border-[#DC5B17] focus:ring-2 focus:ring-[#DC5B17]/20 transition resize-none"
-          />
-        </div>
-
-        {/* Status */}
-        {status && (
-          <div className={`flex items-center gap-2 px-4 py-3 rounded-xl text-sm ${
-            status.type === 'success'
-              ? 'bg-green-500/10 border border-green-500/20 text-green-400'
-              : 'bg-red-500/10 border border-red-500/20 text-red-400'
-          }`}>
-            {status.type === 'success' ? <CheckCircle size={15} weight="fill" /> : <WarningCircle size={15} weight="fill" />}
-            {status.message}
+          {/* Address — spans remaining column */}
+          <div>
+            <label className={labelCls}>Residential Address</label>
+            <input
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              placeholder="e.g. 12 Broad Street, Lagos Island"
+              className={inputCls}
+            />
           </div>
-        )}
 
-        {/* Save */}
-        <div>
+        </div>
+
+        {/* Status + Save */}
+        <div className="flex items-center justify-between mt-6 pt-5 border-t border-white/[0.05]">
+          <div className="flex-1 mr-4">
+            {status && (
+              <div className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs ${
+                status.type === 'success'
+                  ? 'bg-green-500/10 border border-green-500/20 text-green-400'
+                  : 'bg-red-500/10 border border-red-500/20 text-red-400'
+              }`}>
+                {status.type === 'success' ? <CheckCircle size={13} weight="fill" /> : <WarningCircle size={13} weight="fill" />}
+                {status.message}
+              </div>
+            )}
+          </div>
           <button
             onClick={save}
             disabled={saving || uploading}
-            className="px-8 py-3 rounded-xl bg-[#DC5B17] text-white text-sm font-semibold hover:bg-[#c44f13] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            className="px-6 py-2 rounded-lg bg-[#DC5B17] text-white text-sm font-semibold hover:bg-[#c44f13] transition-colors disabled:opacity-40 disabled:cursor-not-allowed shrink-0"
           >
             {saving ? 'Saving…' : 'Save Changes'}
           </button>
