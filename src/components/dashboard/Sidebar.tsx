@@ -94,7 +94,7 @@ export function Sidebar() {
       <div className="flex-1" />
 
       {/* Upgrade card */}
-      <div className="mx-3 mb-3 p-4 rounded-xl bg-[#DC5B17]/10 border border-[#DC5B17]/20">
+      <div className="mx-3 mb-3 p-4 rounded-xl bg-white/[0.04] border border-white/[0.07]">
         <div className="flex items-center gap-2 mb-2">
           <Lightning size={16} weight="fill" className="text-[#DC5B17]" />
           <span className="text-white text-xs font-semibold">Upgrade to Pro</span>

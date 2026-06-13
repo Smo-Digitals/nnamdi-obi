@@ -81,8 +81,8 @@ export default function DashboardPage() {
           <div className="flex flex-col gap-4">
             {recentMembers.map(({ name, course, time }) => (
               <div key={name} className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-[#DC5B17]/20 flex items-center justify-center shrink-0">
-                  <span className="text-[#DC5B17] text-xs font-semibold">{name[0]}</span>
+                <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center shrink-0">
+                  <span className="text-[#aaa] text-xs font-semibold">{name[0]}</span>
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-white text-xs font-medium truncate">{name}</p>
@@ -129,7 +129,7 @@ export default function DashboardPage() {
                 <button className="flex-1 py-1.5 rounded-lg bg-white/5 text-[#888] text-xs hover:bg-white/10 hover:text-white transition-colors">
                   Edit
                 </button>
-                <button className="flex-1 py-1.5 rounded-lg bg-[#DC5B17]/10 text-[#DC5B17] text-xs hover:bg-[#DC5B17]/20 transition-colors">
+                <button className="flex-1 py-1.5 rounded-lg bg-white/5 text-[#aaa] text-xs hover:bg-white/10 hover:text-white transition-colors">
                   Share
                 </button>
               </div>

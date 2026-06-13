@@ -30,7 +30,7 @@ export function GrowthChart() {
       <svg viewBox={`0 0 ${W} ${H}`} className="w-full" style={{ minWidth: 280 }}>
         <defs>
           <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#DC5B17" stopOpacity="0.25" />
+            <stop offset="0%" stopColor="#DC5B17" stopOpacity="0.08" />
             <stop offset="100%" stopColor="#DC5B17" stopOpacity="0" />
           </linearGradient>
         </defs>
