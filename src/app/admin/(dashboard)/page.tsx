@@ -3,6 +3,7 @@
 import { GrowthChart } from '@/components/dashboard/GrowthChart';
 import { Users, BookOpen, CurrencyDollar, Bell } from 'phosphor-react';
 
+
 const stats = [
   { label: 'Total Members',    value: '1,240', icon: Users,           delta: '+12%' },
   { label: 'Active Courses',   value: '8',     icon: BookOpen,        delta: '+2' },
@@ -28,18 +29,6 @@ const courses = [
 export default function DashboardPage() {
   return (
     <div className="p-8 min-h-screen">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-white text-2xl font-bold">Welcome back, Nnamdi!</h1>
-          <p className="text-[#555] text-sm mt-0.5">Here&apos;s what&apos;s happening with your community.</p>
-        </div>
-        <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-[#aaa] text-sm hover:text-white hover:bg-white/10 transition-colors">
-          <CurrencyDollar size={15} />
-          Export report
-        </button>
-      </div>
-
       {/* Stats */}
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
         {stats.map(({ label, value, icon: Icon, delta }) => {
