@@ -126,6 +126,14 @@ export default function ProfilePage() {
               ) : (
                 <span className="text-white text-xl font-bold">{initials}</span>
               )}
+              {uploading && (
+                <div className="absolute inset-0 bg-black/60 rounded-full flex items-center justify-center">
+                  <svg className="animate-spin w-5 h-5 text-white" viewBox="0 0 24 24" fill="none">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" />
+                    <path className="opacity-90" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+                  </svg>
+                </div>
+              )}
             </div>
             <button
               onClick={() => fileRef.current?.click()}
@@ -141,7 +149,7 @@ export default function ProfilePage() {
               onClick={() => fileRef.current?.click()}
               className="px-4 py-1.5 rounded-lg bg-[#DC5B17] text-white text-xs font-semibold hover:bg-[#c44f13] transition-colors"
             >
-              {uploading ? 'Uploading…' : 'Upload New'}
+              Upload New
             </button>
             <button
               onClick={deleteAvatar}
