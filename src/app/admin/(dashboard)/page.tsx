@@ -1,131 +1,124 @@
-'use client';
+import { createClient } from '@/lib/supabase/server';
+import { Users, BookOpen, CurrencyDollar, ChartLine } from 'phosphor-react';
+import { EmptyChart } from '@/components/dashboard/EmptyChart';
 
-import { GrowthChart } from '@/components/dashboard/GrowthChart';
-import { Users, BookOpen, CurrencyDollar, Bell } from 'phosphor-react';
+async function getStats() {
+  const supabase = await createClient();
 
+  const { count: memberCount } = await supabase
+    .from('profiles')
+    .select('*', { count: 'exact', head: true })
+    .eq('role', 'member');
 
-const stats = [
-  { label: 'Total Members',    value: '1,240', icon: Users,           delta: '+12%' },
-  { label: 'Active Courses',   value: '8',     icon: BookOpen,        delta: '+2' },
-  { label: 'Revenue (Jun)',     value: '₦480k', icon: CurrencyDollar,  delta: '+18%' },
-  { label: 'Pending Payments', value: '34',    icon: Bell,            delta: '-5' },
-];
+  const { data: recentMembers } = await supabase
+    .from('profiles')
+    .select('id, full_name, created_at')
+    .eq('role', 'member')
+    .order('created_at', { ascending: false })
+    .limit(5);
 
-const recentMembers = [
-  { name: 'Adaeze Okonkwo',  course: 'Business Growth',    time: '2m ago' },
-  { name: 'Emeka Nwosu',     course: 'Tech Foundations',   time: '14m ago' },
-  { name: 'Chioma Eze',      course: 'Business Growth',    time: '1h ago' },
-  { name: 'Tunde Adeyemi',   course: 'Leadership 101',     time: '3h ago' },
-  { name: 'Ngozi Okafor',    course: 'Tech Foundations',   time: '5h ago' },
-];
+  return {
+    memberCount: memberCount ?? 0,
+    recentMembers: recentMembers ?? [],
+  };
+}
 
-const courses = [
-  { title: 'Business Growth Masterclass', members: 240, status: 'Active',    color: '#DC5B17' },
-  { title: 'Tech Foundations',            members: 180, status: 'Active',    color: '#22c55e' },
-  { title: 'Leadership 101',              members: 95,  status: 'Active',    color: '#eab308' },
-  { title: 'Personal Finance Basics',     members: 50,  status: 'Draft',     color: '#555' },
-];
+export default async function DashboardPage() {
+  const { memberCount, recentMembers } = await getStats();
 
-export default function DashboardPage() {
+  const stats = [
+    { label: 'Total Members',   value: memberCount,  icon: Users,          suffix: '' },
+    { label: 'Active Courses',  value: 0,            icon: BookOpen,       suffix: '' },
+    { label: 'Revenue',         value: 0,            icon: CurrencyDollar, suffix: '₦' },
+    { label: 'Growth',          value: 0,            icon: ChartLine,      suffix: '%' },
+  ];
+
   return (
     <div className="p-8 min-h-screen">
+
       {/* Stats */}
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
-        {stats.map(({ label, value, icon: Icon, delta }) => {
-          const positive = delta.startsWith('+');
-          return (
-            <div key={label} className="bg-[var(--adm-card)] border border-white/5 rounded-2xl p-5">
-              <div className="flex items-center justify-between mb-4">
-                <p className="text-[#555] text-xs font-medium">{label}</p>
-                <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center">
-                  <Icon size={15} className="text-[#DC5B17]" />
-                </div>
+        {stats.map(({ label, value, icon: Icon, suffix }) => (
+          <div key={label} className="bg-[var(--adm-card)] border border-white/5 rounded-2xl p-5">
+            <div className="flex items-center justify-between mb-4">
+              <p className="text-[#555] text-xs font-medium">{label}</p>
+              <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center">
+                <Icon size={15} className="text-[#DC5B17]" />
               </div>
-              <p className="text-white text-2xl font-bold mb-1">{value}</p>
-              <p className={`text-xs font-medium ${positive ? 'text-green-500' : 'text-red-400'}`}>
-                {delta} this month
-              </p>
             </div>
-          );
-        })}
+            <p className="text-white text-2xl font-bold mb-1">
+              {suffix === '₦' ? `₦${value.toLocaleString()}` : `${value}${suffix}`}
+            </p>
+            <p className="text-[#444] text-xs">No change yet</p>
+          </div>
+        ))}
       </div>
 
       {/* Chart + Recent members */}
       <div className="grid grid-cols-1 xl:grid-cols-5 gap-4 mb-8">
+
         {/* Chart */}
         <div className="xl:col-span-3 bg-[var(--adm-card)] border border-white/5 rounded-2xl p-6">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-white font-semibold text-sm">Member growth</h2>
-            <span className="text-[#555] text-xs px-3 py-1 rounded-full bg-white/5">Jan – Jul</span>
+            <div>
+              <h2 className="text-white font-semibold text-sm">Member growth</h2>
+              <p className="text-[#444] text-xs mt-0.5">Members joined over time</p>
+            </div>
           </div>
-          <GrowthChart />
+          <EmptyChart />
         </div>
 
         {/* Recent members */}
-        <div className="xl:col-span-2 bg-[var(--adm-card)] border border-white/5 rounded-2xl p-6">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-white font-semibold text-sm">Recent members</h2>
-            <button className="text-[#DC5B17] text-xs hover:underline">View all</button>
-          </div>
-          <div className="flex flex-col gap-4">
-            {recentMembers.map(({ name, course, time }) => (
-              <div key={name} className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-xl bg-white/5 flex items-center justify-center shrink-0">
-                  <span className="text-[#aaa] text-xs font-semibold">{name[0]}</span>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-white text-xs font-medium truncate">{name}</p>
-                  <p className="text-[#555] text-xs truncate">{course}</p>
-                </div>
-                <span className="text-[#444] text-xs shrink-0">{time}</span>
+        <div className="xl:col-span-2 bg-[var(--adm-card)] border border-white/5 rounded-2xl p-6 flex flex-col">
+          <h2 className="text-white font-semibold text-sm mb-6">Recent members</h2>
+
+          {recentMembers.length === 0 ? (
+            <div className="flex-1 flex flex-col items-center justify-center py-8 text-center">
+              <div className="w-12 h-12 rounded-2xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-center mb-3">
+                <Users size={20} className="text-[#333]" />
               </div>
-            ))}
-          </div>
+              <p className="text-[#444] text-sm font-medium">No members yet</p>
+              <p className="text-[#333] text-xs mt-1">Members will appear here once they join</p>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-4">
+              {recentMembers.map((m) => {
+                const name  = m.full_name || 'Unknown';
+                const initl = name[0]?.toUpperCase() ?? '?';
+                return (
+                  <div key={m.id} className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-xl bg-white/5 flex items-center justify-center shrink-0">
+                      <span className="text-[#aaa] text-xs font-semibold">{initl}</span>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-white text-xs font-medium truncate">{name}</p>
+                      <p className="text-[#555] text-xs">Joined {new Date(m.created_at).toLocaleDateString()}</p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       </div>
 
       {/* Courses */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-white font-semibold text-sm">Your Courses</h2>
-          <button className="flex items-center gap-1.5 text-xs text-[#DC5B17] hover:underline">
-            <BookOpen size={13} /> New course
+          <h2 className="text-white font-semibold text-sm">Courses</h2>
+        </div>
+        <div className="bg-[var(--adm-card)] border border-white/5 rounded-2xl p-12 flex flex-col items-center justify-center text-center">
+          <div className="w-14 h-14 rounded-2xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-center mb-4">
+            <BookOpen size={24} className="text-[#333]" />
+          </div>
+          <p className="text-white font-semibold text-sm mb-1">No courses yet</p>
+          <p className="text-[#444] text-xs mb-5 max-w-xs">Create your first course and start sharing knowledge with your community.</p>
+          <button className="px-5 py-2.5 rounded-xl bg-[#DC5B17] text-white text-sm font-semibold hover:bg-[#c44f13] transition-colors">
+            Create first course
           </button>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-          {courses.map(({ title, members, status, color }) => (
-            <div key={title} className="bg-[var(--adm-card)] border border-white/5 rounded-2xl p-5 hover:border-white/10 transition-colors cursor-pointer group">
-              {/* Thumbnail placeholder */}
-              <div className="w-full h-24 rounded-xl bg-white/5 mb-4 flex items-center justify-center">
-                <BookOpen size={28} style={{ color }} weight="duotone" />
-              </div>
-              <div className="flex items-start justify-between gap-2 mb-1">
-                <p className="text-white text-xs font-semibold leading-snug line-clamp-2">{title}</p>
-              </div>
-              <div className="flex items-center justify-between mt-3">
-                <span className="text-[#555] text-xs">{members} members</span>
-                <span
-                  className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
-                    status === 'Active'
-                      ? 'bg-green-500/10 text-green-400'
-                      : 'bg-white/5 text-[#555]'
-                  }`}
-                >
-                  {status}
-                </span>
-              </div>
-              <div className="flex gap-2 mt-4">
-                <button className="flex-1 py-1.5 rounded-lg bg-white/5 text-[#888] text-xs hover:bg-white/10 hover:text-white transition-colors">
-                  Edit
-                </button>
-                <button className="flex-1 py-1.5 rounded-lg bg-white/5 text-[#aaa] text-xs hover:bg-white/10 hover:text-white transition-colors">
-                  Share
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
       </div>
+
     </div>
   );
 }
