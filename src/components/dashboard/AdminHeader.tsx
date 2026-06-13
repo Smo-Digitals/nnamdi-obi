@@ -21,8 +21,30 @@ const menuItems = [
 ];
 
 function AvatarDropdown() {
-  const [open, setOpen] = useState(false);
+  const [open,      setOpen]      = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [fullName,  setFullName]  = useState('Nnamdi Obi');
+  const [email,     setEmail]     = useState('');
   const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    import('@/lib/supabase/client').then(({ createClient }) => {
+      const supabase = createClient();
+      supabase.auth.getUser().then(({ data: { user } }) => {
+        if (!user) return;
+        setEmail(user.email ?? '');
+        supabase
+          .from('profiles')
+          .select('full_name, avatar_url')
+          .eq('id', user.id)
+          .single()
+          .then(({ data }) => {
+            if (data?.full_name) setFullName(data.full_name);
+            if (data?.avatar_url) setAvatarUrl(data.avatar_url);
+          });
+      });
+    });
+  }, []);
 
   useEffect(() => {
     function handle(e: MouseEvent) {
@@ -32,14 +54,20 @@ function AvatarDropdown() {
     return () => document.removeEventListener('mousedown', handle);
   }, []);
 
+  const initials = fullName.split(' ').map((n) => n[0]).filter(Boolean).join('').slice(0, 2).toUpperCase();
+
   return (
     <div ref={ref} className="relative ml-1">
       {/* Avatar button */}
       <button
         onClick={() => setOpen((o) => !o)}
-        className="relative w-8 h-8 rounded-xl bg-[#DC5B17] flex items-center justify-center text-white text-xs font-bold hover:bg-[#c44f13] transition-colors"
+        className="relative w-8 h-8 rounded-xl bg-[#DC5B17] flex items-center justify-center text-white text-xs font-bold hover:bg-[#c44f13] transition-colors overflow-hidden"
       >
-        N
+        {avatarUrl
+          // eslint-disable-next-line @next/next/no-img-element
+          ? <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+          : initials
+        }
         <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-green-500 border-2 border-[#050505]" />
       </button>
 
@@ -50,14 +78,18 @@ function AvatarDropdown() {
           {/* Profile header */}
           <div className="flex items-center gap-3 p-4 border-b border-white/[0.06]">
             <div className="relative shrink-0">
-              <div className="w-11 h-11 rounded-xl bg-[#DC5B17] flex items-center justify-center text-white font-bold text-base">
-                N
+              <div className="w-11 h-11 rounded-xl bg-[#DC5B17] flex items-center justify-center text-white font-bold text-base overflow-hidden">
+                {avatarUrl
+                  // eslint-disable-next-line @next/next/no-img-element
+                  ? <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+                  : initials
+                }
               </div>
               <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-green-500 border-2 border-[#111]" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-white text-sm font-semibold truncate">Nnamdi Obi</p>
-              <p className="text-[#555] text-xs truncate">sellwithsmo@gmail.com</p>
+              <p className="text-white text-sm font-semibold truncate">{fullName}</p>
+              <p className="text-[#555] text-xs truncate">{email}</p>
             </div>
             <span className="shrink-0 text-[10px] font-bold px-2 py-0.5 rounded-md bg-[#DC5B17]/15 text-[#DC5B17] border border-[#DC5B17]/20">
               ADMIN
