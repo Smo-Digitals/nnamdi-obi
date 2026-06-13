@@ -52,21 +52,16 @@ export default function ProfilePage() {
   async function uploadAvatar(): Promise<string | null> {
     if (!file) return avatarUrl;
     setUploading(true);
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return null;
 
-    const ext  = file.name.split('.').pop();
-    const path = `avatars/${user.id}.${ext}`;
+    const form = new FormData();
+    form.append('file', file);
 
-    const { error } = await supabase.storage
-      .from('profiles')
-      .upload(path, file, { upsert: true });
-
-    if (error) { setUploading(false); return null; }
-
-    const { data } = supabase.storage.from('profiles').getPublicUrl(path);
+    const res = await fetch('/api/upload-avatar', { method: 'POST', body: form });
     setUploading(false);
-    return data.publicUrl;
+
+    if (!res.ok) return null;
+    const { url } = await res.json() as { url: string };
+    return url;
   }
 
   async function save() {
