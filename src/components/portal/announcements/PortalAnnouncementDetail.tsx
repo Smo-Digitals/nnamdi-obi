@@ -20,6 +20,24 @@ function getYoutubeEmbedUrl(url: string) {
   return match ? `https://www.youtube.com/embed/${match[1]}` : null;
 }
 
+// Prose vars that inherit from the active theme — works in both light and dark mode
+const proseStyle = {
+  '--tw-prose-body':          'var(--adm-muted)',
+  '--tw-prose-headings':      'var(--adm-text)',
+  '--tw-prose-bold':          'var(--adm-text)',
+  '--tw-prose-links':         '#DC5B17',
+  '--tw-prose-bullets':       'var(--adm-muted)',
+  '--tw-prose-counters':      'var(--adm-muted)',
+  '--tw-prose-quotes':        'var(--adm-muted)',
+  '--tw-prose-quote-borders': '#DC5B17',
+  '--tw-prose-hr':            'var(--adm-border)',
+  '--tw-prose-code':          'var(--adm-text)',
+  '--tw-prose-th-borders':    'var(--adm-border)',
+  '--tw-prose-td-borders':    'var(--adm-border)',
+} as React.CSSProperties;
+
+const proseClass = 'prose prose-sm max-w-none prose-headings:font-bold prose-a:no-underline hover:prose-a:underline prose-blockquote:border-[#DC5B17] prose-iframe:w-full prose-iframe:aspect-video prose-iframe:rounded-xl';
+
 export function PortalAnnouncementDetail({ announcement: a }: Props) {
   const embedUrl = a.cover_video_url ? getYoutubeEmbedUrl(a.cover_video_url) : null;
   const hasCover = !!embedUrl || !!a.cover_image_url;
@@ -37,19 +55,12 @@ export function PortalAnnouncementDetail({ announcement: a }: Props) {
           {new Date(a.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
         </p>
         <hr style={{ borderColor: 'var(--adm-border)' }} className="mb-6" />
-        <div className="prose prose-sm prose-invert max-w-none
-          prose-p:text-[#aaa] prose-p:leading-relaxed prose-strong:text-white
-          prose-a:text-[#DC5B17] prose-a:no-underline hover:prose-a:underline
-          prose-ul:text-[#aaa] prose-ol:text-[#aaa] prose-headings:text-white prose-headings:font-bold
-          prose-blockquote:border-[#DC5B17] prose-blockquote:text-[#888]"
-          dangerouslySetInnerHTML={{ __html: a.body }} />
+        <div className={proseClass} style={proseStyle} dangerouslySetInnerHTML={{ __html: a.body }} />
       </div>
     );
   }
 
   return (
-    /* h-full + overflow-hidden locks the outer box to the viewport height
-       so only the right panel scrolls, the image stays fixed */
     <div className="h-full flex flex-col overflow-hidden">
 
       {/* Back button — fixed at top */}
@@ -93,13 +104,7 @@ export function PortalAnnouncementDetail({ announcement: a }: Props) {
             {new Date(a.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
           </p>
           <hr style={{ borderColor: 'var(--adm-border)' }} className="mb-6" />
-          <div className="prose prose-sm prose-invert max-w-none
-            prose-p:text-[#aaa] prose-p:leading-relaxed prose-strong:text-white prose-strong:font-semibold
-            prose-a:text-[#DC5B17] prose-a:no-underline hover:prose-a:underline
-            prose-ul:text-[#aaa] prose-ol:text-[#aaa] prose-headings:text-white prose-headings:font-bold
-            prose-blockquote:border-[#DC5B17] prose-blockquote:text-[#888]
-            prose-iframe:w-full prose-iframe:aspect-video prose-iframe:rounded-xl"
-            dangerouslySetInnerHTML={{ __html: a.body }} />
+          <div className={proseClass} style={proseStyle} dangerouslySetInnerHTML={{ __html: a.body }} />
         </div>
       </div>
     </div>
