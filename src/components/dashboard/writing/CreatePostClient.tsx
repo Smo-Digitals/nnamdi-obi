@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, FloppyDisk, PaperPlaneTilt } from 'phosphor-react';
+import { ArrowLeft, FloppyDisk, PaperPlaneTilt, CheckCircle, WarningCircle, X } from 'phosphor-react';
 import { PostEditorPanel, type PostStatus } from './PostEditorPanel';
 import { PostPreviewPanel } from './PostPreviewPanel';
 
@@ -10,45 +10,88 @@ function toSlug(s: string) {
   return s.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
 }
 
-export function CreatePostClient() {
-  const [title,       setTitle]       = useState('');
-  const [excerpt,     setExcerpt]     = useState('');
-  const [body,        setBody]        = useState('');
-  const [coverUrl,    setCoverUrl]    = useState<string | null>(null);
-  const [slug,        setSlug]        = useState('');
-  const [status,      setStatus]      = useState<PostStatus>('draft');
-  const [categories,  setCategories]  = useState<string[]>([]);
-  const [seoKeyword,  setSeoKeyword]  = useState('');
-  const [metaTitle,   setMetaTitle]   = useState('');
-  const [metaDesc,    setMetaDesc]    = useState('');
-  const [saving,      setSaving]      = useState(false);
-  const [saved,       setSaved]       = useState(false);
+type Toast = { id: number; message: string; type: 'success' | 'error' };
 
-  // Auto-generate slug from title when slug is still untouched
+function ToastStack({ toasts, onDismiss }: { toasts: Toast[]; onDismiss: (id: number) => void }) {
+  if (!toasts.length) return null;
+  return (
+    <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none">
+      {toasts.map((t) => (
+        <div key={t.id}
+          className="flex items-center gap-3 px-4 py-3 rounded-2xl shadow-xl text-sm font-medium pointer-events-auto animate-in slide-in-from-bottom-4 fade-in duration-200"
+          style={{
+            backgroundColor: t.type === 'success' ? '#1a2e1a' : '#2e1a1a',
+            border: `1px solid ${t.type === 'success' ? 'rgba(34,197,94,0.3)' : 'rgba(239,68,68,0.3)'}`,
+            color: t.type === 'success' ? '#4ade80' : '#f87171',
+          }}>
+          {t.type === 'success'
+            ? <CheckCircle size={16} weight="fill" />
+            : <WarningCircle size={16} weight="fill" />}
+          {t.message}
+          <button onClick={() => onDismiss(t.id)} className="ml-1 opacity-60 hover:opacity-100 transition-opacity">
+            <X size={13} weight="bold" />
+          </button>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export function CreatePostClient() {
+  const [title,      setTitle]      = useState('');
+  const [excerpt,    setExcerpt]    = useState('');
+  const [body,       setBody]       = useState('');
+  const [coverUrl,   setCoverUrl]   = useState<string | null>(null);
+  const [slug,       setSlug]       = useState('');
+  const [status,     setStatus]     = useState<PostStatus>('draft');
+  const [categories, setCategories] = useState<string[]>([]);
+  const [seoKeyword, setSeoKeyword] = useState('');
+  const [metaTitle,  setMetaTitle]  = useState('');
+  const [metaDesc,   setMetaDesc]   = useState('');
+  const [saving,     setSaving]     = useState(false);
+  const [toasts,     setToasts]     = useState<Toast[]>([]);
+  let toastId = 0;
+
   useEffect(() => {
     setSlug((prev) => (prev === '' || prev === toSlug(title.slice(0, -1))) ? toSlug(title) : prev);
   }, [title]);
 
-  const wordCount = body.replace(/<[^>]*>/g, '').trim().split(/\s+/).filter(Boolean).length;
-  const readMins  = Math.max(1, Math.ceil(wordCount / 200));
+  function addToast(message: string, type: Toast['type']) {
+    const id = ++toastId;
+    setToasts((t) => [...t, { id, message, type }]);
+    setTimeout(() => setToasts((t) => t.filter((x) => x.id !== id)), 4000);
+  }
+  function dismissToast(id: number) { setToasts((t) => t.filter((x) => x.id !== id)); }
 
   async function save(s: PostStatus) {
-    if (!title.trim()) return;
+    if (!title.trim()) { addToast('Add a title before saving.', 'error'); return; }
     setSaving(true);
-    await fetch('/api/posts', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        title, subtitle: excerpt, body, cover_image_url: coverUrl,
-        slug, category: categories[0] ?? '', categories, tags: [],
-        access: 'Free', seo_keyword: seoKeyword,
-        meta_title: metaTitle, meta_description: metaDesc, status: s,
-      }),
-    });
-    setSaving(false);
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
+    try {
+      const res = await fetch('/api/posts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title, subtitle: excerpt, body, cover_image_url: coverUrl,
+          slug, category: categories[0] ?? '', categories, tags: [],
+          access: 'Free', seo_keyword: seoKeyword,
+          meta_title: metaTitle, meta_description: metaDesc, status: s,
+        }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        addToast(err.error ?? 'Save failed. Check your database.', 'error');
+      } else {
+        addToast(s === 'published' ? '🚀 Post published!' : '✓ Draft saved', 'success');
+      }
+    } catch {
+      addToast('Network error — could not save.', 'error');
+    } finally {
+      setSaving(false);
+    }
   }
+
+  const wordCount = body.replace(/<[^>]*>/g, '').trim().split(/\s+/).filter(Boolean).length;
+  const readMins  = Math.max(1, Math.ceil(wordCount / 200));
 
   return (
     <div className="h-full flex flex-col overflow-hidden">
@@ -75,21 +118,21 @@ export function CreatePostClient() {
           </span>
         )}
 
-        <button onClick={() => save('draft')} disabled={!title.trim() || saving}
+        <button onClick={() => save('draft')} disabled={saving}
           className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border transition-colors hover:bg-white/5 disabled:opacity-40"
           style={{ color: 'var(--adm-muted)', borderColor: 'var(--adm-border)' }}>
           <FloppyDisk size={13} weight="bold" />
-          {saved ? 'Saved!' : 'Save Draft'}
+          {saving ? 'Saving…' : 'Save Draft'}
         </button>
 
-        <button onClick={() => save('published')} disabled={!title.trim() || saving}
+        <button onClick={() => save('published')} disabled={saving}
           className="flex items-center gap-1.5 text-xs font-semibold px-4 py-1.5 rounded-lg bg-[#DC5B17] text-white hover:bg-[#c44f13] transition-colors disabled:opacity-40">
           <PaperPlaneTilt size={13} weight="bold" />
-          {status === 'published' ? 'Publish' : 'Save'}
+          {saving ? 'Saving…' : 'Publish'}
         </button>
       </div>
 
-      {/* Two-panel body — equal 50/50 split */}
+      {/* Two-panel body */}
       <div className="flex-1 flex overflow-hidden min-h-0">
         <div className="w-1/2 flex flex-col overflow-hidden">
           <PostEditorPanel
@@ -113,6 +156,8 @@ export function CreatePostClient() {
           />
         </div>
       </div>
+
+      <ToastStack toasts={toasts} onDismiss={dismissToast} />
     </div>
   );
 }
