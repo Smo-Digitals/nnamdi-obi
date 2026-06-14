@@ -94,7 +94,7 @@ body {
 }
 
 html.light {
-  --adm-bg:       #eef0f3;
+  --adm-bg:       #f5f5f5;
   --adm-sidebar:  #ffffff;
   --adm-card:     #ffffff;
   --adm-header:   #ffffff;
