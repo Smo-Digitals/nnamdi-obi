@@ -44,7 +44,8 @@ function Divider() {
 }
 
 export function RichTextEditor({ value, onChange }: Props) {
-  const colorRef = useRef<HTMLInputElement>(null);
+  const colorRef  = useRef<HTMLInputElement>(null);
+  const imageRef  = useRef<HTMLInputElement>(null);
 
   const editor = useEditor({
     extensions: [
@@ -75,10 +76,20 @@ export function RichTextEditor({ value, onChange }: Props) {
 
   if (!editor) return null;
 
-  function addImage() {
-    const url = window.prompt('Image URL');
+  async function handleImageFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    e.target.value = '';
+    const form = new FormData();
+    form.append('file', file);
+    form.append('folder', 'editor');
+    const res = await fetch('/api/upload-image', { method: 'POST', body: form });
+    if (!res.ok) return;
+    const { url } = await res.json();
     if (url) editor?.chain().focus().setImage({ src: url }).run();
   }
+
+  function addImage() { imageRef.current?.click(); }
 
   function addLink() {
     const url = window.prompt('URL');
@@ -93,6 +104,7 @@ export function RichTextEditor({ value, onChange }: Props) {
 
   return (
     <div className="rounded-xl border overflow-hidden" style={{ borderColor: 'var(--adm-border)' }}>
+      <input ref={imageRef} type="file" accept="image/*" className="hidden" onChange={handleImageFile} />
       {/* Toolbar */}
       <div
         className="flex flex-wrap items-center gap-0.5 px-3 py-2 border-b"

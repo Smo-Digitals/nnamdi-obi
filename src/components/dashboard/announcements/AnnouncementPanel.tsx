@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, Trash, CalendarBlank, WarningCircle } from 'phosphor-react';
 import type { Announcement } from './AnnouncementsClient';
 import { RichTextEditor } from '@/components/dashboard/RichTextEditor';
+import { ImageUploader } from '@/components/dashboard/ImageUploader';
 
 interface Props {
   open:      boolean;
@@ -150,24 +151,16 @@ export function AnnouncementPanel({ open, onClose, editing, onSaved, onDeleted }
               </div>
 
               {/* Cover media */}
-              <div className="flex flex-col gap-3">
-                <label className="text-xs font-semibold" style={{ color: 'var(--adm-muted)' }}>Cover Media <span className="font-normal opacity-60">(optional)</span></label>
+              <div className="flex flex-col gap-4">
+                <p className="text-xs font-semibold" style={{ color: 'var(--adm-muted)' }}>Cover Media <span className="font-normal opacity-60">(optional)</span></p>
+                <ImageUploader
+                  label="Cover Image"
+                  value={coverImageUrl || null}
+                  onChange={(url) => setCoverImageUrl(url ?? '')}
+                  folder="announcements"
+                />
                 <div>
-                  <p className="text-[10px] mb-1.5" style={{ color: 'var(--adm-muted)' }}>Image URL</p>
-                  <input
-                    value={coverImageUrl}
-                    onChange={(e) => setCoverImageUrl(e.target.value)}
-                    placeholder="https://example.com/image.jpg"
-                    className={inputCls}
-                    style={{ color: 'var(--adm-text)', borderColor: 'var(--adm-border)' }}
-                  />
-                  {coverImageUrl && (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={coverImageUrl} alt="Cover preview" className="mt-2 w-full h-32 object-cover rounded-xl" />
-                  )}
-                </div>
-                <div>
-                  <p className="text-[10px] mb-1.5" style={{ color: 'var(--adm-muted)' }}>Video URL <span className="opacity-60">(YouTube)</span></p>
+                  <p className="text-[10px] mb-1.5" style={{ color: 'var(--adm-muted)' }}>Cover Video URL <span className="opacity-60">(YouTube)</span></p>
                   <input
                     value={coverVideoUrl}
                     onChange={(e) => setCoverVideoUrl(e.target.value)}
