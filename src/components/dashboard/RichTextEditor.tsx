@@ -103,11 +103,11 @@ export function RichTextEditor({ value, onChange }: Props) {
   }
 
   return (
-    <div className="rounded-xl border overflow-hidden" style={{ borderColor: 'var(--adm-border)' }}>
+    <div className="rounded-xl border" style={{ borderColor: 'var(--adm-border)' }}>
       <input ref={imageRef} type="file" accept="image/*" className="hidden" onChange={handleImageFile} />
-      {/* Toolbar */}
+      {/* Toolbar — sticky so it stays visible while scrolling content */}
       <div
-        className="flex flex-wrap items-center gap-0.5 px-3 py-2 border-b"
+        className="flex flex-wrap items-center gap-0.5 px-3 py-2 border-b sticky top-0 z-10"
         style={{ backgroundColor: 'var(--adm-card)', borderColor: 'var(--adm-border)' }}
       >
         <ToolBtn onClick={() => editor.chain().focus().undo().run()} title="Undo"><ArrowCounterClockwise size={14} /></ToolBtn>
