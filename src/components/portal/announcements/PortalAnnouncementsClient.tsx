@@ -39,7 +39,7 @@ function AnnouncementCard({ a }: { a: Announcement }) {
     >
       {/* Cover */}
       {cover && (
-        <div className="relative w-full h-44 overflow-hidden bg-black/20">
+        <div className="relative w-full aspect-square overflow-hidden bg-black/20">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={cover} alt={a.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
           {a.cover_video_url && (
@@ -115,7 +115,7 @@ export function PortalAnnouncementsClient({ announcements }: Props) {
       {pinned.length > 0 && (
         <div className="mb-8">
           <p className="text-[10px] font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--adm-muted)' }}>Pinned</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {pinned.map((a) => <AnnouncementCard key={a.id} a={a} />)}
           </div>
         </div>
@@ -126,7 +126,7 @@ export function PortalAnnouncementsClient({ announcements }: Props) {
           {pinned.length > 0 && (
             <p className="text-[10px] font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--adm-muted)' }}>Latest</p>
           )}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {unpinned.map((a) => <AnnouncementCard key={a.id} a={a} />)}
           </div>
         </div>
