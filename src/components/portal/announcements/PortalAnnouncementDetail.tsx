@@ -34,9 +34,9 @@ export function PortalAnnouncementDetail({ announcement: a }: Props) {
         All Announcements
       </Link>
 
-      {/* Main layout — centred, side by side when cover exists */}
-      <div className="flex-1 flex items-start justify-center">
-        <div className={`w-full max-w-5xl flex gap-10 ${hasCover ? 'flex-col lg:flex-row' : 'flex-col max-w-2xl'}`}>
+      {/* Main layout — aligned with back button, side by side when cover exists */}
+      <div className="flex-1">
+        <div className={`flex gap-10 ${hasCover ? 'flex-col lg:flex-row' : 'flex-col max-w-2xl'}`}>
 
           {/* LEFT — cover media */}
           {hasCover && (
