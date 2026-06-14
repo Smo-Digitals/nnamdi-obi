@@ -14,6 +14,10 @@ export type Announcement = {
   scheduled_at: string | null;
 };
 
+function stripHtml(html: string) {
+  return html.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').trim();
+}
+
 const STATUS_STYLE: Record<string, string> = {
   published: 'text-green-400 bg-green-400/10 border-green-400/20',
   scheduled: 'text-blue-400 bg-blue-400/10 border-blue-400/20',
@@ -146,7 +150,7 @@ export function AnnouncementsClient({ announcements: initial }: Props) {
                       {a.status}
                     </span>
                   </div>
-                  <p className="text-xs line-clamp-2" style={{ color: 'var(--adm-muted)' }}>{a.body}</p>
+                  <p className="text-xs line-clamp-2" style={{ color: 'var(--adm-muted)' }}>{stripHtml(a.body)}</p>
                   <p className="text-[11px] mt-2" style={{ color: 'var(--adm-muted)' }}>
                     {a.status === 'scheduled' && a.scheduled_at
                       ? `Scheduled for ${new Date(a.scheduled_at).toLocaleString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}`
