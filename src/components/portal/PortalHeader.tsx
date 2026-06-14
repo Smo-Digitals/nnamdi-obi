@@ -129,7 +129,7 @@ export function PortalHeader() {
         <p className="text-xs" style={{ color: 'var(--adm-muted)' }}>Welcome back to your dashboard.</p>
       </div>
 
-      <button className="absolute left-1/2 -translate-x-1/2 w-72 flex items-center gap-2.5 px-4 py-2.5 rounded-xl border text-[#444] hover:border-white/10 hover:bg-white/[0.06] transition-colors"
+      <button className="absolute left-1/2 -translate-x-1/2 z-10 w-72 flex items-center gap-2.5 px-4 py-2.5 rounded-xl border text-[#444] hover:border-white/10 hover:bg-white/[0.06] transition-colors"
         style={{ backgroundColor: 'var(--adm-pill)', borderColor: 'var(--adm-border)' }}>
         <MagnifyingGlass size={15} />
         <span className="text-sm flex-1 text-left">Search courses, events…</span>

@@ -185,7 +185,7 @@ export function AdminHeader() {
       {/* Search — absolutely centred, fixed width */}
       <button
         onClick={() => setSearchOpen(true)}
-        className="absolute left-1/2 -translate-x-1/2 w-72 flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.06] text-[#444] hover:border-white/10 hover:bg-white/[0.06] transition-colors"
+        className="absolute left-1/2 -translate-x-1/2 z-10 w-72 flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.06] text-[#444] hover:border-white/10 hover:bg-white/[0.06] transition-colors"
       >
         <MagnifyingGlass size={15} />
         <span className="text-sm flex-1 text-left">Search anything…</span>
