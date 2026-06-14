@@ -77,14 +77,14 @@ export function PostPreviewPanel(p: Props) {
         {tab === 'post' ? (
 
           /* ── Post preview card ── */
-          <div className="rounded-2xl overflow-hidden border shadow-sm" style={{ backgroundColor: '#ffffff', borderColor: '#e5e7eb' }}>
+          <div className="rounded-2xl overflow-hidden border" style={{ backgroundColor: 'var(--adm-card)', borderColor: 'var(--adm-border)' }}>
             {/* Cover */}
-            <div className="w-full aspect-video flex items-center justify-center" style={{ backgroundColor: '#f3f4f6' }}>
+            <div className="w-full aspect-video flex items-center justify-center" style={{ backgroundColor: 'var(--adm-pill)' }}>
               {p.coverUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={p.coverUrl} alt="cover" className="w-full h-full object-cover" />
               ) : (
-                <svg width="28" height="28" fill="none" stroke="#d1d5db" strokeWidth="1.5" viewBox="0 0 24 24">
+                <svg width="28" height="28" fill="none" strokeWidth="1.5" viewBox="0 0 24 24" style={{ stroke: 'var(--adm-muted)' }}>
                   <rect x="3" y="3" width="18" height="18" rx="2" />
                   <circle cx="8.5" cy="8.5" r="1.5" /><path d="m21 15-5-5L5 21" />
                 </svg>
@@ -97,21 +97,21 @@ export function PostPreviewPanel(p: Props) {
                 <div className="w-5 h-5 rounded-full bg-[#DC5B17] flex items-center justify-center shrink-0">
                   <span className="text-white text-[8px] font-bold">N</span>
                 </div>
-                <span className="text-[11px] font-semibold text-[#111]">Nnamdi Obi</span>
-                <span className="text-[#ccc] text-[10px]">·</span>
-                <span className="text-[10px] text-[#888]">
+                <span className="text-[11px] font-semibold" style={{ color: 'var(--adm-text)' }}>Nnamdi Obi</span>
+                <span className="text-[10px]" style={{ color: 'var(--adm-border)' }}>·</span>
+                <span className="text-[10px]" style={{ color: 'var(--adm-muted)' }}>
                   {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
                 </span>
               </div>
 
               {/* Title */}
-              <h2 className="font-bold text-base leading-snug text-[#111] mb-2">
-                {p.title || <span className="text-[#bbb]">Post title will appear here…</span>}
+              <h2 className="font-bold text-base leading-snug mb-2" style={{ color: 'var(--adm-text)' }}>
+                {p.title || <span style={{ color: 'var(--adm-muted)', opacity: 0.4 }}>Post title will appear here…</span>}
               </h2>
 
               {/* Excerpt */}
               {p.excerpt && (
-                <p className="text-sm leading-relaxed text-[#555] mb-4 pb-4 border-b border-[#f0f0f0] italic">
+                <p className="text-sm leading-relaxed mb-4 pb-4 border-b italic" style={{ color: 'var(--adm-muted)', borderColor: 'var(--adm-border)' }}>
                   {p.excerpt}
                 </p>
               )}
@@ -119,19 +119,26 @@ export function PostPreviewPanel(p: Props) {
               {/* Body */}
               {p.body ? (
                 <div
-                  className="prose prose-sm max-w-none text-[#333]
-                    [&_h1]:text-sm [&_h1]:font-bold [&_h1]:text-[#111] [&_h1]:mb-2
-                    [&_h2]:text-xs [&_h2]:font-bold [&_h2]:text-[#111] [&_h2]:mb-1.5
-                    [&_h3]:text-xs [&_h3]:font-semibold [&_h3]:text-[#111]
-                    [&_p]:text-[12px] [&_p]:leading-relaxed [&_p]:mb-2 [&_p]:text-[#444]
+                  className="prose prose-sm max-w-none
+                    [&_h1]:text-sm [&_h1]:font-bold [&_h1]:mb-2
+                    [&_h2]:text-xs [&_h2]:font-bold [&_h2]:mb-1.5
+                    [&_h3]:text-xs [&_h3]:font-semibold
+                    [&_p]:text-[12px] [&_p]:leading-relaxed [&_p]:mb-2
                     [&_a]:text-[#DC5B17] [&_a]:no-underline
-                    [&_ul]:text-[12px] [&_ul]:text-[#444] [&_ol]:text-[12px] [&_ol]:text-[#444]
-                    [&_blockquote]:border-l-2 [&_blockquote]:border-[#DC5B17] [&_blockquote]:pl-3 [&_blockquote]:italic [&_blockquote]:text-[#666]
-                    [&_strong]:font-semibold [&_strong]:text-[#111]"
+                    [&_ul]:text-[12px] [&_ol]:text-[12px]
+                    [&_blockquote]:border-l-2 [&_blockquote]:border-[#DC5B17] [&_blockquote]:pl-3 [&_blockquote]:italic
+                    [&_strong]:font-semibold"
+                  style={{
+                    '--tw-prose-body':     'var(--adm-muted)',
+                    '--tw-prose-headings': 'var(--adm-text)',
+                    '--tw-prose-bold':     'var(--adm-text)',
+                    '--tw-prose-bullets':  'var(--adm-muted)',
+                    '--tw-prose-counters': 'var(--adm-muted)',
+                  } as React.CSSProperties}
                   dangerouslySetInnerHTML={{ __html: p.body }}
                 />
               ) : (
-                <p className="text-[12px] text-[#bbb] italic">Your content will appear here as you write…</p>
+                <p className="text-[12px] italic" style={{ color: 'var(--adm-muted)', opacity: 0.4 }}>Your content will appear here as you write…</p>
               )}
             </div>
           </div>
