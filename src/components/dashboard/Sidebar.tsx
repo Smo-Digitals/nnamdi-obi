@@ -47,6 +47,7 @@ const NAV: NavGroup[] = [
     items: [
       { label: 'Roadmaps',        href: '/admin/courses/roadmaps' },
       { label: 'All Courses',     href: '/admin/courses/all' },
+      { label: 'Assignments',     href: '/admin/courses/assignments' },
       { label: 'Curated Content', href: '/admin/courses/curated' },
       { label: 'Categories',      href: '/admin/courses/categories' },
       { label: 'Bundles',         href: '/admin/courses/bundles' },

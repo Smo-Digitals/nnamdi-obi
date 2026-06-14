@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import {
   House, Megaphone, BookOpen, BookmarkSimple, FolderOpen,
   Binoculars, UserPlus, ShoppingBag, CalendarCheck, CalendarPlus,
-  Headset, ChatCircle, Trophy, CaretRight, SignOut,
+  Headset, ChatCircle, Trophy, CaretRight, SignOut, ClipboardText,
 } from 'phosphor-react';
 import { logout } from '@/app/(auth)/actions';
 
@@ -24,6 +24,7 @@ const SECTIONS: { label: string; items: NavItem[] }[] = [
     label: 'Courses',
     items: [
       { label: 'Courses',         href: '/home/courses',         icon: BookOpen },
+      { label: 'My Reviews',      href: '/home/reviews',         icon: ClipboardText },
       { label: 'Curated Content', href: '/home/courses/curated', icon: BookmarkSimple },
       { label: 'Files & Docs',    href: '/home/courses/files',   icon: FolderOpen },
     ],

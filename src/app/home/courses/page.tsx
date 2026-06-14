@@ -1,8 +1,12 @@
-export default function CoursesPage() {
-  return (
-    <div className="p-8">
-      <h1 className="font-bold text-2xl text-white mb-1">Courses</h1>
-      <p className="text-sm text-[#555]">Browse all available courses.</p>
-    </div>
-  );
+import { createClient } from '@/lib/supabase/server';
+import { PortalCoursesClient } from '@/components/portal/courses/PortalCoursesClient';
+
+export default async function CoursesPage() {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('courses')
+    .select('id, title, description, cover_image_url, price')
+    .eq('status', 'published')
+    .order('created_at', { ascending: false });
+  return <PortalCoursesClient courses={data ?? []} />;
 }
