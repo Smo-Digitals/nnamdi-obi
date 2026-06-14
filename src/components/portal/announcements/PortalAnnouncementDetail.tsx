@@ -22,69 +22,77 @@ function getYoutubeEmbedUrl(url: string) {
 
 export function PortalAnnouncementDetail({ announcement: a }: Props) {
   const embedUrl = a.cover_video_url ? getYoutubeEmbedUrl(a.cover_video_url) : null;
+  const hasCover = !!embedUrl || !!a.cover_image_url;
 
   return (
-    <div className="p-8 max-w-2xl">
+    <div className="min-h-full flex flex-col p-8">
       {/* Back */}
       <Link href="/home/announcements"
-        className="inline-flex items-center gap-1.5 text-xs font-semibold mb-8 transition-colors"
+        className="inline-flex items-center gap-1.5 text-xs font-semibold mb-10 transition-colors"
         style={{ color: 'var(--adm-muted)' }}>
         <ArrowLeft size={13} weight="bold" />
         All Announcements
       </Link>
 
-      {/* Cover video */}
-      {embedUrl && (
-        <div className="w-full aspect-video rounded-2xl overflow-hidden mb-6 bg-black">
-          <iframe
-            src={embedUrl}
-            className="w-full h-full"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
-        </div>
-      )}
+      {/* Main layout — centred, side by side when cover exists */}
+      <div className="flex-1 flex items-start justify-center">
+        <div className={`w-full max-w-5xl flex gap-10 ${hasCover ? 'flex-col lg:flex-row' : 'flex-col max-w-2xl'}`}>
 
-      {/* Cover image (only if no video) */}
-      {!embedUrl && a.cover_image_url && (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={a.cover_image_url}
-          alt={a.title}
-          className="w-full h-56 object-cover rounded-2xl mb-6"
-        />
-      )}
+          {/* LEFT — cover media */}
+          {hasCover && (
+            <div className="lg:w-[420px] shrink-0">
+              {embedUrl ? (
+                <div className="w-full aspect-video rounded-2xl overflow-hidden bg-black sticky top-8">
+                  <iframe
+                    src={embedUrl}
+                    className="w-full h-full"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                </div>
+              ) : (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={a.cover_image_url!}
+                  alt={a.title}
+                  className="w-full rounded-2xl object-cover sticky top-8"
+                  style={{ maxHeight: '560px' }}
+                />
+              )}
+            </div>
+          )}
 
-      {/* Header */}
-      <div className="mb-6">
-        {a.pinned && (
-          <div className="flex items-center gap-1.5 text-[#DC5B17] text-xs font-semibold mb-2">
-            <PushPin size={12} weight="fill" />
-            Pinned
+          {/* RIGHT — content */}
+          <div className="flex-1 min-w-0">
+            {a.pinned && (
+              <div className="flex items-center gap-1.5 text-[#DC5B17] text-xs font-semibold mb-3">
+                <PushPin size={12} weight="fill" />
+                Pinned
+              </div>
+            )}
+            <h1 className="font-bold text-2xl leading-snug mb-2" style={{ color: 'var(--adm-text)' }}>
+              {a.title}
+            </h1>
+            <p className="text-xs mb-6" style={{ color: 'var(--adm-muted)' }}>
+              {new Date(a.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+            </p>
+
+            <hr style={{ borderColor: 'var(--adm-border)' }} className="mb-6" />
+
+            <div
+              className="prose prose-sm prose-invert max-w-none
+                prose-p:text-[#aaa] prose-p:leading-relaxed
+                prose-strong:text-white prose-strong:font-semibold
+                prose-a:text-[#DC5B17] prose-a:no-underline hover:prose-a:underline
+                prose-ul:text-[#aaa] prose-ol:text-[#aaa]
+                prose-headings:text-white prose-headings:font-bold
+                prose-blockquote:border-[#DC5B17] prose-blockquote:text-[#888]
+                prose-iframe:w-full prose-iframe:aspect-video prose-iframe:rounded-xl"
+              dangerouslySetInnerHTML={{ __html: a.body }}
+            />
           </div>
-        )}
-        <h1 className="font-bold text-2xl leading-snug mb-2" style={{ color: 'var(--adm-text)' }}>
-          {a.title}
-        </h1>
-        <p className="text-xs" style={{ color: 'var(--adm-muted)' }}>
-          {new Date(a.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
-        </p>
+        </div>
       </div>
-
-      <hr style={{ borderColor: 'var(--adm-border)' }} className="mb-6" />
-
-      {/* Body */}
-      <div
-        className="prose prose-sm prose-invert max-w-none
-          prose-p:text-[#aaa] prose-p:leading-relaxed
-          prose-strong:text-white prose-strong:font-semibold
-          prose-a:text-[#DC5B17] prose-a:no-underline hover:prose-a:underline
-          prose-ul:text-[#aaa] prose-ol:text-[#aaa]
-          prose-headings:text-white prose-headings:font-bold
-          prose-blockquote:border-[#DC5B17] prose-blockquote:text-[#888]
-          prose-iframe:w-full prose-iframe:aspect-video prose-iframe:rounded-xl"
-        dangerouslySetInnerHTML={{ __html: a.body }}
-      />
     </div>
   );
 }
