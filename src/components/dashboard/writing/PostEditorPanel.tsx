@@ -82,16 +82,21 @@ export function PostEditorPanel(p: Props) {
   const sDesc = STATUS_OPTIONS.find((s) => s.value === p.status)?.desc ?? '';
 
   return (
-    <div className="w-full flex-1 overflow-y-auto">
+    <div className="w-full flex-1 flex flex-col overflow-hidden">
+
+      {/* Sticky title + excerpt — always visible while scrolling */}
+      <div className="shrink-0 border-b px-8 py-6" style={{ backgroundColor: 'var(--adm-bg)', borderColor: 'var(--adm-border)' }}>
+        <div className="max-w-2xl mx-auto">
+          <AutoTextarea value={p.title} onChange={p.setTitle} placeholder="Post title…"
+            className="font-bold text-3xl mb-2" style={{ color: 'var(--adm-text)' }} />
+          <AutoTextarea value={p.excerpt} onChange={p.setExcerpt} placeholder="Excerpt — a short description of the post"
+            className="text-base" style={{ color: 'var(--adm-muted)' }} />
+        </div>
+      </div>
+
+      {/* Scrollable body */}
+      <div className="flex-1 overflow-y-auto">
       <div className="max-w-2xl mx-auto px-8 py-8 flex flex-col gap-0">
-
-        {/* Title */}
-        <AutoTextarea value={p.title} onChange={p.setTitle} placeholder="Post title…"
-          className="font-bold text-3xl mb-3" style={{ color: 'var(--adm-text)' }} />
-
-        {/* Excerpt */}
-        <AutoTextarea value={p.excerpt} onChange={p.setExcerpt} placeholder="Excerpt — a short description of the post"
-          className="text-base mb-6" style={{ color: 'var(--adm-muted)' }} />
 
         {/* Rich text */}
         <div className="rounded-2xl border mb-8" style={{ backgroundColor: 'var(--adm-card)', borderColor: 'var(--adm-border)' }}>
@@ -207,6 +212,7 @@ export function PostEditorPanel(p: Props) {
           </div>
         </div>
 
+      </div>
       </div>
     </div>
   );
