@@ -5,21 +5,23 @@ import { Plus, PushPin, Eye, NotePencil } from 'phosphor-react';
 import { AnnouncementPanel } from './AnnouncementPanel';
 
 export type Announcement = {
-  id: string;
-  title: string;
-  body: string;
-  status: 'draft' | 'published' | 'archived';
-  pinned: boolean;
-  created_at: string;
+  id:           string;
+  title:        string;
+  body:         string;
+  status:       'draft' | 'published' | 'scheduled' | 'archived';
+  pinned:       boolean;
+  created_at:   string;
+  scheduled_at: string | null;
 };
 
 const STATUS_STYLE: Record<string, string> = {
   published: 'text-green-400 bg-green-400/10 border-green-400/20',
+  scheduled: 'text-blue-400 bg-blue-400/10 border-blue-400/20',
   draft:     'text-yellow-400 bg-yellow-400/10 border-yellow-400/20',
   archived:  'text-[#555] bg-white/5 border-white/10',
 };
 
-const FILTERS = ['all', 'published', 'draft', 'archived'] as const;
+const FILTERS = ['all', 'published', 'scheduled', 'draft', 'archived'] as const;
 type Filter = (typeof FILTERS)[number];
 
 interface Props { announcements: Announcement[] }
@@ -146,7 +148,10 @@ export function AnnouncementsClient({ announcements: initial }: Props) {
                   </div>
                   <p className="text-xs line-clamp-2" style={{ color: 'var(--adm-muted)' }}>{a.body}</p>
                   <p className="text-[11px] mt-2" style={{ color: 'var(--adm-muted)' }}>
-                    {new Date(a.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                    {a.status === 'scheduled' && a.scheduled_at
+                      ? `Scheduled for ${new Date(a.scheduled_at).toLocaleString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}`
+                      : new Date(a.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
+                    }
                   </p>
                 </div>
                 <Eye size={15} className="text-[#333] shrink-0 mt-0.5" />

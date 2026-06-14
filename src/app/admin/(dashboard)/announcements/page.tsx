@@ -2,12 +2,13 @@ import { createClient } from '@/lib/supabase/server';
 import { AnnouncementsClient } from '@/components/dashboard/announcements/AnnouncementsClient';
 
 export type Announcement = {
-  id: string;
-  title: string;
-  body: string;
-  status: 'draft' | 'published' | 'archived';
-  pinned: boolean;
-  created_at: string;
+  id:           string;
+  title:        string;
+  body:         string;
+  status:       'draft' | 'published' | 'scheduled' | 'archived';
+  pinned:       boolean;
+  created_at:   string;
+  scheduled_at: string | null;
 };
 
 export default async function AnnouncementsPage() {
@@ -15,7 +16,7 @@ export default async function AnnouncementsPage() {
 
   const { data } = await supabase
     .from('announcements')
-    .select('id, title, body, status, pinned, created_at')
+    .select('id, title, body, status, pinned, created_at, scheduled_at')
     .order('pinned', { ascending: false })
     .order('created_at', { ascending: false });
 
