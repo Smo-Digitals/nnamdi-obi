@@ -30,7 +30,7 @@ const actionColors: Record<string, string> = {
 
 export default function HomePage() {
   return (
-    <div className="flex flex-col gap-12">
+    <div className="flex flex-col gap-12 p-8 max-w-6xl">
 
       {/* Welcome banner */}
       <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-[#DC5B17]/20 via-[#111] to-[#111] border border-[#DC5B17]/20 px-8 py-10">

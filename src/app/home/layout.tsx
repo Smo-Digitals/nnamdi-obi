@@ -1,13 +1,17 @@
 import { ReactNode } from 'react';
-import { TopNav } from '@/components/portal/TopNav';
+import { PortalSidebar } from '@/components/portal/PortalSidebar';
+import { PortalHeader } from '@/components/portal/PortalHeader';
 
 export default function HomeLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="min-h-screen bg-[#0a0a0a]">
-      <TopNav />
-      <main className="max-w-6xl mx-auto px-6 py-10">
-        {children}
-      </main>
+    <div className="admin-ui flex h-screen overflow-hidden" style={{ backgroundColor: 'var(--adm-bg)' }}>
+      <PortalSidebar />
+      <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
+        <PortalHeader />
+        <main className="flex-1 overflow-y-auto">
+          {children}
+        </main>
+      </div>
     </div>
   );
 }
