@@ -89,25 +89,29 @@ export function CreatePostClient() {
         </button>
       </div>
 
-      {/* Two-panel body */}
+      {/* Two-panel body — equal 50/50 split */}
       <div className="flex-1 flex overflow-hidden min-h-0">
-        <PostEditorPanel
-          title={title}       setTitle={setTitle}
-          excerpt={excerpt}   setExcerpt={setExcerpt}
-          body={body}         setBody={setBody}
-          coverUrl={coverUrl} setCoverUrl={setCoverUrl}
-          slug={slug}         setSlug={setSlug}
-          status={status}     setStatus={setStatus}
-          categories={categories} setCategories={setCategories}
-          seoKeyword={seoKeyword} setSeoKeyword={setSeoKeyword}
-          metaTitle={metaTitle}   setMetaTitle={setMetaTitle}
-          metaDesc={metaDesc}     setMetaDesc={setMetaDesc}
-        />
-        <PostPreviewPanel
-          title={title} excerpt={excerpt} body={body}
-          coverUrl={coverUrl} slug={slug}
-          seoKeyword={seoKeyword} metaTitle={metaTitle} metaDesc={metaDesc}
-        />
+        <div className="w-1/2 flex flex-col overflow-hidden">
+          <PostEditorPanel
+            title={title}       setTitle={setTitle}
+            excerpt={excerpt}   setExcerpt={setExcerpt}
+            body={body}         setBody={setBody}
+            coverUrl={coverUrl} setCoverUrl={setCoverUrl}
+            slug={slug}         setSlug={setSlug}
+            status={status}     setStatus={setStatus}
+            categories={categories} setCategories={setCategories}
+            seoKeyword={seoKeyword} setSeoKeyword={setSeoKeyword}
+            metaTitle={metaTitle}   setMetaTitle={setMetaTitle}
+            metaDesc={metaDesc}     setMetaDesc={setMetaDesc}
+          />
+        </div>
+        <div className="w-1/2 flex flex-col overflow-hidden">
+          <PostPreviewPanel
+            title={title} excerpt={excerpt} body={body}
+            coverUrl={coverUrl} slug={slug}
+            seoKeyword={seoKeyword} metaTitle={metaTitle} metaDesc={metaDesc}
+          />
+        </div>
       </div>
     </div>
   );

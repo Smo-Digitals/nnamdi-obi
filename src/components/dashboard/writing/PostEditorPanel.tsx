@@ -82,7 +82,7 @@ export function PostEditorPanel(p: Props) {
   const sDesc = STATUS_OPTIONS.find((s) => s.value === p.status)?.desc ?? '';
 
   return (
-    <div className="flex-1 overflow-y-auto">
+    <div className="w-full flex-1 overflow-y-auto">
       <div className="max-w-2xl mx-auto px-8 py-8 flex flex-col gap-0">
 
         {/* Title */}

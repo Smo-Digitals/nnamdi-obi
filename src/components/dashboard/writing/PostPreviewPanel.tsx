@@ -53,7 +53,7 @@ export function PostPreviewPanel(p: Props) {
   const displaySlug = p.slug || 'post-url-slug';
 
   return (
-    <div className="w-[380px] shrink-0 flex flex-col overflow-hidden border-l" style={{ borderColor: 'var(--adm-border)', backgroundColor: 'var(--adm-sidebar)' }}>
+    <div className="flex-1 flex flex-col overflow-hidden border-l" style={{ borderColor: 'var(--adm-border)', backgroundColor: 'var(--adm-sidebar)' }}>
 
       {/* Tab bar */}
       <div className="shrink-0 flex items-center gap-1 px-4 py-3 border-b" style={{ borderColor: 'var(--adm-border)' }}>
