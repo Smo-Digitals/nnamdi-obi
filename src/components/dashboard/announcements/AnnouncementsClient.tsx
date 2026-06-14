@@ -5,13 +5,15 @@ import { Plus, PushPin, Eye, NotePencil } from 'phosphor-react';
 import { AnnouncementPanel } from './AnnouncementPanel';
 
 export type Announcement = {
-  id:           string;
-  title:        string;
-  body:         string;
-  status:       'draft' | 'published' | 'scheduled' | 'archived';
-  pinned:       boolean;
-  created_at:   string;
-  scheduled_at: string | null;
+  id:              string;
+  title:           string;
+  body:            string;
+  status:          'draft' | 'published' | 'scheduled' | 'archived';
+  pinned:          boolean;
+  created_at:      string;
+  scheduled_at:    string | null;
+  cover_image_url: string | null;
+  cover_video_url: string | null;
 };
 
 function stripHtml(html: string) {

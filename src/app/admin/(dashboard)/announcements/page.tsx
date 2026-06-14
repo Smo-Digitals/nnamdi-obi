@@ -16,7 +16,7 @@ export default async function AnnouncementsPage() {
 
   const { data } = await supabase
     .from('announcements')
-    .select('id, title, body, status, pinned, created_at, scheduled_at')
+    .select('id, title, body, status, pinned, created_at, scheduled_at, cover_image_url, cover_video_url')
     .order('pinned', { ascending: false })
     .order('created_at', { ascending: false });
 

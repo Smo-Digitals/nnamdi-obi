@@ -40,14 +40,16 @@ function bodyIsEmpty(html: string) {
 }
 
 export function AnnouncementPanel({ open, onClose, editing, onSaved, onDeleted }: Props) {
-  const [title,       setTitle]       = useState('');
-  const [body,        setBody]        = useState('');
-  const [status,      setStatus]      = useState<PanelStatus>('draft');
-  const [scheduledAt, setScheduledAt] = useState('');
-  const [pinned,      setPinned]      = useState(false);
-  const [saving,      setSaving]      = useState(false);
-  const [deleting,    setDeleting]    = useState(false);
-  const [error,       setError]       = useState<string | null>(null);
+  const [title,          setTitle]          = useState('');
+  const [body,           setBody]           = useState('');
+  const [status,         setStatus]         = useState<PanelStatus>('draft');
+  const [scheduledAt,    setScheduledAt]    = useState('');
+  const [pinned,         setPinned]         = useState(false);
+  const [coverImageUrl,  setCoverImageUrl]  = useState('');
+  const [coverVideoUrl,  setCoverVideoUrl]  = useState('');
+  const [saving,         setSaving]         = useState(false);
+  const [deleting,       setDeleting]       = useState(false);
+  const [error,          setError]          = useState<string | null>(null);
 
   useEffect(() => {
     if (open) {
@@ -55,6 +57,8 @@ export function AnnouncementPanel({ open, onClose, editing, onSaved, onDeleted }
       setTitle(editing?.title ?? '');
       setBody(editing?.body ?? '');
       setPinned(editing?.pinned ?? false);
+      setCoverImageUrl(editing?.cover_image_url ?? '');
+      setCoverVideoUrl(editing?.cover_video_url ?? '');
       const s = editing?.status;
       setStatus(s === 'published' ? 'published' : s === 'scheduled' ? 'scheduled' : 'draft');
       setScheduledAt(toLocalDatetimeValue(editing?.scheduled_at) || nowPlusFiveMin());
@@ -74,11 +78,13 @@ export function AnnouncementPanel({ open, onClose, editing, onSaved, onDeleted }
       method,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        title:        title.trim(),
-        body:         body.trim(),
+        title:           title.trim(),
+        body:            body.trim(),
         status,
         pinned,
-        scheduled_at: status === 'scheduled' ? new Date(scheduledAt).toISOString() : null,
+        scheduled_at:    status === 'scheduled' ? new Date(scheduledAt).toISOString() : null,
+        cover_image_url: coverImageUrl.trim() || null,
+        cover_video_url: coverVideoUrl.trim() || null,
       }),
     });
     const data = await res.json();
@@ -141,6 +147,35 @@ export function AnnouncementPanel({ open, onClose, editing, onSaved, onDeleted }
               <div>
                 <label className="text-xs font-semibold mb-2 block" style={{ color: 'var(--adm-muted)' }}>Content</label>
                 <RichTextEditor value={body} onChange={setBody} />
+              </div>
+
+              {/* Cover media */}
+              <div className="flex flex-col gap-3">
+                <label className="text-xs font-semibold" style={{ color: 'var(--adm-muted)' }}>Cover Media <span className="font-normal opacity-60">(optional)</span></label>
+                <div>
+                  <p className="text-[10px] mb-1.5" style={{ color: 'var(--adm-muted)' }}>Image URL</p>
+                  <input
+                    value={coverImageUrl}
+                    onChange={(e) => setCoverImageUrl(e.target.value)}
+                    placeholder="https://example.com/image.jpg"
+                    className={inputCls}
+                    style={{ color: 'var(--adm-text)', borderColor: 'var(--adm-border)' }}
+                  />
+                  {coverImageUrl && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={coverImageUrl} alt="Cover preview" className="mt-2 w-full h-32 object-cover rounded-xl" />
+                  )}
+                </div>
+                <div>
+                  <p className="text-[10px] mb-1.5" style={{ color: 'var(--adm-muted)' }}>Video URL <span className="opacity-60">(YouTube)</span></p>
+                  <input
+                    value={coverVideoUrl}
+                    onChange={(e) => setCoverVideoUrl(e.target.value)}
+                    placeholder="https://youtube.com/watch?v=..."
+                    className={inputCls}
+                    style={{ color: 'var(--adm-text)', borderColor: 'var(--adm-border)' }}
+                  />
+                </div>
               </div>
 
               {/* Status */}

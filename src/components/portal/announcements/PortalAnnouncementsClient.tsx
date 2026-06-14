@@ -1,16 +1,83 @@
 'use client';
 
-import { PushPin, MegaphoneSimple } from 'phosphor-react';
+import Link from 'next/link';
+import { PushPin, ArrowRight, MegaphoneSimple, PlayCircle } from 'phosphor-react';
 
 type Announcement = {
-  id:           string;
-  title:        string;
-  body:         string;
-  pinned:       boolean;
-  created_at:   string;
+  id:              string;
+  title:           string;
+  body:            string;
+  pinned:          boolean;
+  created_at:      string;
+  cover_image_url: string | null;
+  cover_video_url: string | null;
 };
 
 interface Props { announcements: Announcement[] }
+
+function stripHtml(html: string) {
+  return html.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
+}
+
+function getYoutubeThumbnail(url: string) {
+  const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/);
+  return match ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg` : null;
+}
+
+function AnnouncementCard({ a }: { a: Announcement }) {
+  const thumb = a.cover_video_url ? getYoutubeThumbnail(a.cover_video_url) : null;
+  const cover = thumb ?? a.cover_image_url ?? null;
+
+  return (
+    <Link
+      href={`/home/announcements/${a.id}`}
+      className="group flex flex-col rounded-2xl border overflow-hidden transition-all hover:border-white/15"
+      style={{
+        backgroundColor: a.pinned ? 'color-mix(in srgb, #DC5B17 5%, var(--adm-card))' : 'var(--adm-card)',
+        borderColor:     a.pinned ? 'color-mix(in srgb, #DC5B17 20%, transparent)' : 'var(--adm-border)',
+      }}
+    >
+      {/* Cover */}
+      {cover && (
+        <div className="relative w-full h-44 overflow-hidden bg-black/20">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={cover} alt={a.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+          {a.cover_video_url && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+              <PlayCircle size={48} weight="fill" className="text-white/90 drop-shadow-lg" />
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Body */}
+      <div className="flex flex-col gap-2 p-5">
+        {/* Title row */}
+        <div className="flex items-start gap-2">
+          {a.pinned && <PushPin size={13} weight="fill" className="text-[#DC5B17] shrink-0 mt-0.5" />}
+          <h2 className="font-bold text-sm leading-snug flex-1" style={{ color: 'var(--adm-text)' }}>
+            {a.title}
+          </h2>
+        </div>
+
+        {/* Excerpt */}
+        <p className="text-xs line-clamp-2 leading-relaxed" style={{ color: 'var(--adm-muted)' }}>
+          {stripHtml(a.body)}
+        </p>
+
+        {/* Footer */}
+        <div className="flex items-center justify-between mt-1">
+          <span className="text-[11px]" style={{ color: 'var(--adm-muted)' }}>
+            {new Date(a.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+          </span>
+          <span className="flex items-center gap-1 text-[11px] font-semibold text-[#DC5B17] opacity-0 group-hover:opacity-100 transition-opacity">
+            Read more <ArrowRight size={11} weight="bold" />
+          </span>
+        </div>
+      </div>
+    </Link>
+  );
+}
 
 export function PortalAnnouncementsClient({ announcements }: Props) {
   if (announcements.length === 0) {
@@ -35,10 +102,9 @@ export function PortalAnnouncementsClient({ announcements }: Props) {
 
   const pinned   = announcements.filter((a) => a.pinned);
   const unpinned = announcements.filter((a) => !a.pinned);
-  const ordered  = [...pinned, ...unpinned];
 
   return (
-    <div className="p-8 max-w-3xl">
+    <div className="p-8">
       <div className="mb-8">
         <h1 className="font-bold text-2xl" style={{ color: 'var(--adm-text)' }}>Announcements</h1>
         <p className="text-sm mt-1" style={{ color: 'var(--adm-muted)' }}>
@@ -46,47 +112,25 @@ export function PortalAnnouncementsClient({ announcements }: Props) {
         </p>
       </div>
 
-      <div className="flex flex-col gap-4">
-        {ordered.map((a) => (
-          <article
-            key={a.id}
-            className="rounded-2xl border p-6"
-            style={{
-              backgroundColor: a.pinned ? 'color-mix(in srgb, #DC5B17 6%, var(--adm-card))' : 'var(--adm-card)',
-              borderColor:     a.pinned ? 'color-mix(in srgb, #DC5B17 25%, transparent)' : 'var(--adm-border)',
-            }}
-          >
-            {/* Title row */}
-            <div className="flex items-start gap-3 mb-4">
-              {a.pinned && (
-                <PushPin size={15} weight="fill" className="text-[#DC5B17] shrink-0 mt-0.5" />
-              )}
-              <div className="flex-1 min-w-0">
-                <h2 className="font-bold text-base leading-snug" style={{ color: 'var(--adm-text)' }}>
-                  {a.title}
-                </h2>
-                <p className="text-xs mt-1" style={{ color: 'var(--adm-muted)' }}>
-                  {new Date(a.created_at).toLocaleDateString('en-GB', {
-                    day: 'numeric', month: 'long', year: 'numeric',
-                  })}
-                </p>
-              </div>
-            </div>
+      {pinned.length > 0 && (
+        <div className="mb-8">
+          <p className="text-[10px] font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--adm-muted)' }}>Pinned</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {pinned.map((a) => <AnnouncementCard key={a.id} a={a} />)}
+          </div>
+        </div>
+      )}
 
-            {/* Body — rendered rich text */}
-            <div
-              className="prose prose-sm prose-invert max-w-none
-                prose-p:text-[#aaa] prose-p:leading-relaxed
-                prose-strong:text-white prose-strong:font-semibold
-                prose-a:text-[#DC5B17] prose-a:no-underline hover:prose-a:underline
-                prose-ul:text-[#aaa] prose-ol:text-[#aaa]
-                prose-headings:text-white prose-headings:font-bold
-                prose-blockquote:border-[#DC5B17] prose-blockquote:text-[#888]"
-              dangerouslySetInnerHTML={{ __html: a.body }}
-            />
-          </article>
-        ))}
-      </div>
+      {unpinned.length > 0 && (
+        <div>
+          {pinned.length > 0 && (
+            <p className="text-[10px] font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--adm-muted)' }}>Latest</p>
+          )}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {unpinned.map((a) => <AnnouncementCard key={a.id} a={a} />)}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
