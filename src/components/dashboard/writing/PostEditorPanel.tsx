@@ -99,10 +99,8 @@ export function PostEditorPanel(p: Props) {
       <div className="max-w-2xl mx-auto px-8 py-8 flex flex-col gap-0">
 
         {/* Rich text */}
-        <div className="rounded-2xl border mb-8" style={{ backgroundColor: 'var(--adm-card)', borderColor: 'var(--adm-border)' }}>
-          <div className="border-b" style={{ borderColor: 'var(--adm-border)' }}>
-            <RichTextEditor value={p.body} onChange={p.setBody} />
-          </div>
+        <div className="mb-8">
+          <RichTextEditor value={p.body} onChange={p.setBody} />
         </div>
 
         {/* Cover image */}

@@ -158,8 +158,8 @@ export function RichTextEditor({ value, onChange }: Props) {
         <ToolBtn onClick={addLink} active={editor.isActive('link')} title="Insert link"><Link size={14} /></ToolBtn>
       </div>
 
-      {/* Editor area */}
-      <div style={{ backgroundColor: 'var(--adm-bg)' }}>
+      {/* Editor area — overflow-hidden clips content to the card's bottom rounded corners */}
+      <div className="rounded-b-xl overflow-hidden" style={{ backgroundColor: 'var(--adm-bg)' }}>
         <EditorContent editor={editor} />
       </div>
     </div>
