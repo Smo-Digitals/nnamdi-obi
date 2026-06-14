@@ -2,7 +2,7 @@
 
 import { useRef, useEffect } from 'react';
 import { RichTextEditor } from '@/components/dashboard/RichTextEditor';
-import { ImageIcon } from 'phosphor-react';
+import { Image as ImageIcon } from 'phosphor-react';
 
 export type PostStatus = 'draft' | 'scheduled' | 'published';
 
