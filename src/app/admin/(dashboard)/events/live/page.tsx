@@ -1,5 +1,2 @@
-import { PageShell } from '@/components/dashboard/PageShell';
-
-export default function LiveEventsPage() {
-  return <PageShell title="Live Events" subtitle="Stream and manage live sessions" />;
-}
+import { LiveEventsClient } from '@/components/dashboard/events/LiveEventsClient';
+export default function LiveEventsPage() { return <LiveEventsClient />; }

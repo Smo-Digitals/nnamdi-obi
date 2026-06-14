@@ -1,5 +1,2 @@
-import { PageShell } from '@/components/dashboard/PageShell';
-
-export default function CommunityMembersPage() {
-  return <PageShell title="Members" subtitle="Manage all community members and roles" />;
-}
+import { CommunityMembersClient } from '@/components/dashboard/community/CommunityMembersClient';
+export default function CommunityMembersPage() { return <CommunityMembersClient />; }

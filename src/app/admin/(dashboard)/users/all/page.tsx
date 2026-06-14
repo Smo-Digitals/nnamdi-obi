@@ -1,5 +1,2 @@
-import { PageShell } from '@/components/dashboard/PageShell';
-
-export default function AllUsersPage() {
-  return <PageShell title="All Users" subtitle="Manage all registered users and their roles" />;
-}
+import { AllUsersClient } from '@/components/dashboard/users/AllUsersClient';
+export default function AllUsersPage() { return <AllUsersClient />; }

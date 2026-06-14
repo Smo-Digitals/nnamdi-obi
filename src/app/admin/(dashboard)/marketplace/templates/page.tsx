@@ -1,5 +1,2 @@
-import { PageShell } from '@/components/dashboard/PageShell';
-
-export default function TemplatesPage() {
-  return <PageShell title="Templates" subtitle="Sell and manage digital templates" />;
-}
+import { TemplatesClient } from '@/components/dashboard/marketplace/TemplatesClient';
+export default function TemplatesPage() { return <TemplatesClient />; }

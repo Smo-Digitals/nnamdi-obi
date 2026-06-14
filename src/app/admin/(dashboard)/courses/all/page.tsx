@@ -1,5 +1,2 @@
-import { PageShell } from '@/components/dashboard/PageShell';
-
-export default function AllCoursesPage() {
-  return <PageShell title="All Courses" subtitle="Manage all your courses and content" />;
-}
+import { CoursesAllClient } from '@/components/dashboard/courses/CoursesAllClient';
+export default function CoursesAllPage() { return <CoursesAllClient />; }

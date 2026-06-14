@@ -1,5 +1,2 @@
-import { PageShell } from '@/components/dashboard/PageShell';
-
-export default function PostMetricsPage() {
-  return <PageShell title="Post Metrics" subtitle="Track views, reads, and engagement" />;
-}
+import { WritingMetricsClient } from '@/components/dashboard/writing/WritingMetricsClient';
+export default function WritingMetricsPage() { return <WritingMetricsClient />; }

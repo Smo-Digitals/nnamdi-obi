@@ -1,5 +1,2 @@
-import { PageShell } from '@/components/dashboard/PageShell';
-
-export default function AllLettersPage() {
-  return <PageShell title="All Letters" subtitle="View all sent and drafted emails" />;
-}
+import { AllEmailsClient } from '@/components/dashboard/emails/AllEmailsClient';
+export default function AllEmailsPage() { return <AllEmailsClient />; }

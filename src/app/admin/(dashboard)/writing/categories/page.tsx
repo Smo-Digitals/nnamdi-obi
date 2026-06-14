@@ -1,5 +1,2 @@
-import { PageShell } from '@/components/dashboard/PageShell';
-
-export default function PostCategoriesPage() {
-  return <PageShell title="Categories" subtitle="Organise posts by topic and category" />;
-}
+import { WritingCategoriesClient } from '@/components/dashboard/writing/WritingCategoriesClient';
+export default function WritingCategoriesPage() { return <WritingCategoriesClient />; }

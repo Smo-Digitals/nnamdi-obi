@@ -1,5 +1,2 @@
-import { PageShell } from '@/components/dashboard/PageShell';
-
-export default function MoneyMetricsPage() {
-  return <PageShell title="Money Metrics" subtitle="Detailed financial analytics and reports" />;
-}
+import { FinancialMetricsClient } from '@/components/dashboard/financials/FinancialMetricsClient';
+export default function FinancialMetricsPage() { return <FinancialMetricsClient />; }

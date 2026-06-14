@@ -1,5 +1,5 @@
-import { PageShell } from '@/components/dashboard/PageShell';
+import { PostsClient } from '@/components/dashboard/writing/PostsClient';
 
 export default function AllPostsPage() {
-  return <PageShell title="All Posts" subtitle="Manage all published and draft posts" />;
+  return <PostsClient />;
 }

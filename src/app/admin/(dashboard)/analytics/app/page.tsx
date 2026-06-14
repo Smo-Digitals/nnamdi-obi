@@ -1,5 +1,2 @@
-import { PageShell } from '@/components/dashboard/PageShell';
-
-export default function AppAnalyticsPage() {
-  return <PageShell title="App Analytics" subtitle="Platform performance and usage data" />;
-}
+import { AppAnalyticsClient } from '@/components/dashboard/analytics/AppAnalyticsClient';
+export default function AppAnalyticsPage() { return <AppAnalyticsClient />; }

@@ -1,5 +1,2 @@
-import { PageShell } from '@/components/dashboard/PageShell';
-
-export default function RoadmapsPage() {
-  return <PageShell title="Roadmaps" subtitle="Create structured learning paths for your members" />;
-}
+import { RoadmapsClient } from '@/components/dashboard/courses/RoadmapsClient';
+export default function RoadmapsPage() { return <RoadmapsClient />; }

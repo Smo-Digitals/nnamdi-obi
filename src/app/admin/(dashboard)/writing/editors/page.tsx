@@ -1,5 +1,2 @@
-import { PageShell } from '@/components/dashboard/PageShell';
-
-export default function EditorsPage() {
-  return <PageShell title="Editors" subtitle="Manage editors and writing collaborators" />;
-}
+import { WritingEditorsClient } from '@/components/dashboard/writing/WritingEditorsClient';
+export default function WritingEditorsPage() { return <WritingEditorsClient />; }

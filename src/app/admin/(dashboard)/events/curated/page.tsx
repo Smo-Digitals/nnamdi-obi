@@ -1,5 +1,2 @@
-import { PageShell } from '@/components/dashboard/PageShell';
-
-export default function CuratedEventsPage() {
-  return <PageShell title="Curated Events" subtitle="Feature and promote curated events" />;
-}
+import { CuratedEventsClient } from '@/components/dashboard/events/CuratedEventsClient';
+export default function CuratedEventsPage() { return <CuratedEventsClient />; }

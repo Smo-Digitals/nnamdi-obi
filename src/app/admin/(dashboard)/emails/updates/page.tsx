@@ -1,5 +1,2 @@
-import { PageShell } from '@/components/dashboard/PageShell';
-
-export default function UpdatesPage() {
-  return <PageShell title="Updates" subtitle="Send product and community updates" />;
-}
+import { UpdatesClient } from '@/components/dashboard/emails/UpdatesClient';
+export default function UpdatesEmailsPage() { return <UpdatesClient />; }

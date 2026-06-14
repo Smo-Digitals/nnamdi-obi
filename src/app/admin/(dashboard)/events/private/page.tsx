@@ -1,5 +1,2 @@
-import { PageShell } from '@/components/dashboard/PageShell';
-
-export default function PrivateEventsPage() {
-  return <PageShell title="Private Events" subtitle="Manage invite-only and private events" />;
-}
+import { PrivateEventsClient } from '@/components/dashboard/events/PrivateEventsClient';
+export default function PrivateEventsPage() { return <PrivateEventsClient />; }

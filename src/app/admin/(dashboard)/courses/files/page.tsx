@@ -1,5 +1,2 @@
-import { PageShell } from '@/components/dashboard/PageShell';
-
-export default function CourseFilesPage() {
-  return <PageShell title="Files" subtitle="Manage course assets and downloadable files" />;
-}
+import { CourseFilesClient } from '@/components/dashboard/courses/CourseFilesClient';
+export default function CourseFilesPage() { return <CourseFilesClient />; }

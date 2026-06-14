@@ -1,5 +1,2 @@
-import { PageShell } from '@/components/dashboard/PageShell';
-
-export default function PartnershipsPage() {
-  return <PageShell title="Partnerships" subtitle="Manage partner integrations and collaborations" />;
-}
+import { PartnershipsClient } from '@/components/dashboard/marketplace/PartnershipsClient';
+export default function PartnershipsPage() { return <PartnershipsClient />; }

@@ -1,5 +1,2 @@
-import { PageShell } from '@/components/dashboard/PageShell';
-
-export default function NewslettersPage() {
-  return <PageShell title="Newsletters" subtitle="Create and send newsletters to subscribers" />;
-}
+import { NewslettersClient } from '@/components/dashboard/emails/NewslettersClient';
+export default function NewslettersPage() { return <NewslettersClient />; }
