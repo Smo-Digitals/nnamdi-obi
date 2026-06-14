@@ -4,9 +4,9 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
-  House, BookOpen, UsersThree, CalendarBlank,
-  Storefront, CalendarCheck, UserCircle, Gear,
-  SignOut, CaretRight, ChatCircle,
+  House, Megaphone, BookOpen, BookmarkSimple, FolderOpen,
+  Binoculars, UserPlus, ShoppingBag, CalendarCheck, CalendarPlus,
+  Headset, ChatCircle, Trophy, CaretRight, SignOut,
 } from 'phosphor-react';
 import { logout } from '@/app/(auth)/actions';
 
@@ -14,33 +14,57 @@ type NavItem = { label: string; href: string; icon: React.ElementType };
 
 const SECTIONS: { label: string; items: NavItem[] }[] = [
   {
-    label: 'Main',
+    label: 'Dashboard',
     items: [
-      { label: 'Home',       href: '/home',           icon: House },
-      { label: 'Courses',    href: '/home/courses',    icon: BookOpen },
-      { label: 'Community',  href: '/home/community',  icon: UsersThree },
-      { label: 'Events',     href: '/home/events',     icon: CalendarBlank },
+      { label: 'Overview',      href: '/home',                 icon: House },
+      { label: 'Announcements', href: '/home/announcements',   icon: Megaphone },
     ],
   },
   {
-    label: 'Commerce',
+    label: 'Courses',
     items: [
-      { label: 'Marketplace', href: '/home/marketplace', icon: Storefront },
-      { label: 'Bookings',    href: '/home/bookings',    icon: CalendarCheck },
+      { label: 'Courses',         href: '/home/courses',         icon: BookOpen },
+      { label: 'Curated Content', href: '/home/courses/curated', icon: BookmarkSimple },
+      { label: 'Files & Docs',    href: '/home/courses/files',   icon: FolderOpen },
     ],
   },
   {
-    label: 'Account',
+    label: 'Community',
     items: [
-      { label: 'Messages',  href: '/home/messages',  icon: ChatCircle },
-      { label: 'Profile',   href: '/home/profile',   icon: UserCircle },
-      { label: 'Settings',  href: '/home/settings',  icon: Gear },
+      { label: 'Find', href: '/home/community/find', icon: Binoculars },
+      { label: 'Join', href: '/home/community/join', icon: UserPlus },
+    ],
+  },
+  {
+    label: 'Marketplace',
+    items: [
+      { label: 'Shop Owned', href: '/home/marketplace/owned', icon: ShoppingBag },
+    ],
+  },
+  {
+    label: 'Booking',
+    items: [
+      { label: 'Active',   href: '/home/booking/active', icon: CalendarCheck },
+      { label: 'Book Now', href: '/home/booking/new',    icon: CalendarPlus },
+    ],
+  },
+  {
+    label: 'Messages',
+    items: [
+      { label: 'Support', href: '/home/messages/support', icon: Headset },
+      { label: 'Chat',    href: '/home/messages/chat',    icon: ChatCircle },
+    ],
+  },
+  {
+    label: 'Leaderboard',
+    items: [
+      { label: 'Leaderboard', href: '/home/leaderboard', icon: Trophy },
     ],
   },
 ];
 
 export function PortalSidebar() {
-  const pathname  = usePathname();
+  const pathname   = usePathname();
   const [collapsed, setCollapsed] = useState(false);
 
   return (
@@ -78,7 +102,7 @@ export function PortalSidebar() {
             )}
             <div className="flex flex-col gap-0.5">
               {items.map(({ label: name, href, icon: Icon }) => {
-                const active = href === '/home' ? pathname === '/home' : pathname.startsWith(href);
+                const active = pathname === href;
                 return collapsed ? (
                   <Link key={href} href={href} title={name}
                     className={`flex items-center justify-center w-10 h-10 mx-auto rounded-xl transition-colors ${
