@@ -47,7 +47,7 @@ function AutoTextarea({ value, onChange, placeholder, className, style, minRows 
   return (
     <textarea ref={ref} value={value} onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder} rows={minRows}
-      className={`w-full bg-transparent resize-none outline-none placeholder:opacity-25 leading-tight ${className ?? ''}`}
+      className={`w-full bg-transparent resize-none outline-none placeholder:opacity-50 leading-tight ${className ?? ''}`}
       style={style} />
   );
 }
