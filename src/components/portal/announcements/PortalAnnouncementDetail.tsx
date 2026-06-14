@@ -64,10 +64,10 @@ export function PortalAnnouncementDetail({ announcement: a }: Props) {
       {/* Two-panel: left image fixed, right content scrolls */}
       <div className="flex-1 flex overflow-hidden min-h-0">
 
-        {/* LEFT — image, never scrolls */}
-        <div className="w-[380px] shrink-0 px-8 pb-8 overflow-hidden">
+        {/* LEFT — square image, never scrolls */}
+        <div className="w-[380px] shrink-0 px-8 pb-8">
           {embedUrl ? (
-            <div className="w-full h-full aspect-video rounded-2xl overflow-hidden bg-black">
+            <div className="w-full aspect-square rounded-2xl overflow-hidden bg-black">
               <iframe src={embedUrl} className="w-full h-full"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen />
@@ -75,7 +75,7 @@ export function PortalAnnouncementDetail({ announcement: a }: Props) {
           ) : (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={a.cover_image_url!} alt={a.title}
-              className="w-full h-full object-cover rounded-2xl" />
+              className="w-full aspect-square object-cover rounded-2xl" />
           )}
         </div>
 
