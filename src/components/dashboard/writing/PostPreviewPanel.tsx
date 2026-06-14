@@ -110,9 +110,29 @@ export function PostPreviewPanel(p: Props) {
               </h2>
 
               {/* Excerpt */}
-              <p className="text-sm leading-relaxed text-[#666] line-clamp-3">
-                {p.excerpt || <span className="text-[#bbb]">Your content will appear here as you write…</span>}
-              </p>
+              {p.excerpt && (
+                <p className="text-sm leading-relaxed text-[#555] mb-4 pb-4 border-b border-[#f0f0f0] italic">
+                  {p.excerpt}
+                </p>
+              )}
+
+              {/* Body */}
+              {p.body ? (
+                <div
+                  className="prose prose-sm max-w-none text-[#333]
+                    [&_h1]:text-sm [&_h1]:font-bold [&_h1]:text-[#111] [&_h1]:mb-2
+                    [&_h2]:text-xs [&_h2]:font-bold [&_h2]:text-[#111] [&_h2]:mb-1.5
+                    [&_h3]:text-xs [&_h3]:font-semibold [&_h3]:text-[#111]
+                    [&_p]:text-[12px] [&_p]:leading-relaxed [&_p]:mb-2 [&_p]:text-[#444]
+                    [&_a]:text-[#DC5B17] [&_a]:no-underline
+                    [&_ul]:text-[12px] [&_ul]:text-[#444] [&_ol]:text-[12px] [&_ol]:text-[#444]
+                    [&_blockquote]:border-l-2 [&_blockquote]:border-[#DC5B17] [&_blockquote]:pl-3 [&_blockquote]:italic [&_blockquote]:text-[#666]
+                    [&_strong]:font-semibold [&_strong]:text-[#111]"
+                  dangerouslySetInnerHTML={{ __html: p.body }}
+                />
+              ) : (
+                <p className="text-[12px] text-[#bbb] italic">Your content will appear here as you write…</p>
+              )}
             </div>
           </div>
 
