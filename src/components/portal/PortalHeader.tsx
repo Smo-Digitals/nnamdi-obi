@@ -119,7 +119,7 @@ export function PortalHeader() {
   const { theme, setTheme } = useTheme();
 
   return (
-    <header className="h-20 shrink-0 flex items-center px-8 border-b"
+    <header className="h-20 shrink-0 relative flex items-center px-8 border-b"
       style={{ backgroundColor: 'var(--adm-header)', borderColor: 'var(--adm-border)' }}>
 
       <div className="shrink-0">
@@ -129,14 +129,14 @@ export function PortalHeader() {
         <p className="text-xs" style={{ color: 'var(--adm-muted)' }}>Welcome back to your dashboard.</p>
       </div>
 
-      <button className="flex-1 mx-8 flex items-center gap-2.5 px-4 py-2.5 rounded-xl border text-[#444] hover:border-white/10 hover:bg-white/[0.06] transition-colors"
+      <button className="absolute left-1/2 -translate-x-1/2 w-72 flex items-center gap-2.5 px-4 py-2.5 rounded-xl border text-[#444] hover:border-white/10 hover:bg-white/[0.06] transition-colors"
         style={{ backgroundColor: 'var(--adm-pill)', borderColor: 'var(--adm-border)' }}>
         <MagnifyingGlass size={15} />
         <span className="text-sm flex-1 text-left">Search courses, events…</span>
         <kbd className="text-[10px] bg-white/5 px-1.5 py-0.5 rounded text-[#333]">⌘K</kbd>
       </button>
 
-      <div className="shrink-0 flex items-center gap-5">
+      <div className="shrink-0 flex items-center gap-5 ml-auto">
         <div className="relative shrink-0">
           <button className="w-10 h-10 flex items-center justify-center rounded-xl border text-[#555] hover:text-white transition-colors"
             style={{ backgroundColor: 'var(--adm-pill)', borderColor: 'var(--adm-border)' }}>

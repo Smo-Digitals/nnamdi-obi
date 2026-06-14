@@ -172,7 +172,7 @@ export function AdminHeader() {
     <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
     <NotificationsPanel open={notifOpen} onClose={() => setNotifOpen(false)} onRead={(n) => setNotifCount((c) => Math.max(0, c - n))} />
     <MessagesPanel open={msgOpen} onClose={() => setMsgOpen(false)} onRead={(n) => setMsgCount((c) => Math.max(0, c - n))} />
-    <header className="h-20 shrink-0 flex items-center px-8 border-b" style={{ backgroundColor: 'var(--adm-header)', borderColor: 'var(--adm-border)' }}>
+    <header className="h-20 shrink-0 relative flex items-center px-8 border-b" style={{ backgroundColor: 'var(--adm-header)', borderColor: 'var(--adm-border)' }}>
 
       {/* Greeting — left */}
       <div className="shrink-0">
@@ -182,10 +182,10 @@ export function AdminHeader() {
         <p className="text-[#444] text-xs">Here&apos;s what&apos;s happening today.</p>
       </div>
 
-      {/* Search — stretches to fill middle */}
+      {/* Search — absolutely centred, fixed width */}
       <button
         onClick={() => setSearchOpen(true)}
-        className="flex-1 mx-8 flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.06] text-[#444] hover:border-white/10 hover:bg-white/[0.06] transition-colors"
+        className="absolute left-1/2 -translate-x-1/2 w-72 flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.06] text-[#444] hover:border-white/10 hover:bg-white/[0.06] transition-colors"
       >
         <MagnifyingGlass size={15} />
         <span className="text-sm flex-1 text-left">Search anything…</span>
@@ -193,7 +193,7 @@ export function AdminHeader() {
       </button>
 
       {/* Right */}
-      <div className="shrink-0 flex items-center gap-5">
+      <div className="shrink-0 flex items-center gap-5 ml-auto">
 
         {/* Messages — icon box */}
         <div className="relative shrink-0">
