@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Trash } from 'phosphor-react';
 import type { Announcement } from './AnnouncementsClient';
+import { RichTextEditor } from '@/components/dashboard/RichTextEditor';
 
 interface Props {
   open:      boolean;
@@ -98,15 +99,11 @@ export function AnnouncementPanel({ open, onClose, editing, onSaved, onDeleted }
               </div>
 
               <div>
-                <label className="text-xs font-semibold mb-2 block" style={{ color: 'var(--adm-muted)' }}>Message</label>
-                <textarea
-                  value={body}
-                  onChange={(e) => setBody(e.target.value)}
-                  placeholder="Write your announcement…"
-                  rows={8}
-                  className={`${inputCls} resize-none`}
-                  style={{ color: 'var(--adm-text)', borderColor: 'var(--adm-border)' }}
-                />
+                <label className="text-xs font-semibold mb-2 block" style={{ color: 'var(--adm-muted)' }}>Content</label>
+                <RichTextEditor value={body} onChange={setBody} />
+                <p className="text-[11px] mt-1.5" style={{ color: 'var(--adm-muted)' }}>
+                  Use the toolbar to add headings, colours, lists, images, videos, and more
+                </p>
               </div>
 
               <div>
