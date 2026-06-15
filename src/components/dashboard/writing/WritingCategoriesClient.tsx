@@ -37,7 +37,6 @@ function flattenCategories(cats: Category[]): { cat: Category; depth: number }[]
 export function WritingCategoriesClient() {
   const [categories, setCategories] = useState<Category[]>(MOCK);
   const [editing,    setEditing]    = useState<Category | null>(null);
-  const [hoverId,    setHoverId]    = useState<string | null>(null);
   const [selected,   setSelected]   = useState<Set<string>>(new Set());
 
   // Form state
@@ -200,7 +199,7 @@ export function WritingCategoriesClient() {
                     onChange={() => toggleAll(rows)}
                     className="accent-[#DC5B17] cursor-pointer" />
                 </th>
-                {['Name', 'Description', 'Slug', 'Count'].map((h) => (
+                {['Name', 'Description', 'Slug', 'Count', ''].map((h) => (
                   <th key={h} className="px-4 py-3 text-xs font-semibold" style={{ color: 'var(--adm-muted)' }}>{h}</th>
                 ))}
               </tr>
@@ -208,8 +207,6 @@ export function WritingCategoriesClient() {
             <tbody>
               {rows.map(({ cat, depth }, i) => (
                 <tr key={cat.id}
-                  onMouseEnter={() => setHoverId(cat.id)}
-                  onMouseLeave={() => setHoverId(null)}
                   className="group transition-colors"
                   style={{
                     backgroundColor: selected.has(cat.id) ? 'rgba(220,91,23,0.06)' : 'var(--adm-card)',
@@ -221,19 +218,8 @@ export function WritingCategoriesClient() {
                   </td>
                   <td className="px-4 py-3">
                     <div style={{ paddingLeft: depth * 16 }}>
-                      {depth > 0 && (
-                        <span className="mr-1 text-xs" style={{ color: 'var(--adm-border)' }}>—</span>
-                      )}
+                      {depth > 0 && <span className="mr-1 text-xs" style={{ color: 'var(--adm-border)' }}>—</span>}
                       <span className="text-sm font-medium" style={{ color: 'var(--adm-text)' }}>{cat.name}</span>
-                      {hoverId === cat.id && (
-                        <span className="ml-2 text-[11px]">
-                          <button onClick={() => startEdit(cat)}
-                            className="hover:underline mr-1.5" style={{ color: '#DC5B17' }}>Edit</button>
-                          <span style={{ color: 'var(--adm-border)' }}>|</span>
-                          <button onClick={() => remove(cat.id)}
-                            className="hover:underline ml-1.5" style={{ color: 'var(--adm-muted)' }}>Delete</button>
-                        </span>
-                      )}
                     </div>
                   </td>
                   <td className="px-4 py-3 text-xs max-w-xs" style={{ color: 'var(--adm-muted)' }}>
@@ -241,6 +227,20 @@ export function WritingCategoriesClient() {
                   </td>
                   <td className="px-4 py-3 text-xs font-mono" style={{ color: 'var(--adm-muted)' }}>{cat.slug}</td>
                   <td className="px-4 py-3 text-sm text-center" style={{ color: 'var(--adm-text)' }}>{cat.posts}</td>
+                  <td className="px-4 py-3">
+                    <div className="flex items-center gap-1 justify-end">
+                      <button onClick={() => startEdit(cat)}
+                        className="p-1.5 rounded-lg hover:bg-white/5 transition-colors" style={{ color: 'var(--adm-muted)' }}
+                        title="Edit">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                      </button>
+                      <button onClick={() => remove(cat.id)}
+                        className="p-1.5 rounded-lg hover:bg-red-500/10 hover:text-red-400 transition-colors" style={{ color: 'var(--adm-muted)' }}
+                        title="Delete">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+                      </button>
+                    </div>
+                  </td>
                 </tr>
               ))}
             </tbody>
