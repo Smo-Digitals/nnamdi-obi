@@ -19,7 +19,7 @@ export async function GET(request: Request) {
         .single();
 
       if (profile?.role === 'admin') return NextResponse.redirect(`${origin}/admin`);
-      return NextResponse.redirect(`${origin}/dashboard`);
+      return NextResponse.redirect(`${origin}/home`);
     }
   }
 
