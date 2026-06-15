@@ -1,7 +1,8 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { RichTextEditor } from '@/components/dashboard/RichTextEditor';
+import { MediaPickerModal } from './MediaPickerModal';
 import { Image as ImageIcon } from 'phosphor-react';
 
 export type PostStatus = 'draft' | 'scheduled' | 'published';
@@ -66,14 +67,7 @@ interface Props {
 }
 
 export function PostEditorPanel(p: Props) {
-  const fileRef = useRef<HTMLInputElement>(null);
-
-  async function onCoverFile(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0]; if (!file) return;
-    const form = new FormData(); form.append('file', file); form.append('folder', 'posts');
-    const res = await fetch('/api/upload-image', { method: 'POST', body: form });
-    if (res.ok) { const { url } = await res.json(); p.setCoverUrl(url); }
-  }
+  const [mediaOpen, setMediaOpen] = useState(false);
 
   function toggleCat(id: string) {
     p.setCategories(p.categories.includes(id) ? p.categories.filter((c) => c !== id) : [...p.categories, id]);
@@ -109,24 +103,31 @@ export function PostEditorPanel(p: Props) {
             <span className="text-[10px] font-bold uppercase tracking-widest" style={{ color: 'var(--adm-muted)' }}>Cover Image</span>
             <span className="text-[10px]" style={{ color: 'var(--adm-muted)' }}>16:9 · PNG, JPG, WEBP</span>
           </div>
-          <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={onCoverFile} />
           {p.coverUrl ? (
-            <div className="relative w-full aspect-video">
+            <button onClick={() => setMediaOpen(true)} className="relative w-full aspect-video block group">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={p.coverUrl} alt="cover" className="w-full h-full object-cover" />
-              <button onClick={() => p.setCoverUrl(null)}
-                className="absolute top-2 right-2 px-2 py-1 rounded-lg bg-black/50 text-white text-xs hover:bg-black/70">Remove</button>
-            </div>
+              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                <span className="text-white text-xs font-semibold">Change image</span>
+              </div>
+            </button>
           ) : (
-            <button onClick={() => fileRef.current?.click()}
+            <button onClick={() => setMediaOpen(true)}
               className="w-full aspect-video flex flex-col items-center justify-center gap-2 hover:opacity-70 transition-opacity"
               style={{ backgroundColor: 'var(--adm-bg)' }}>
               <ImageIcon size={24} style={{ color: 'var(--adm-muted)' }} />
-              <span className="text-sm font-medium" style={{ color: 'var(--adm-muted)' }}>Click or drag to upload</span>
-              <span className="text-xs" style={{ color: 'var(--adm-muted)' }}>PNG, JPG, WEBP, AVIF · 1280 × 720 recommended</span>
+              <span className="text-sm font-medium" style={{ color: 'var(--adm-muted)' }}>Click to choose or upload</span>
+              <span className="text-xs" style={{ color: 'var(--adm-muted)' }}>PNG, JPG, WEBP · 1280 × 720 recommended</span>
             </button>
           )}
         </div>
+
+        <MediaPickerModal
+          open={mediaOpen}
+          onClose={() => setMediaOpen(false)}
+          onSelect={p.setCoverUrl}
+          currentUrl={p.coverUrl}
+        />
 
         {/* Slug + Status */}
         <div className="grid grid-cols-2 gap-4 mb-5">
