@@ -24,8 +24,7 @@ export async function POST(req: NextRequest) {
     const folder = (form.get('folder') as string | null) ?? 'media';
     if (!file) return NextResponse.json({ error: 'No file provided' }, { status: 400 });
 
-    const ALLOWED = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml'];
-    if (!ALLOWED.includes(file.type)) return NextResponse.json({ error: 'File type not allowed' }, { status: 400 });
+    if (!file.type.startsWith('image/')) return NextResponse.json({ error: 'File type not allowed' }, { status: 400 });
     if (file.size > 10 * 1024 * 1024) return NextResponse.json({ error: 'Max file size is 10MB' }, { status: 400 });
 
     const ext    = file.name.split('.').pop()?.toLowerCase() ?? 'jpg';
