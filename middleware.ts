@@ -42,7 +42,13 @@ export async function middleware(request: NextRequest) {
       .eq('id', user.id)
       .single();
 
-    if (profile?.role !== 'admin') {
+    if (profile?.role === 'admin') {
+      // full access — proceed
+    } else if (profile?.role === 'editor') {
+      if (!pathname.startsWith('/admin/writing')) {
+        return NextResponse.redirect(new URL('/admin/writing/posts', request.url));
+      }
+    } else {
       return NextResponse.redirect(new URL('/home', request.url));
     }
   }
@@ -60,7 +66,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/home', request.url));
   }
 
-  // ── Redirect admin away from admin/login if already signed in ────────────────
+  // ── Redirect admin/editor away from admin/login if already signed in ─────────
   if (pathname === '/admin/login' && user) {
     const { data: profile } = await supabase
       .from('profiles')
@@ -70,6 +76,9 @@ export async function middleware(request: NextRequest) {
 
     if (profile?.role === 'admin') {
       return NextResponse.redirect(new URL('/admin', request.url));
+    }
+    if (profile?.role === 'editor') {
+      return NextResponse.redirect(new URL('/admin/writing/posts', request.url));
     }
   }
 

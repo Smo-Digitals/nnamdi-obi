@@ -93,13 +93,23 @@ export async function loginWithGoogle() {
 export async function adminLogin(formData: FormData) {
   const supabase = await createClient();
 
-  const { error } = await supabase.auth.signInWithPassword({
+  const { data, error } = await supabase.auth.signInWithPassword({
     email: formData.get('email') as string,
     password: formData.get('password') as string,
   });
 
   if (error) {
     redirect('/admin/login?error=' + encodeURIComponent(error.message));
+  }
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', data.user.id)
+    .single();
+
+  if (profile?.role === 'editor') {
+    redirect('/admin/writing/posts');
   }
 
   redirect('/admin');

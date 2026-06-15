@@ -120,20 +120,23 @@ const NAV: NavGroup[] = [
   },
 ];
 
-export function Sidebar() {
+const EDITOR_GROUPS = new Set(['writing']);
+
+export function Sidebar({ role }: { role: string }) {
   const pathname = usePathname();
+  const nav = role === 'editor' ? NAV.filter((g) => EDITOR_GROUPS.has(g.id)) : NAV;
   const [collapsed,   setCollapsed]   = useState(false);
   const [openGroups,  setOpenGroups]  = useState<string[]>(() => {
-    const active = NAV.find((g) =>
+    const active = nav.find((g) =>
       g.id === 'dashboard'
         ? pathname === '/admin' || pathname.startsWith('/admin/announcements') || pathname.startsWith('/admin/media') || pathname.startsWith('/admin/homepage')
         : pathname.startsWith(g.basePath)
     );
-    return active ? [active.id] : ['dashboard'];
+    return active ? [active.id] : [nav[0]?.id ?? 'dashboard'];
   });
 
   useEffect(() => {
-    const active = NAV.find((g) =>
+    const active = nav.find((g) =>
       g.id === 'dashboard'
         ? pathname === '/admin' || g.items.some((i) => pathname === i.href)
         : pathname.startsWith(g.basePath)
@@ -190,7 +193,7 @@ export function Sidebar() {
           <p className="text-[#333] text-[10px] font-semibold uppercase tracking-widest px-2 mb-2">Menu</p>
         )}
 
-        {NAV.map((group) => {
+        {nav.map((group) => {
           const Icon     = group.icon;
           const isOpen   = openGroups.includes(group.id);
           const isActive = group.id === 'dashboard'
