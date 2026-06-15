@@ -6,7 +6,7 @@ import Image from 'next/image';
 type CuratedLink = {
   id: string; url: string; title: string; description: string | null;
   image_url: string | null; source_name: string | null; author: string | null;
-  position: number; added_at: string;
+  position: number; click_count: number; added_at: string;
 };
 
 function ExternalIcon() {
@@ -58,6 +58,7 @@ export function CuratedReadsPage() {
         <div className="grid gap-4">
           {links.map((link) => (
             <a key={link.id} href={link.url} target="_blank" rel="noopener noreferrer"
+              onClick={() => fetch(`/api/curated/${link.id}/click`, { method: 'POST' })}
               className="group rounded-2xl border flex gap-0 overflow-hidden transition-all hover:border-[#DC5B17]/40"
               style={{ backgroundColor: 'var(--adm-card)', borderColor: 'var(--adm-border)' }}>
 
