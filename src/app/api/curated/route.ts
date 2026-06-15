@@ -2,14 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   const admin = createAdminClient();
-  const { data, error } = await admin
-    .from('curated_links')
-    .select('*')
-    .eq('active', true)
-    .order('position', { ascending: true })
-    .order('added_at', { ascending: false });
+  const all = req.nextUrl.searchParams.get('all') === '1';
+  let query = admin.from('curated_links').select('*').order('position', { ascending: true }).order('added_at', { ascending: false });
+  if (!all) query = query.eq('active', true);
+  const { data, error } = await query;
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json(data);
 }

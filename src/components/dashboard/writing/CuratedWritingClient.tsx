@@ -6,7 +6,7 @@ import Image from 'next/image';
 type CuratedLink = {
   id: string; url: string; title: string; description: string | null;
   image_url: string | null; source_name: string | null; author: string | null;
-  position: number; click_count: number; added_at: string;
+  position: number; click_count: number; active: boolean; added_at: string;
 };
 
 type Draft = {
@@ -24,7 +24,7 @@ export function CuratedWritingClient() {
   const [saving,     setSaving]     = useState(false);
 
   useEffect(() => {
-    fetch('/api/curated')
+    fetch('/api/curated?all=1')
       .then((r) => r.json())
       .then((d) => { if (Array.isArray(d)) setLinks(d); })
       .finally(() => setLoading(false));
@@ -54,6 +54,14 @@ export function CuratedWritingClient() {
   }
 
   function handleCancel() { setDraft(null); setUrlInput(''); setFetchErr(''); }
+
+  async function toggleActive(id: string, active: boolean) {
+    setLinks((prev) => prev.map((l) => l.id === id ? { ...l, active } : l));
+    await fetch(`/api/curated/${id}`, {
+      method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ active }),
+    });
+  }
 
   async function handleRemove(id: string) {
     if (!confirm('Remove this link?')) return;
@@ -125,27 +133,23 @@ export function CuratedWritingClient() {
               {draft.image_url && (
                 <div className="relative w-full h-48 bg-white/5 overflow-hidden">
                   <Image src={draft.image_url} alt="" fill className="object-cover" unoptimized />
-                  {draft.source_name && (
-                    <div className="absolute bottom-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold"
-                      style={{ backgroundColor: 'rgba(0,0,0,0.65)', color: '#fff', backdropFilter: 'blur(4px)' }}>
-                      <svg width="10" height="10" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
-                        <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
-                      </svg>
-                      {draft.source_name}
-                    </div>
-                  )}
                 </div>
               )}
               <div className="p-4">
+                <div className="flex items-center gap-2 mb-2 flex-wrap">
+                  {draft.source_name && (
+                    <span className="text-xs font-semibold px-2 py-0.5 rounded-full border"
+                      style={{ color: 'var(--adm-text)', borderColor: 'var(--adm-border)', backgroundColor: 'var(--adm-bg)' }}>
+                      {draft.source_name}
+                    </span>
+                  )}
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full text-green-400 bg-green-400/10">
+                    Live
+                  </span>
+                </div>
                 <h3 className="font-bold text-base leading-snug" style={{ color: 'var(--adm-text)' }}>{draft.title}</h3>
                 {draft.description && (
                   <p className="text-sm mt-1.5 line-clamp-2 leading-relaxed" style={{ color: 'var(--adm-muted)' }}>{draft.description}</p>
-                )}
-                {draft.source_name && (
-                  <p className="text-xs mt-2 font-medium" style={{ color: '#DC5B17' }}>
-                    Read on {draft.source_name} →
-                  </p>
                 )}
               </div>
             </div>
@@ -214,102 +218,92 @@ export function CuratedWritingClient() {
         </div>
 
         {loading ? (
-          <div className="flex flex-col gap-3">
-            {[1,2,3].map((i) => (
-              <div key={i} className="h-28 rounded-2xl border animate-pulse"
-                style={{ backgroundColor: 'var(--adm-card)', borderColor: 'var(--adm-border)' }} />
+          <div className="flex flex-col">
+            {[1,2,3,4].map((i) => (
+              <div key={i} className="flex gap-4 py-4 border-b animate-pulse" style={{ borderColor: 'var(--adm-border)' }}>
+                <div className="w-24 h-16 rounded-xl shrink-0" style={{ backgroundColor: 'var(--adm-card)' }} />
+                <div className="flex-1 flex flex-col gap-2 pt-1">
+                  <div className="h-3 w-24 rounded-full" style={{ backgroundColor: 'var(--adm-card)' }} />
+                  <div className="h-4 w-3/4 rounded-full" style={{ backgroundColor: 'var(--adm-card)' }} />
+                  <div className="h-3 w-1/2 rounded-full" style={{ backgroundColor: 'var(--adm-card)' }} />
+                </div>
+              </div>
             ))}
           </div>
         ) : links.length === 0 ? (
-          <div className="flex-1 flex flex-col items-center justify-center py-20 rounded-2xl border"
-            style={{ backgroundColor: 'var(--adm-card)', borderColor: 'var(--adm-border)' }}>
-            <svg className="mb-3" width="32" height="32" fill="none" stroke="currentColor" strokeWidth="1.2"
-              viewBox="0 0 24 24" style={{ color: 'var(--adm-border)' }}>
-              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
-              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
-            </svg>
+          <div className="flex flex-col items-center justify-center py-20">
             <p className="text-sm font-medium" style={{ color: 'var(--adm-text)' }}>No curated posts yet</p>
             <p className="text-xs mt-1" style={{ color: 'var(--adm-muted)' }}>Paste a URL on the left to get started.</p>
           </div>
         ) : (
-          <div className="flex flex-col gap-3">
-            {links.map((link, i) => (
-              <div key={link.id} className="rounded-2xl border overflow-hidden"
-                style={{ backgroundColor: 'var(--adm-card)', borderColor: 'var(--adm-border)' }}>
+          <div className="flex flex-col">
+            {links.map((link) => {
+              let hostname = '';
+              try { hostname = new URL(link.url).hostname.replace('www.', ''); } catch { hostname = link.url; }
+              return (
+                <div key={link.id}
+                  className="flex items-start gap-4 py-4 border-b"
+                  style={{ borderColor: 'var(--adm-border)', opacity: link.active ? 1 : 0.45 }}>
 
-                {/* Banner image — full width, 16:9-ish */}
-                {link.image_url ? (
-                  <div className="relative w-full h-36 overflow-hidden bg-white/5">
-                    <Image src={link.image_url} alt="" fill className="object-cover" unoptimized />
-                    {/* Source badge over image */}
-                    {link.source_name && (
-                      <div className="absolute bottom-2 left-3 flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] font-semibold"
-                        style={{ backgroundColor: 'rgba(0,0,0,0.6)', color: '#fff', backdropFilter: 'blur(4px)' }}>
-                        <svg width="9" height="9" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
-                          <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
-                        </svg>
-                        {link.source_name}
-                      </div>
+                  {/* Thumbnail */}
+                  <div className="w-24 h-16 rounded-xl shrink-0 overflow-hidden bg-white/5 flex items-center justify-center">
+                    {link.image_url ? (
+                      <Image src={link.image_url} alt="" width={96} height={64}
+                        className="w-full h-full object-cover" unoptimized />
+                    ) : (
+                      <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.5"
+                        viewBox="0 0 24 24" style={{ color: 'var(--adm-border)' }}>
+                        <rect x="3" y="3" width="18" height="18" rx="2"/>
+                        <path d="M3 9l5-5 4 4 3-3 6 6"/><circle cx="8.5" cy="8.5" r="1.5"/>
+                      </svg>
                     )}
                   </div>
-                ) : (
-                  <div className="w-full h-20 flex items-center justify-center bg-white/[0.03]">
-                    <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.2"
-                      viewBox="0 0 24 24" style={{ color: 'var(--adm-border)' }}>
-                      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
-                      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
-                    </svg>
-                  </div>
-                )}
 
-                {/* Content + actions row */}
-                <div className="flex items-start gap-3 p-3">
+                  {/* Content */}
                   <div className="flex-1 min-w-0">
-                    {link.source_name && !link.image_url && (
-                      <p className="text-[11px] font-semibold uppercase tracking-wide mb-0.5" style={{ color: '#DC5B17' }}>
-                        {link.source_name}
-                      </p>
-                    )}
-                    <p className="text-sm font-semibold line-clamp-2 leading-snug" style={{ color: 'var(--adm-text)' }}>
+                    <div className="flex items-center gap-2 mb-1 flex-wrap">
+                      {link.source_name && (
+                        <span className="text-xs font-semibold px-2 py-0.5 rounded-full border"
+                          style={{ color: 'var(--adm-text)', borderColor: 'var(--adm-border)', backgroundColor: 'var(--adm-bg)' }}>
+                          {link.source_name}
+                        </span>
+                      )}
+                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${link.active ? 'text-green-400 bg-green-400/10' : 'text-[#555] bg-white/5'}`}>
+                        {link.active ? 'Live' : 'Hidden'}
+                      </span>
+                    </div>
+                    <p className="text-sm font-semibold leading-snug line-clamp-1" style={{ color: 'var(--adm-text)' }}>
                       {link.title}
                     </p>
                     {link.description && (
-                      <p className="text-xs mt-1 line-clamp-1" style={{ color: 'var(--adm-muted)' }}>{link.description}</p>
+                      <p className="text-xs mt-0.5 line-clamp-1" style={{ color: 'var(--adm-muted)' }}>{link.description}</p>
                     )}
+                    <p className="text-[11px] mt-1 truncate" style={{ color: 'var(--adm-border)' }}>{hostname}</p>
                   </div>
 
-                  {/* Actions */}
-                  <div className="flex items-center gap-1.5 shrink-0 pt-0.5">
-                    <div className="text-center mr-1">
-                      <p className="text-sm font-bold leading-none"
-                        style={{ color: (link.click_count ?? 0) > 0 ? '#DC5B17' : 'var(--adm-border)' }}>
-                        {link.click_count ?? 0}
-                      </p>
-                      <p className="text-[9px]" style={{ color: 'var(--adm-muted)' }}>clicks</p>
-                    </div>
-                    <button onClick={() => move(link.id, 'up')} disabled={i === 0}
-                      className="p-1.5 rounded-lg disabled:opacity-20"
-                      style={{ color: 'var(--adm-muted)', backgroundColor: 'var(--adm-bg)' }}>
-                      <svg width="11" height="11" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path d="M18 15l-6-6-6 6"/></svg>
-                    </button>
-                    <button onClick={() => move(link.id, 'down')} disabled={i === links.length - 1}
-                      className="p-1.5 rounded-lg disabled:opacity-20"
-                      style={{ color: 'var(--adm-muted)', backgroundColor: 'var(--adm-bg)' }}>
-                      <svg width="11" height="11" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+                  {/* Right: date + actions */}
+                  <div className="flex items-center gap-2 shrink-0">
+                    <span className="text-xs" style={{ color: 'var(--adm-muted)' }}>
+                      {new Date(link.added_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                    </span>
+                    <button
+                      onClick={() => toggleActive(link.id, !link.active)}
+                      className="px-3 py-1 rounded-lg text-xs font-semibold transition-colors"
+                      style={{ backgroundColor: 'var(--adm-bg)', color: 'var(--adm-muted)', border: '1px solid var(--adm-border)' }}>
+                      {link.active ? 'Hide' : 'Show'}
                     </button>
                     <button onClick={() => handleRemove(link.id)}
-                      className="p-1.5 rounded-lg"
-                      style={{ color: '#ef4444', backgroundColor: 'rgba(239,68,68,0.1)' }}>
-                      <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
+                      className="p-1.5 rounded-lg transition-colors hover:bg-red-500/10 hover:text-red-400"
+                      style={{ color: 'var(--adm-muted)' }}>
+                      <svg width="13" height="13" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
                         <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
                         <path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
                       </svg>
                     </button>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
