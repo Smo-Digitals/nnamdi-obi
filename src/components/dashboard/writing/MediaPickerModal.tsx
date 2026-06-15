@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { X, CloudArrowUp, CheckCircle, Trash, MagnifyingGlass } from 'phosphor-react';
+import { X, CloudArrowUp, CheckCircle, Trash, MagnifyingGlass, Warning } from 'phosphor-react';
 
 type MediaFile = { key: string; name: string; url: string; type: string; size: number; lastModified: string };
 
@@ -13,40 +13,62 @@ interface Props {
 }
 
 export function MediaPickerModal({ open, onClose, onSelect, currentUrl }: Props) {
-  const [tab,      setTab]      = useState<'library' | 'upload'>('library');
-  const [files,    setFiles]    = useState<MediaFile[]>([]);
-  const [loading,  setLoading]  = useState(false);
-  const [uploading,setUploading]= useState(false);
-  const [selected, setSelected] = useState<string | null>(null);
-  const [search,   setSearch]   = useState('');
-  const [dragging, setDragging] = useState(false);
+  const [tab,         setTab]         = useState<'library' | 'upload'>('library');
+  const [files,       setFiles]       = useState<MediaFile[]>([]);
+  const [loading,     setLoading]     = useState(false);
+  const [loadError,   setLoadError]   = useState<string | null>(null);
+  const [uploading,   setUploading]   = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [selected,    setSelected]    = useState<string | null>(null);
+  const [search,      setSearch]      = useState('');
+  const [dragging,    setDragging]    = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const loadMedia = useCallback(async () => {
     setLoading(true);
+    setLoadError(null);
     try {
       const res = await fetch('/api/media?folder=all');
-      if (res.ok) {
-        const data: MediaFile[] = await res.json();
-        setFiles(data.filter((f) => f.type === 'image'));
-      }
+      if (!res.ok) { setLoadError(`Failed to load media (${res.status})`); return; }
+      const data: MediaFile[] = await res.json();
+      setFiles(data.filter((f) => f.type === 'image'));
+    } catch {
+      setLoadError('Network error loading media.');
     } finally { setLoading(false); }
   }, []);
 
   useEffect(() => {
-    if (open) { setSelected(currentUrl); setSearch(''); setTab('library'); loadMedia(); }
+    if (open) { setSelected(currentUrl); setSearch(''); setTab('library'); setUploadError(null); loadMedia(); }
   }, [open, currentUrl, loadMedia]);
 
   async function upload(file: File) {
     setUploading(true);
+    setUploadError(null);
     try {
-      const form = new FormData(); form.append('file', file); form.append('folder', 'posts');
+      const form = new FormData();
+      form.append('file', file);
+      form.append('folder', 'posts');
       const res = await fetch('/api/upload-image', { method: 'POST', body: form });
-      if (res.ok) { const { url } = await res.json(); await loadMedia(); setSelected(url); setTab('library'); }
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        setUploadError(err.error ?? `Upload failed (${res.status})`);
+        return;
+      }
+      const { url } = await res.json();
+      await loadMedia();
+      setSelected(url);
+      setTab('library');
+    } catch {
+      setUploadError('Network error — could not upload.');
     } finally { setUploading(false); }
   }
 
-  function handleFiles(list: FileList | null) { const f = list?.[0]; if (f) upload(f); }
+  function handleFiles(list: FileList | null) {
+    const f = list?.[0];
+    if (!f) return;
+    if (f.size > 10 * 1024 * 1024) { setUploadError('File is too large (max 10 MB).'); return; }
+    upload(f);
+  }
 
   function handleDrop(e: React.DragEvent) {
     e.preventDefault(); setDragging(false); handleFiles(e.dataTransfer.files);
@@ -57,8 +79,14 @@ export function MediaPickerModal({ open, onClose, onSelect, currentUrl }: Props)
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ backgroundColor: 'rgba(0,0,0,0.75)' }}
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      style={{ backgroundColor: 'rgba(0,0,0,0.75)' }}
       onClick={(e) => e.target === e.currentTarget && onClose()}>
+
+      {/* Hidden file input — outside drop zone to avoid click bubbling */}
+      <input ref={fileRef} type="file" accept="image/*" className="hidden"
+        onChange={(e) => { handleFiles(e.target.files); e.target.value = ''; }} />
+
       <div className="w-full max-w-3xl rounded-2xl border flex flex-col overflow-hidden"
         style={{ backgroundColor: 'var(--adm-card)', borderColor: 'var(--adm-border)', maxHeight: '85vh' }}>
 
@@ -73,7 +101,7 @@ export function MediaPickerModal({ open, onClose, onSelect, currentUrl }: Props)
         {/* Tabs */}
         <div className="shrink-0 flex gap-1 px-5 pt-3">
           {(['library', 'upload'] as const).map((t) => (
-            <button key={t} onClick={() => setTab(t)}
+            <button key={t} onClick={() => { setTab(t); setUploadError(null); }}
               className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-colors ${tab === t ? 'bg-[#DC5B17] text-white' : 'hover:bg-white/5'}`}
               style={tab !== t ? { color: 'var(--adm-muted)' } : {}}>
               {t === 'library' ? 'Media Library' : 'Upload New'}
@@ -92,8 +120,17 @@ export function MediaPickerModal({ open, onClose, onSelect, currentUrl }: Props)
                   style={{ backgroundColor: 'var(--adm-bg)', borderColor: 'var(--adm-border)', color: 'var(--adm-text)' }} />
               </div>
 
-              {loading ? (
-                <div className="flex items-center justify-center py-16 text-xs" style={{ color: 'var(--adm-muted)' }}>Loading…</div>
+              {loadError ? (
+                <div className="flex flex-col items-center justify-center py-16 text-center gap-2">
+                  <Warning size={24} className="text-red-400" />
+                  <p className="text-sm text-red-400">{loadError}</p>
+                  <button onClick={loadMedia} className="mt-2 px-4 py-1.5 rounded-xl bg-[#DC5B17] text-white text-xs font-semibold">Retry</button>
+                </div>
+              ) : loading ? (
+                <div className="flex items-center justify-center py-16 gap-2 text-xs" style={{ color: 'var(--adm-muted)' }}>
+                  <div className="w-4 h-4 rounded-full border-2 border-current border-t-transparent animate-spin" />
+                  Loading…
+                </div>
               ) : filtered.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-16 text-center">
                   <p className="text-sm font-medium mb-1" style={{ color: 'var(--adm-muted)' }}>No images yet</p>
@@ -127,25 +164,33 @@ export function MediaPickerModal({ open, onClose, onSelect, currentUrl }: Props)
               )}
             </>
           ) : (
-            <div
-              onDrop={handleDrop}
-              onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
-              onDragLeave={() => setDragging(false)}
-              onClick={() => !uploading && fileRef.current?.click()}
-              className="flex flex-col items-center justify-center py-20 rounded-2xl border-2 border-dashed cursor-pointer transition-colors"
-              style={{ borderColor: dragging ? '#DC5B17' : 'var(--adm-border)', backgroundColor: dragging ? 'rgba(220,91,23,0.05)' : 'var(--adm-bg)' }}>
-              <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={(e) => handleFiles(e.target.files)} />
-              {uploading ? (
-                <>
-                  <div className="w-8 h-8 rounded-full border-2 border-[#DC5B17] border-t-transparent animate-spin mb-3" />
-                  <p className="text-sm font-medium" style={{ color: 'var(--adm-muted)' }}>Uploading…</p>
-                </>
-              ) : (
-                <>
-                  <CloudArrowUp size={36} style={{ color: 'var(--adm-muted)' }} className="mb-3" />
-                  <p className="text-sm font-semibold mb-1" style={{ color: 'var(--adm-text)' }}>Drop image here or click to browse</p>
-                  <p className="text-xs" style={{ color: 'var(--adm-muted)' }}>PNG, JPG, WEBP, GIF · max 10 MB</p>
-                </>
+            <div className="flex flex-col gap-3">
+              <div
+                onDrop={handleDrop}
+                onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
+                onDragLeave={() => setDragging(false)}
+                onClick={() => !uploading && fileRef.current?.click()}
+                className="flex flex-col items-center justify-center py-20 rounded-2xl border-2 border-dashed cursor-pointer transition-colors"
+                style={{ borderColor: dragging ? '#DC5B17' : 'var(--adm-border)', backgroundColor: dragging ? 'rgba(220,91,23,0.05)' : 'var(--adm-bg)' }}>
+                {uploading ? (
+                  <>
+                    <div className="w-8 h-8 rounded-full border-2 border-[#DC5B17] border-t-transparent animate-spin mb-3" />
+                    <p className="text-sm font-medium" style={{ color: 'var(--adm-muted)' }}>Uploading…</p>
+                  </>
+                ) : (
+                  <>
+                    <CloudArrowUp size={36} style={{ color: 'var(--adm-muted)' }} className="mb-3" />
+                    <p className="text-sm font-semibold mb-1" style={{ color: 'var(--adm-text)' }}>Drop image here or click to browse</p>
+                    <p className="text-xs" style={{ color: 'var(--adm-muted)' }}>PNG, JPG, WEBP, GIF · max 10 MB</p>
+                  </>
+                )}
+              </div>
+
+              {uploadError && (
+                <div className="flex items-center gap-2 px-4 py-3 rounded-xl text-sm text-red-400 border border-red-400/20 bg-red-400/5">
+                  <Warning size={15} weight="fill" />
+                  {uploadError}
+                </div>
               )}
             </div>
           )}
