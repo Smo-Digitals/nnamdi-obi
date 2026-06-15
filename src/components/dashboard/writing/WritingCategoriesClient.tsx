@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { PencilSimple, Trash, Tag, CaretRight } from 'phosphor-react';
 
 type Category = {
   id: string; name: string; slug: string;
@@ -22,16 +21,34 @@ function toSlug(s: string) {
   return s.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
 }
 
+/** Flatten categories into ordered rows: parent first, then its children indented */
+function flattenCategories(cats: Category[]): { cat: Category; depth: number }[] {
+  const topLevel = cats.filter((c) => c.parentId === null);
+  const result: { cat: Category; depth: number }[] = [];
+  for (const parent of topLevel) {
+    result.push({ cat: parent, depth: 0 });
+    for (const child of cats.filter((c) => c.parentId === parent.id)) {
+      result.push({ cat: child, depth: 1 });
+    }
+  }
+  return result;
+}
+
 export function WritingCategoriesClient() {
   const [categories, setCategories] = useState<Category[]>(MOCK);
   const [editing,    setEditing]    = useState<Category | null>(null);
-  const [name,       setName]       = useState('');
-  const [slug,       setSlug]       = useState('');
-  const [desc,       setDesc]       = useState('');
-  const [parentId,   setParentId]   = useState<string | null>(null);
+  const [hoverId,    setHoverId]    = useState<string | null>(null);
+  const [selected,   setSelected]   = useState<Set<string>>(new Set());
+
+  // Form state
+  const [name,     setName]     = useState('');
+  const [slug,     setSlug]     = useState('');
+  const [desc,     setDesc]     = useState('');
+  const [parentId, setParentId] = useState<string | null>(null);
 
   function startEdit(c: Category) {
     setEditing(c); setName(c.name); setSlug(c.slug); setDesc(c.description); setParentId(c.parentId);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   function resetForm() {
@@ -49,88 +66,97 @@ export function WritingCategoriesClient() {
       setCategories((cs) => cs.map((c) =>
         c.id === editing.id ? { ...c, name, slug, description: desc, parentId } : c));
     } else {
-      setCategories((cs) => [...cs, { id: Date.now().toString(), name, slug, description: desc, posts: 0, parentId }]);
+      setCategories((cs) => [...cs, {
+        id: Date.now().toString(), name, slug, description: desc, posts: 0, parentId,
+      }]);
     }
     resetForm();
   }
 
   function remove(id: string) {
-    if (!confirm('Delete this category? Subcategories will also be removed.')) return;
+    if (!confirm('Delete this category?')) return;
     setCategories((cs) => cs.filter((c) => c.id !== id && c.parentId !== id));
+    setSelected((s) => { const n = new Set(s); n.delete(id); return n; });
   }
 
-  // Only top-level categories can be parents (no deep nesting)
-  const topLevel = categories.filter((c) => c.parentId === null);
-  const subs     = (pid: string) => categories.filter((c) => c.parentId === pid);
+  function bulkDelete() {
+    if (!selected.size || !confirm(`Delete ${selected.size} categories?`)) return;
+    setCategories((cs) => cs.filter((c) => !selected.has(c.id) && !selected.has(c.parentId ?? '')));
+    setSelected(new Set());
+  }
 
-  const totalPosts = categories.reduce((s, c) => s + c.posts, 0);
+  function toggleSelect(id: string) {
+    setSelected((s) => { const n = new Set(s); n.has(id) ? n.delete(id) : n.add(id); return n; });
+  }
+
+  function toggleAll(rows: { cat: Category }[]) {
+    const ids = rows.map((r) => r.cat.id);
+    const allSelected = ids.every((id) => selected.has(id));
+    setSelected(allSelected ? new Set() : new Set(ids));
+  }
+
+  const rows = flattenCategories(categories);
+  const topLevel = categories.filter((c) => c.parentId === null);
 
   return (
-    <div className="p-8 flex gap-6 min-h-screen items-start">
+    <div className="p-8 flex gap-8 items-start">
 
-      {/* Left — form */}
-      <div className="w-72 shrink-0 sticky top-8">
-        <div className="rounded-2xl border overflow-hidden" style={{ backgroundColor: 'var(--adm-card)', borderColor: 'var(--adm-border)' }}>
-          <div className="px-5 py-4 border-b" style={{ borderColor: 'var(--adm-border)' }}>
-            <h2 className="font-semibold text-sm" style={{ color: 'var(--adm-text)' }}>
-              {editing ? 'Edit Category' : 'Add Category'}
-            </h2>
-            {editing && (
-              <p className="text-xs mt-0.5" style={{ color: 'var(--adm-muted)' }}>Editing "{editing.name}"</p>
-            )}
-          </div>
+      {/* ── Left: form ── */}
+      <div className="w-64 shrink-0 sticky top-8 flex flex-col gap-5">
+        <div>
+          <h2 className="text-base font-bold mb-4" style={{ color: 'var(--adm-text)' }}>
+            {editing ? 'Edit Category' : 'Add New Category'}
+          </h2>
 
-          <div className="p-5 flex flex-col gap-4">
-            {/* Parent category */}
+          <div className="flex flex-col gap-3">
             <div>
-              <label className="block text-[10px] font-bold uppercase tracking-widest mb-1.5" style={{ color: 'var(--adm-muted)' }}>
-                Parent Category <span className="normal-case font-normal">(optional)</span>
-              </label>
+              <label className="block text-xs font-semibold mb-1" style={{ color: 'var(--adm-text)' }}>Name</label>
+              <input value={name} onChange={(e) => handleName(e.target.value)} autoFocus
+                placeholder="Category name"
+                className="w-full px-3 py-2 text-sm rounded-lg border outline-none"
+                style={{ backgroundColor: 'var(--adm-bg)', borderColor: 'var(--adm-border)', color: 'var(--adm-text)' }} />
+              <p className="text-[11px] mt-1" style={{ color: 'var(--adm-muted)' }}>The name shown on your site.</p>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold mb-1" style={{ color: 'var(--adm-text)' }}>Slug</label>
+              <input value={slug} onChange={(e) => setSlug(toSlug(e.target.value))}
+                placeholder="category-slug"
+                className="w-full px-3 py-2 text-sm rounded-lg border outline-none font-mono"
+                style={{ backgroundColor: 'var(--adm-bg)', borderColor: 'var(--adm-border)', color: 'var(--adm-muted)' }} />
+              <p className="text-[11px] mt-1" style={{ color: 'var(--adm-muted)' }}>URL-friendly version of the name.</p>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold mb-1" style={{ color: 'var(--adm-text)' }}>Parent Category</label>
               <select value={parentId ?? ''}
                 onChange={(e) => setParentId(e.target.value || null)}
-                className="w-full px-3 py-2 text-sm rounded-xl border outline-none appearance-none cursor-pointer"
+                className="w-full px-3 py-2 text-sm rounded-lg border outline-none cursor-pointer"
                 style={{ backgroundColor: 'var(--adm-bg)', borderColor: 'var(--adm-border)', color: 'var(--adm-text)' }}>
-                <option value="">— None (top-level) —</option>
-                {topLevel
-                  .filter((c) => !editing || c.id !== editing.id)
-                  .map((c) => (
-                    <option key={c.id} value={c.id}>{c.name}</option>
-                  ))}
+                <option value="">None</option>
+                {topLevel.filter((c) => !editing || c.id !== editing.id).map((c) => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
               </select>
+              <p className="text-[11px] mt-1" style={{ color: 'var(--adm-muted)' }}>Leave empty for a top-level category.</p>
             </div>
 
             <div>
-              <label className="block text-[10px] font-bold uppercase tracking-widest mb-1.5" style={{ color: 'var(--adm-muted)' }}>Name</label>
-              <input value={name} onChange={(e) => handleName(e.target.value)}
-                placeholder="e.g. Building in Public"
-                className="w-full px-3 py-2 text-sm rounded-xl border outline-none"
-                style={{ backgroundColor: 'var(--adm-bg)', borderColor: 'var(--adm-border)', color: 'var(--adm-text)' }} />
-            </div>
-
-            <div>
-              <label className="block text-[10px] font-bold uppercase tracking-widest mb-1.5" style={{ color: 'var(--adm-muted)' }}>Slug</label>
-              <input value={slug} onChange={(e) => setSlug(toSlug(e.target.value))}
-                placeholder="building-in-public"
-                className="w-full px-3 py-2 text-sm rounded-xl border outline-none font-mono"
-                style={{ backgroundColor: 'var(--adm-bg)', borderColor: 'var(--adm-border)', color: 'var(--adm-muted)' }} />
-            </div>
-
-            <div>
-              <label className="block text-[10px] font-bold uppercase tracking-widest mb-1.5" style={{ color: 'var(--adm-muted)' }}>Description</label>
+              <label className="block text-xs font-semibold mb-1" style={{ color: 'var(--adm-text)' }}>Description</label>
               <textarea value={desc} onChange={(e) => setDesc(e.target.value)}
-                placeholder="What is this category about?"
-                rows={3} className="w-full px-3 py-2 text-sm rounded-xl border outline-none resize-none"
+                placeholder="Optional description"
+                rows={3} className="w-full px-3 py-2 text-sm rounded-lg border outline-none resize-none"
                 style={{ backgroundColor: 'var(--adm-bg)', borderColor: 'var(--adm-border)', color: 'var(--adm-text)' }} />
             </div>
 
-            <div className="flex gap-2">
+            <div className="flex gap-2 pt-1">
               <button onClick={save} disabled={!name.trim()}
-                className="flex-1 py-2.5 rounded-xl text-sm font-semibold bg-[#DC5B17] text-white hover:bg-[#c44f13] transition-colors disabled:opacity-40">
-                {editing ? 'Save changes' : 'Add category'}
+                className="flex-1 py-2 rounded-lg text-sm font-semibold bg-[#DC5B17] text-white hover:bg-[#c44f13] transition-colors disabled:opacity-40">
+                {editing ? 'Update' : 'Add New Category'}
               </button>
               {editing && (
                 <button onClick={resetForm}
-                  className="px-3 py-2.5 rounded-xl text-sm border transition-colors hover:bg-white/5"
+                  className="px-3 py-2 rounded-lg text-sm border transition-colors hover:bg-white/5"
                   style={{ color: 'var(--adm-muted)', borderColor: 'var(--adm-border)' }}>
                   Cancel
                 </button>
@@ -139,93 +165,86 @@ export function WritingCategoriesClient() {
           </div>
         </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-2 gap-3 mt-4">
-          {[
-            { label: 'Categories', value: categories.length },
-            { label: 'Total Posts', value: totalPosts },
-          ].map(({ label, value }) => (
-            <div key={label} className="rounded-2xl border p-3 text-center" style={{ backgroundColor: 'var(--adm-card)', borderColor: 'var(--adm-border)' }}>
-              <p className="text-xl font-bold" style={{ color: 'var(--adm-text)' }}>{value}</p>
-              <p className="text-[10px] mt-0.5" style={{ color: 'var(--adm-muted)' }}>{label}</p>
-            </div>
-          ))}
+        {/* mini stats */}
+        <div className="border-t pt-4 flex gap-4" style={{ borderColor: 'var(--adm-border)' }}>
+          <div>
+            <p className="text-lg font-bold" style={{ color: 'var(--adm-text)' }}>{categories.length}</p>
+            <p className="text-[11px]" style={{ color: 'var(--adm-muted)' }}>Categories</p>
+          </div>
+          <div>
+            <p className="text-lg font-bold" style={{ color: 'var(--adm-text)' }}>{categories.reduce((s, c) => s + c.posts, 0)}</p>
+            <p className="text-[11px]" style={{ color: 'var(--adm-muted)' }}>Total posts</p>
+          </div>
         </div>
       </div>
 
-      {/* Right — list */}
-      <div className="flex-1">
-        <div className="flex items-center justify-between mb-4">
-          <h1 className="font-bold text-2xl" style={{ color: 'var(--adm-text)' }}>Writing Categories</h1>
-          <p className="text-sm" style={{ color: 'var(--adm-muted)' }}>Organise your posts into categories</p>
-        </div>
-
-        {categories.length === 0 ? (
-          <div className="rounded-2xl border p-12 flex flex-col items-center text-center"
-            style={{ backgroundColor: 'var(--adm-card)', borderColor: 'var(--adm-border)' }}>
-            <Tag size={28} style={{ color: 'var(--adm-muted)' }} className="mb-3" />
-            <p className="text-sm font-medium mb-1" style={{ color: 'var(--adm-muted)' }}>No categories yet</p>
-            <p className="text-xs" style={{ color: 'var(--adm-muted)' }}>Add your first category using the form on the left</p>
-          </div>
-        ) : (
-          <div className="flex flex-col gap-2">
-            {topLevel.map((parent) => (
-              <div key={parent.id}>
-                {/* Parent row */}
-                <CategoryRow cat={parent} onEdit={startEdit} onDelete={remove} isParent />
-                {/* Subcategories */}
-                {subs(parent.id).map((sub) => (
-                  <div key={sub.id} className="flex items-start gap-2 mt-2 pl-6">
-                    <div className="flex flex-col items-center shrink-0 pt-5">
-                      <CaretRight size={11} style={{ color: 'var(--adm-border)' }} />
-                    </div>
-                    <div className="flex-1">
-                      <CategoryRow cat={sub} onEdit={startEdit} onDelete={remove} isParent={false} />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function CategoryRow({ cat, onEdit, onDelete, isParent }: {
-  cat: Category; onEdit: (c: Category) => void; onDelete: (id: string) => void; isParent: boolean;
-}) {
-  return (
-    <div className="rounded-2xl border px-5 py-4 flex items-center gap-4"
-      style={{ backgroundColor: 'var(--adm-card)', borderColor: 'var(--adm-border)' }}>
-      <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
-        style={{ backgroundColor: 'var(--adm-pill)' }}>
-        <Tag size={15} className={isParent ? 'text-[#DC5B17]' : ''} style={!isParent ? { color: 'var(--adm-muted)' } : {}} />
-      </div>
+      {/* ── Right: table ── */}
       <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2 mb-0.5">
-          <p className="text-sm font-semibold" style={{ color: 'var(--adm-text)' }}>{cat.name}</p>
-          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-md"
-            style={{ backgroundColor: 'var(--adm-pill)', color: 'var(--adm-muted)' }}>
-            {cat.slug}
-          </span>
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="text-xl font-bold" style={{ color: 'var(--adm-text)' }}>Writing Categories</h1>
+          {selected.size > 0 && (
+            <button onClick={bulkDelete}
+              className="text-xs font-semibold text-red-400 hover:text-red-300 transition-colors">
+              Delete {selected.size} selected
+            </button>
+          )}
         </div>
-        {cat.description && (
-          <p className="text-xs truncate" style={{ color: 'var(--adm-muted)' }}>{cat.description}</p>
-        )}
-      </div>
-      <div className="shrink-0 flex items-center gap-3">
-        <span className="text-xs font-semibold" style={{ color: 'var(--adm-muted)' }}>
-          {cat.posts} post{cat.posts !== 1 ? 's' : ''}
-        </span>
-        <div className="flex gap-1">
-          <button onClick={() => onEdit(cat)} className="p-1.5 rounded-lg hover:bg-white/5 transition-colors" style={{ color: 'var(--adm-muted)' }}>
-            <PencilSimple size={14} />
-          </button>
-          <button onClick={() => onDelete(cat.id)} className="p-1.5 rounded-lg hover:bg-red-500/10 hover:text-red-400 transition-colors" style={{ color: 'var(--adm-muted)' }}>
-            <Trash size={14} />
-          </button>
+
+        <div className="rounded-xl border overflow-hidden" style={{ borderColor: 'var(--adm-border)' }}>
+          <table className="w-full">
+            <thead>
+              <tr className="border-b text-left" style={{ backgroundColor: 'var(--adm-card)', borderColor: 'var(--adm-border)' }}>
+                <th className="px-4 py-3 w-8">
+                  <input type="checkbox"
+                    checked={rows.length > 0 && rows.every((r) => selected.has(r.cat.id))}
+                    onChange={() => toggleAll(rows)}
+                    className="accent-[#DC5B17] cursor-pointer" />
+                </th>
+                {['Name', 'Description', 'Slug', 'Count'].map((h) => (
+                  <th key={h} className="px-4 py-3 text-xs font-semibold" style={{ color: 'var(--adm-muted)' }}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map(({ cat, depth }, i) => (
+                <tr key={cat.id}
+                  onMouseEnter={() => setHoverId(cat.id)}
+                  onMouseLeave={() => setHoverId(null)}
+                  className="group transition-colors"
+                  style={{
+                    backgroundColor: selected.has(cat.id) ? 'rgba(220,91,23,0.06)' : 'var(--adm-card)',
+                    borderTop: i > 0 ? '1px solid var(--adm-border)' : undefined,
+                  }}>
+                  <td className="px-4 py-3">
+                    <input type="checkbox" checked={selected.has(cat.id)} onChange={() => toggleSelect(cat.id)}
+                      className="accent-[#DC5B17] cursor-pointer" />
+                  </td>
+                  <td className="px-4 py-3">
+                    <div style={{ paddingLeft: depth * 16 }}>
+                      {depth > 0 && (
+                        <span className="mr-1 text-xs" style={{ color: 'var(--adm-border)' }}>—</span>
+                      )}
+                      <span className="text-sm font-medium" style={{ color: 'var(--adm-text)' }}>{cat.name}</span>
+                      {hoverId === cat.id && (
+                        <span className="ml-2 text-[11px]">
+                          <button onClick={() => startEdit(cat)}
+                            className="hover:underline mr-1.5" style={{ color: '#DC5B17' }}>Edit</button>
+                          <span style={{ color: 'var(--adm-border)' }}>|</span>
+                          <button onClick={() => remove(cat.id)}
+                            className="hover:underline ml-1.5" style={{ color: 'var(--adm-muted)' }}>Delete</button>
+                        </span>
+                      )}
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 text-xs max-w-xs" style={{ color: 'var(--adm-muted)' }}>
+                    <span className="line-clamp-1">{cat.description || '—'}</span>
+                  </td>
+                  <td className="px-4 py-3 text-xs font-mono" style={{ color: 'var(--adm-muted)' }}>{cat.slug}</td>
+                  <td className="px-4 py-3 text-sm text-center" style={{ color: 'var(--adm-text)' }}>{cat.posts}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
