@@ -306,9 +306,9 @@ export default function LandingPage() {
             <span>© 2025 Nnamdi Obi</span>
           </div>
           <div className="flex gap-5">
-            <a href="#" className="hover:text-white transition-colors">Privacy</a>
-            <a href="#" className="hover:text-white transition-colors">Terms</a>
-            <a href="#" className="hover:text-white transition-colors">Support</a>
+            <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
+            <Link href="/terms"   className="hover:text-white transition-colors">Terms</Link>
+            <a href="mailto:hello@nnamdiobi.com" className="hover:text-white transition-colors">Support</a>
           </div>
         </div>
       </footer>
