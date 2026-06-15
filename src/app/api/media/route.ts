@@ -16,7 +16,7 @@ const PUBLIC_URL = process.env.CLOUDFLARE_R2_PUBLIC_URL!;
 
 function fileType(key: string): 'image' | 'video' | 'pdf' | 'other' {
   const ext = key.split('.').pop()?.toLowerCase() ?? '';
-  if (['jpg','jpeg','png','webp','gif','svg'].includes(ext)) return 'image';
+  if (['jpg','jpeg','png','webp','gif','svg','avif','heic','heif','tiff','tif','bmp','ico'].includes(ext)) return 'image';
   if (['mp4','mov','webm','avi'].includes(ext)) return 'video';
   if (ext === 'pdf') return 'pdf';
   return 'other';
