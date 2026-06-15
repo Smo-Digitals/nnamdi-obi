@@ -236,24 +236,37 @@ export function CuratedWritingClient() {
             {links.map((link, i) => (
               <div key={link.id} className="rounded-2xl border overflow-hidden"
                 style={{ backgroundColor: 'var(--adm-card)', borderColor: 'var(--adm-border)' }}>
-                <div className="flex">
-                  {/* Thumbnail */}
-                  <div className="w-28 shrink-0 self-stretch bg-white/5 overflow-hidden flex items-center justify-center">
-                    {link.image_url ? (
-                      <Image src={link.image_url} alt="" width={112} height={112}
-                        className="w-full h-full object-cover" unoptimized />
-                    ) : (
-                      <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.5"
-                        viewBox="0 0 24 24" style={{ color: 'var(--adm-border)' }}>
-                        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
-                        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
-                      </svg>
+
+                {/* Banner image — full width, 16:9-ish */}
+                {link.image_url ? (
+                  <div className="relative w-full h-36 overflow-hidden bg-white/5">
+                    <Image src={link.image_url} alt="" fill className="object-cover" unoptimized />
+                    {/* Source badge over image */}
+                    {link.source_name && (
+                      <div className="absolute bottom-2 left-3 flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] font-semibold"
+                        style={{ backgroundColor: 'rgba(0,0,0,0.6)', color: '#fff', backdropFilter: 'blur(4px)' }}>
+                        <svg width="9" height="9" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                          <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+                        </svg>
+                        {link.source_name}
+                      </div>
                     )}
                   </div>
+                ) : (
+                  <div className="w-full h-20 flex items-center justify-center bg-white/[0.03]">
+                    <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.2"
+                      viewBox="0 0 24 24" style={{ color: 'var(--adm-border)' }}>
+                      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                    </svg>
+                  </div>
+                )}
 
-                  {/* Content */}
-                  <div className="flex-1 px-4 py-3 min-w-0">
-                    {link.source_name && (
+                {/* Content + actions row */}
+                <div className="flex items-start gap-3 p-3">
+                  <div className="flex-1 min-w-0">
+                    {link.source_name && !link.image_url && (
                       <p className="text-[11px] font-semibold uppercase tracking-wide mb-0.5" style={{ color: '#DC5B17' }}>
                         {link.source_name}
                       </p>
@@ -266,31 +279,25 @@ export function CuratedWritingClient() {
                     )}
                   </div>
 
-                  {/* Actions column */}
-                  <div className="flex flex-col items-center justify-between py-3 px-3 shrink-0 border-l gap-2"
-                    style={{ borderColor: 'var(--adm-border)' }}>
-                    {/* Clicks */}
-                    <div className="text-center">
-                      <p className="text-base font-bold leading-none"
+                  {/* Actions */}
+                  <div className="flex items-center gap-1.5 shrink-0 pt-0.5">
+                    <div className="text-center mr-1">
+                      <p className="text-sm font-bold leading-none"
                         style={{ color: (link.click_count ?? 0) > 0 ? '#DC5B17' : 'var(--adm-border)' }}>
                         {link.click_count ?? 0}
                       </p>
-                      <p className="text-[9px] mt-0.5" style={{ color: 'var(--adm-muted)' }}>clicks</p>
+                      <p className="text-[9px]" style={{ color: 'var(--adm-muted)' }}>clicks</p>
                     </div>
-                    {/* Reorder */}
-                    <div className="flex flex-col gap-0.5">
-                      <button onClick={() => move(link.id, 'up')} disabled={i === 0}
-                        className="p-1.5 rounded-lg disabled:opacity-20"
-                        style={{ color: 'var(--adm-muted)', backgroundColor: 'var(--adm-bg)' }}>
-                        <svg width="11" height="11" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path d="M18 15l-6-6-6 6"/></svg>
-                      </button>
-                      <button onClick={() => move(link.id, 'down')} disabled={i === links.length - 1}
-                        className="p-1.5 rounded-lg disabled:opacity-20"
-                        style={{ color: 'var(--adm-muted)', backgroundColor: 'var(--adm-bg)' }}>
-                        <svg width="11" height="11" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
-                      </button>
-                    </div>
-                    {/* Delete */}
+                    <button onClick={() => move(link.id, 'up')} disabled={i === 0}
+                      className="p-1.5 rounded-lg disabled:opacity-20"
+                      style={{ color: 'var(--adm-muted)', backgroundColor: 'var(--adm-bg)' }}>
+                      <svg width="11" height="11" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path d="M18 15l-6-6-6 6"/></svg>
+                    </button>
+                    <button onClick={() => move(link.id, 'down')} disabled={i === links.length - 1}
+                      className="p-1.5 rounded-lg disabled:opacity-20"
+                      style={{ color: 'var(--adm-muted)', backgroundColor: 'var(--adm-bg)' }}>
+                      <svg width="11" height="11" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
                     <button onClick={() => handleRemove(link.id)}
                       className="p-1.5 rounded-lg"
                       style={{ color: '#ef4444', backgroundColor: 'rgba(239,68,68,0.1)' }}>
