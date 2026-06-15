@@ -1,18 +1,21 @@
 'use client';
 
 import { useState } from 'react';
-import { PencilSimple, Trash, Tag } from 'phosphor-react';
+import { PencilSimple, Trash, Tag, CaretRight } from 'phosphor-react';
 
-type Category = { id: string; name: string; slug: string; description: string; posts: number };
+type Category = {
+  id: string; name: string; slug: string;
+  description: string; posts: number; parentId: string | null;
+};
 
 const MOCK: Category[] = [
-  { id: '1', name: 'Community',   slug: 'community',   description: 'Community discussions and updates', posts: 8 },
-  { id: '2', name: 'Courses',     slug: 'courses',     description: 'Course-related content',           posts: 5 },
-  { id: '3', name: 'Productivity',slug: 'productivity',description: 'Tips for doing more with less',    posts: 12 },
-  { id: '4', name: 'Personal',    slug: 'personal',    description: 'Personal stories and reflections', posts: 6 },
-  { id: '5', name: 'Marketing',   slug: 'marketing',   description: 'Marketing strategies and ideas',   posts: 9 },
-  { id: '6', name: 'Industry',    slug: 'industry',    description: 'Industry news and trends',         posts: 4 },
-  { id: '7', name: 'Finance',     slug: 'finance',     description: 'Finance and money management',     posts: 7 },
+  { id: '1', name: 'Community',    slug: 'community',    description: 'Community discussions and updates', posts: 0, parentId: null },
+  { id: '2', name: 'Courses',      slug: 'courses',      description: 'Course-related content',           posts: 0, parentId: null },
+  { id: '3', name: 'Productivity', slug: 'productivity', description: 'Tips for doing more with less',    posts: 0, parentId: null },
+  { id: '4', name: 'Personal',     slug: 'personal',     description: 'Personal stories and reflections', posts: 0, parentId: null },
+  { id: '5', name: 'Marketing',    slug: 'marketing',    description: 'Marketing strategies and ideas',   posts: 0, parentId: null },
+  { id: '6', name: 'Industry',     slug: 'industry',     description: 'Industry news and trends',         posts: 0, parentId: null },
+  { id: '7', name: 'Finance',      slug: 'finance',      description: 'Finance and money management',     posts: 0, parentId: null },
 ];
 
 function toSlug(s: string) {
@@ -25,13 +28,14 @@ export function WritingCategoriesClient() {
   const [name,       setName]       = useState('');
   const [slug,       setSlug]       = useState('');
   const [desc,       setDesc]       = useState('');
+  const [parentId,   setParentId]   = useState<string | null>(null);
 
   function startEdit(c: Category) {
-    setEditing(c); setName(c.name); setSlug(c.slug); setDesc(c.description);
+    setEditing(c); setName(c.name); setSlug(c.slug); setDesc(c.description); setParentId(c.parentId);
   }
 
   function resetForm() {
-    setEditing(null); setName(''); setSlug(''); setDesc('');
+    setEditing(null); setName(''); setSlug(''); setDesc(''); setParentId(null);
   }
 
   function handleName(v: string) {
@@ -42,17 +46,24 @@ export function WritingCategoriesClient() {
   function save() {
     if (!name.trim()) return;
     if (editing) {
-      setCategories((cs) => cs.map((c) => c.id === editing.id ? { ...c, name, slug, description: desc } : c));
+      setCategories((cs) => cs.map((c) =>
+        c.id === editing.id ? { ...c, name, slug, description: desc, parentId } : c));
     } else {
-      setCategories((cs) => [...cs, { id: Date.now().toString(), name, slug, description: desc, posts: 0 }]);
+      setCategories((cs) => [...cs, { id: Date.now().toString(), name, slug, description: desc, posts: 0, parentId }]);
     }
     resetForm();
   }
 
   function remove(id: string) {
-    if (!confirm('Delete this category?')) return;
-    setCategories((cs) => cs.filter((c) => c.id !== id));
+    if (!confirm('Delete this category? Subcategories will also be removed.')) return;
+    setCategories((cs) => cs.filter((c) => c.id !== id && c.parentId !== id));
   }
+
+  // Only top-level categories can be parents (no deep nesting)
+  const topLevel = categories.filter((c) => c.parentId === null);
+  const subs     = (pid: string) => categories.filter((c) => c.parentId === pid);
+
+  const totalPosts = categories.reduce((s, c) => s + c.posts, 0);
 
   return (
     <div className="p-8 flex gap-6 min-h-screen items-start">
@@ -60,7 +71,6 @@ export function WritingCategoriesClient() {
       {/* Left — form */}
       <div className="w-72 shrink-0 sticky top-8">
         <div className="rounded-2xl border overflow-hidden" style={{ backgroundColor: 'var(--adm-card)', borderColor: 'var(--adm-border)' }}>
-
           <div className="px-5 py-4 border-b" style={{ borderColor: 'var(--adm-border)' }}>
             <h2 className="font-semibold text-sm" style={{ color: 'var(--adm-text)' }}>
               {editing ? 'Edit Category' : 'Add Category'}
@@ -71,10 +81,26 @@ export function WritingCategoriesClient() {
           </div>
 
           <div className="p-5 flex flex-col gap-4">
+            {/* Parent category */}
             <div>
               <label className="block text-[10px] font-bold uppercase tracking-widest mb-1.5" style={{ color: 'var(--adm-muted)' }}>
-                Name
+                Parent Category <span className="normal-case font-normal">(optional)</span>
               </label>
+              <select value={parentId ?? ''}
+                onChange={(e) => setParentId(e.target.value || null)}
+                className="w-full px-3 py-2 text-sm rounded-xl border outline-none appearance-none cursor-pointer"
+                style={{ backgroundColor: 'var(--adm-bg)', borderColor: 'var(--adm-border)', color: 'var(--adm-text)' }}>
+                <option value="">— None (top-level) —</option>
+                {topLevel
+                  .filter((c) => !editing || c.id !== editing.id)
+                  .map((c) => (
+                    <option key={c.id} value={c.id}>{c.name}</option>
+                  ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-[10px] font-bold uppercase tracking-widest mb-1.5" style={{ color: 'var(--adm-muted)' }}>Name</label>
               <input value={name} onChange={(e) => handleName(e.target.value)}
                 placeholder="e.g. Building in Public"
                 className="w-full px-3 py-2 text-sm rounded-xl border outline-none"
@@ -82,9 +108,7 @@ export function WritingCategoriesClient() {
             </div>
 
             <div>
-              <label className="block text-[10px] font-bold uppercase tracking-widest mb-1.5" style={{ color: 'var(--adm-muted)' }}>
-                Slug
-              </label>
+              <label className="block text-[10px] font-bold uppercase tracking-widest mb-1.5" style={{ color: 'var(--adm-muted)' }}>Slug</label>
               <input value={slug} onChange={(e) => setSlug(toSlug(e.target.value))}
                 placeholder="building-in-public"
                 className="w-full px-3 py-2 text-sm rounded-xl border outline-none font-mono"
@@ -92,9 +116,7 @@ export function WritingCategoriesClient() {
             </div>
 
             <div>
-              <label className="block text-[10px] font-bold uppercase tracking-widest mb-1.5" style={{ color: 'var(--adm-muted)' }}>
-                Description
-              </label>
+              <label className="block text-[10px] font-bold uppercase tracking-widest mb-1.5" style={{ color: 'var(--adm-muted)' }}>Description</label>
               <textarea value={desc} onChange={(e) => setDesc(e.target.value)}
                 placeholder="What is this category about?"
                 rows={3} className="w-full px-3 py-2 text-sm rounded-xl border outline-none resize-none"
@@ -121,7 +143,7 @@ export function WritingCategoriesClient() {
         <div className="grid grid-cols-2 gap-3 mt-4">
           {[
             { label: 'Categories', value: categories.length },
-            { label: 'Total Posts', value: categories.reduce((s, c) => s + c.posts, 0) },
+            { label: 'Total Posts', value: totalPosts },
           ].map(({ label, value }) => (
             <div key={label} className="rounded-2xl border p-3 text-center" style={{ backgroundColor: 'var(--adm-card)', borderColor: 'var(--adm-border)' }}>
               <p className="text-xl font-bold" style={{ color: 'var(--adm-text)' }}>{value}</p>
@@ -138,54 +160,72 @@ export function WritingCategoriesClient() {
           <p className="text-sm" style={{ color: 'var(--adm-muted)' }}>Organise your posts into categories</p>
         </div>
 
-        <div className="flex flex-col gap-3">
-          {categories.length === 0 ? (
-            <div className="rounded-2xl border p-12 flex flex-col items-center text-center"
-              style={{ backgroundColor: 'var(--adm-card)', borderColor: 'var(--adm-border)' }}>
-              <Tag size={28} style={{ color: 'var(--adm-muted)' }} className="mb-3" />
-              <p className="text-sm font-medium" style={{ color: 'var(--adm-muted)' }}>No categories yet</p>
-              <p className="text-xs mt-1" style={{ color: 'var(--adm-muted)' }}>Add your first category using the form on the left</p>
-            </div>
-          ) : (
-            categories.map((c) => (
-              <div key={c.id} className="rounded-2xl border px-5 py-4 flex items-center gap-4"
-                style={{ backgroundColor: 'var(--adm-card)', borderColor: 'var(--adm-border)' }}>
-                <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
-                  style={{ backgroundColor: 'var(--adm-pill)' }}>
-                  <Tag size={16} className="text-[#DC5B17]" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-0.5">
-                    <p className="text-sm font-semibold" style={{ color: 'var(--adm-text)' }}>{c.name}</p>
-                    <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-md"
-                      style={{ backgroundColor: 'var(--adm-pill)', color: 'var(--adm-muted)' }}>
-                      {c.slug}
-                    </span>
+        {categories.length === 0 ? (
+          <div className="rounded-2xl border p-12 flex flex-col items-center text-center"
+            style={{ backgroundColor: 'var(--adm-card)', borderColor: 'var(--adm-border)' }}>
+            <Tag size={28} style={{ color: 'var(--adm-muted)' }} className="mb-3" />
+            <p className="text-sm font-medium mb-1" style={{ color: 'var(--adm-muted)' }}>No categories yet</p>
+            <p className="text-xs" style={{ color: 'var(--adm-muted)' }}>Add your first category using the form on the left</p>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-2">
+            {topLevel.map((parent) => (
+              <div key={parent.id}>
+                {/* Parent row */}
+                <CategoryRow cat={parent} onEdit={startEdit} onDelete={remove} isParent />
+                {/* Subcategories */}
+                {subs(parent.id).map((sub) => (
+                  <div key={sub.id} className="flex items-start gap-2 mt-2 pl-6">
+                    <div className="flex flex-col items-center shrink-0 pt-5">
+                      <CaretRight size={11} style={{ color: 'var(--adm-border)' }} />
+                    </div>
+                    <div className="flex-1">
+                      <CategoryRow cat={sub} onEdit={startEdit} onDelete={remove} isParent={false} />
+                    </div>
                   </div>
-                  {c.description && (
-                    <p className="text-xs truncate" style={{ color: 'var(--adm-muted)' }}>{c.description}</p>
-                  )}
-                </div>
-                <div className="shrink-0 flex items-center gap-3">
-                  <span className="text-xs font-semibold" style={{ color: 'var(--adm-muted)' }}>
-                    {c.posts} post{c.posts !== 1 ? 's' : ''}
-                  </span>
-                  <div className="flex gap-1">
-                    <button onClick={() => startEdit(c)}
-                      className="p-1.5 rounded-lg hover:bg-white/5 transition-colors"
-                      style={{ color: 'var(--adm-muted)' }}>
-                      <PencilSimple size={14} />
-                    </button>
-                    <button onClick={() => remove(c.id)}
-                      className="p-1.5 rounded-lg hover:bg-red-500/10 hover:text-red-400 transition-colors"
-                      style={{ color: 'var(--adm-muted)' }}>
-                      <Trash size={14} />
-                    </button>
-                  </div>
-                </div>
+                ))}
               </div>
-            ))
-          )}
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function CategoryRow({ cat, onEdit, onDelete, isParent }: {
+  cat: Category; onEdit: (c: Category) => void; onDelete: (id: string) => void; isParent: boolean;
+}) {
+  return (
+    <div className="rounded-2xl border px-5 py-4 flex items-center gap-4"
+      style={{ backgroundColor: 'var(--adm-card)', borderColor: 'var(--adm-border)' }}>
+      <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
+        style={{ backgroundColor: 'var(--adm-pill)' }}>
+        <Tag size={15} className={isParent ? 'text-[#DC5B17]' : ''} style={!isParent ? { color: 'var(--adm-muted)' } : {}} />
+      </div>
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2 mb-0.5">
+          <p className="text-sm font-semibold" style={{ color: 'var(--adm-text)' }}>{cat.name}</p>
+          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-md"
+            style={{ backgroundColor: 'var(--adm-pill)', color: 'var(--adm-muted)' }}>
+            {cat.slug}
+          </span>
+        </div>
+        {cat.description && (
+          <p className="text-xs truncate" style={{ color: 'var(--adm-muted)' }}>{cat.description}</p>
+        )}
+      </div>
+      <div className="shrink-0 flex items-center gap-3">
+        <span className="text-xs font-semibold" style={{ color: 'var(--adm-muted)' }}>
+          {cat.posts} post{cat.posts !== 1 ? 's' : ''}
+        </span>
+        <div className="flex gap-1">
+          <button onClick={() => onEdit(cat)} className="p-1.5 rounded-lg hover:bg-white/5 transition-colors" style={{ color: 'var(--adm-muted)' }}>
+            <PencilSimple size={14} />
+          </button>
+          <button onClick={() => onDelete(cat.id)} className="p-1.5 rounded-lg hover:bg-red-500/10 hover:text-red-400 transition-colors" style={{ color: 'var(--adm-muted)' }}>
+            <Trash size={14} />
+          </button>
         </div>
       </div>
     </div>
