@@ -5,10 +5,11 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Eye, PencilSimple, Trash, Star } from 'phosphor-react';
 import { SectionLayout } from '../SectionLayout';
+import { PostPreviewModal } from './PostPreviewModal';
 
 type Status = 'published' | 'draft' | 'archived' | 'scheduled';
 type Post = {
-  id: string; title: string; category: string | null; status: Status;
+  id: string; title: string; slug: string; category: string | null; status: Status;
   views: number | null; featured: boolean | null; created_at: string;
 };
 
@@ -25,6 +26,7 @@ export function PostsClient() {
   const [loading, setLoading] = useState(true);
   const [filter,  setFilter]  = useState('all');
   const [search,  setSearch]  = useState('');
+  const [previewId, setPreviewId] = useState<string | null>(null);
 
   useEffect(() => {
     fetch('/api/posts')
@@ -142,10 +144,19 @@ export function PostsClient() {
                         style={{ color: 'var(--adm-muted)' }}>
                         <PencilSimple size={14} />
                       </Link>
-                      <button className="p-1.5 rounded-lg hover:bg-white/5 transition-colors" title="View"
-                        style={{ color: 'var(--adm-muted)' }}>
-                        <Eye size={14} />
-                      </button>
+                      {p.status === 'published' ? (
+                        <a href={`/blog/${p.slug}`} target="_blank" rel="noopener noreferrer"
+                          className="p-1.5 rounded-lg hover:bg-white/5 transition-colors" title="View live post"
+                          style={{ color: 'var(--adm-muted)' }}>
+                          <Eye size={14} />
+                        </a>
+                      ) : (
+                        <button onClick={() => setPreviewId(p.id)}
+                          className="p-1.5 rounded-lg hover:bg-white/5 transition-colors" title="Preview"
+                          style={{ color: 'var(--adm-muted)' }}>
+                          <Eye size={14} />
+                        </button>
+                      )}
                       <button onClick={() => deletePost(p.id)}
                         className="p-1.5 rounded-lg hover:bg-red-500/10 hover:text-red-400 transition-colors" title="Delete"
                         style={{ color: 'var(--adm-muted)' }}>
@@ -159,6 +170,8 @@ export function PostsClient() {
           </table>
         )}
       </div>
+
+      <PostPreviewModal postId={previewId} onClose={() => setPreviewId(null)} />
     </SectionLayout>
   );
 }
