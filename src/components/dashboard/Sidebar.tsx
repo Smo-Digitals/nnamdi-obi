@@ -163,13 +163,18 @@ export function Sidebar({ role }: { role: string }) {
         style={{ borderColor: 'var(--adm-border)' }}
       >
         {collapsed ? (
-          <button
-            onClick={() => setCollapsed(false)}
-            title="Expand sidebar"
-            className="w-8 h-8 rounded-lg bg-[#DC5B17] flex items-center justify-center hover:bg-[#c44f13] transition-colors"
-          >
-            <span className="text-white text-sm font-bold">N</span>
-          </button>
+          <div className="w-full flex flex-col items-center gap-1.5">
+            <div className="w-8 h-8 rounded-lg bg-[#DC5B17] flex items-center justify-center shrink-0">
+              <span className="text-white text-sm font-bold">N</span>
+            </div>
+            <button
+              onClick={() => setCollapsed(false)}
+              title="Expand sidebar"
+              className="w-6 h-6 flex items-center justify-center rounded-md text-[#444] hover:text-white hover:bg-white/5 transition-colors"
+            >
+              <CaretRight size={12} weight="bold" />
+            </button>
+          </div>
         ) : (
           <>
             <div className="w-8 h-8 rounded-lg bg-[#DC5B17] flex items-center justify-center shrink-0">
