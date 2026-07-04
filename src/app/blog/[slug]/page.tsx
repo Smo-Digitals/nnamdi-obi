@@ -42,9 +42,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     <div className="min-h-screen bg-[#0a0a0a] text-white">
       <header className="sticky top-0 z-50 border-b border-white/5 bg-[#0a0a0a]/80 backdrop-blur-md">
         <div className="max-w-2xl mx-auto px-6 h-16 flex items-center">
-          <Link href="/" className="flex items-center gap-1.5 text-sm font-medium text-white/60 hover:text-white transition-colors">
+          <Link href="/blog" className="flex items-center gap-1.5 text-sm font-medium text-white/60 hover:text-white transition-colors">
             <svg width="15" height="15" viewBox="0 0 256 256" fill="currentColor"><path d="M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z"/></svg>
-            Back
+            All posts
           </Link>
         </div>
       </header>
