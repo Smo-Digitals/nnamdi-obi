@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { ArrowLeft, FloppyDisk, PaperPlaneTilt, CheckCircle, WarningCircle, X } from 'phosphor-react';
 import { PostEditorPanel, type PostStatus } from './PostEditorPanel';
 import { PostPreviewPanel } from './PostPreviewPanel';
@@ -38,6 +39,9 @@ function ToastStack({ toasts, onDismiss }: { toasts: Toast[]; onDismiss: (id: nu
 }
 
 export function CreatePostClient() {
+  const searchParams = useSearchParams();
+  const postId = searchParams.get('id');
+
   const [title,      setTitle]      = useState('');
   const [excerpt,    setExcerpt]    = useState('');
   const [body,       setBody]       = useState('');
@@ -49,12 +53,39 @@ export function CreatePostClient() {
   const [metaTitle,  setMetaTitle]  = useState('');
   const [metaDesc,   setMetaDesc]   = useState('');
   const [saving,     setSaving]     = useState(false);
+  const [loading,    setLoading]    = useState(!!postId);
   const [toasts,     setToasts]     = useState<Toast[]>([]);
   let toastId = 0;
 
   useEffect(() => {
     setSlug((prev) => (prev === '' || prev === toSlug(title.slice(0, -1))) ? toSlug(title) : prev);
   }, [title]);
+
+  useEffect(() => {
+    if (!postId) return;
+    (async () => {
+      try {
+        const res = await fetch(`/api/posts/${postId}`);
+        if (!res.ok) { addToast('Could not load post.', 'error'); return; }
+        const data = await res.json();
+        setTitle(data.title ?? '');
+        setExcerpt(data.subtitle ?? '');
+        setBody(data.body ?? '');
+        setCoverUrl(data.cover_image_url ?? null);
+        setSlug(data.slug ?? '');
+        setStatus((data.status as PostStatus) ?? 'draft');
+        setCategories(data.categories ?? []);
+        setSeoKeyword(data.seo_keyword ?? '');
+        setMetaTitle(data.meta_title ?? '');
+        setMetaDesc(data.meta_description ?? '');
+      } catch {
+        addToast('Network error — could not load post.', 'error');
+      } finally {
+        setLoading(false);
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [postId]);
 
   function addToast(message: string, type: Toast['type']) {
     const id = ++toastId;
@@ -67,8 +98,8 @@ export function CreatePostClient() {
     if (!title.trim()) { addToast('Add a title before saving.', 'error'); return; }
     setSaving(true);
     try {
-      const res = await fetch('/api/posts', {
-        method: 'POST',
+      const res = await fetch(postId ? `/api/posts/${postId}` : '/api/posts', {
+        method: postId ? 'PATCH' : 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           title, subtitle: excerpt, body, cover_image_url: coverUrl,
@@ -92,6 +123,14 @@ export function CreatePostClient() {
 
   const wordCount = body.replace(/<[^>]*>/g, '').trim().split(/\s+/).filter(Boolean).length;
   const readMins  = Math.max(1, Math.ceil(wordCount / 200));
+
+  if (loading) {
+    return (
+      <div className="h-full flex items-center justify-center text-sm" style={{ color: 'var(--adm-muted)' }}>
+        Loading post…
+      </div>
+    );
+  }
 
   return (
     <div className="h-full flex flex-col overflow-hidden">
