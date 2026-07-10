@@ -1,17 +1,13 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import Image from 'next/image';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { categoryLabel } from '@/lib/categories';
+import { BlogIndexClient } from '@/components/blog/BlogIndexClient';
 
 export const metadata: Metadata = {
   title: 'Blog — Nnamdi Obi',
   description: 'Writing on building in public, entrepreneurship, and tech from Nnamdi Obi.',
 };
-
-function categoryLabel(id: string | null) {
-  if (!id) return null;
-  return id.split('-').map((w) => w[0].toUpperCase() + w.slice(1)).join(' ');
-}
 
 async function getPosts() {
   const admin = createAdminClient();
@@ -25,6 +21,9 @@ async function getPosts() {
 
 export default async function BlogIndexPage() {
   const posts = await getPosts();
+
+  const categories = Array.from(new Set(posts.map((p) => p.category).filter((c): c is string => !!c)))
+    .map((id) => ({ id, label: categoryLabel(id) ?? id }));
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
@@ -48,46 +47,7 @@ export default async function BlogIndexPage() {
           <p className="text-[#666] text-lg">Writing on building in public, entrepreneurship, and tech.</p>
         </div>
 
-        {posts.length === 0 ? (
-          <div className="py-24 text-center text-[#666]">No posts published yet — check back soon.</div>
-        ) : (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {posts.map((post) => (
-              <Link key={post.id} href={`/blog/${post.slug}`} className="group flex flex-col">
-                <div className="relative w-full aspect-video rounded-2xl overflow-hidden mb-4 bg-white/5">
-                  {post.cover_image_url ? (
-                    <Image src={post.cover_image_url} alt={post.title} fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-300" />
-                  ) : (
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-10 h-10 rounded-lg bg-[#DC5B17]/20 flex items-center justify-center">
-                        <span className="text-[#DC5B17] text-sm font-bold">N</span>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {categoryLabel(post.category) && (
-                  <span className="text-[11px] font-semibold text-[#DC5B17] uppercase tracking-wide mb-2">
-                    {categoryLabel(post.category)}
-                  </span>
-                )}
-
-                <h2 className="text-lg font-bold leading-snug mb-2 group-hover:text-[#DC5B17] transition-colors line-clamp-2">
-                  {post.title}
-                </h2>
-
-                {post.subtitle && (
-                  <p className="text-sm text-[#666] leading-relaxed mb-3 line-clamp-2">{post.subtitle}</p>
-                )}
-
-                <span className="text-xs text-[#555] mt-auto">
-                  {new Date(post.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
-                </span>
-              </Link>
-            ))}
-          </div>
-        )}
+        <BlogIndexClient posts={posts} categories={categories} />
       </main>
     </div>
   );
