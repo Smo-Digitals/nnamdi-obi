@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { motion, type Variants } from 'framer-motion';
 import { ArrowRight, CheckCircle, BookOpen, Users, Lightning, Play, Quotes } from 'phosphor-react';
 import { Logo, LogoMark } from '@/components/Logo';
@@ -37,104 +36,73 @@ export default function LandingPage() {
       <SiteHeader />
 
       {/* Hero */}
-      <section className="relative bg-white text-[#0a0a0a]">
-        {/* Glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-[#DC5B17]/15 rounded-full blur-[120px] pointer-events-none" />
+      <section className="relative px-4 sm:px-6 pt-24">
+        <div className="relative max-w-6xl mx-auto rounded-[32px] overflow-hidden bg-[#0d0d0d] border border-white/5">
+          {/* Glow */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[500px] bg-[#DC5B17]/15 rounded-full blur-[140px] pointer-events-none" />
 
-        <div className="relative max-w-6xl mx-auto px-6 pt-36 pb-32 flex flex-col lg:flex-row items-center gap-16">
-        <div className="relative flex-1 text-center lg:text-left">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#DC5B17]/10 border border-[#DC5B17]/20 text-[#DC5B17] text-xs font-semibold mb-6"
-          >
-            <Lightning size={12} weight="fill" /> Africa&apos;s future starts here
-          </motion.div>
+          <div className="relative px-6 py-28 sm:py-32 flex flex-col items-center text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#DC5B17]/10 border border-[#DC5B17]/20 text-[#DC5B17] text-xs font-semibold mb-6"
+            >
+              <Lightning size={12} weight="fill" /> Africa&apos;s future starts here
+            </motion.div>
 
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, delay: 0.1 }}
-            className="text-5xl lg:text-6xl font-bold leading-[1.1] mb-6"
-          >
-            Build the life<br />
-            <span className="text-[#DC5B17]">Africa needs</span><br />
-            you to build.
-          </motion.h1>
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55, delay: 0.1 }}
+              className="text-5xl lg:text-6xl font-bold leading-[1.1] mb-6"
+            >
+              Build the life<br />
+              <span className="text-[#DC5B17]">Africa needs</span><br />
+              you to build.
+            </motion.h1>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, delay: 0.2 }}
-            className="text-[#555] text-lg leading-relaxed max-w-lg mx-auto lg:mx-0 mb-8"
-          >
-            Join thousands of entrepreneurs, builders, and creators learning from Nnamdi Obi — teacher, founder, and one of Africa&apos;s most intentional thinkers.
-          </motion.p>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55, delay: 0.2 }}
+              className="text-[#888] text-lg leading-relaxed max-w-lg mx-auto mb-8"
+            >
+              Join thousands of entrepreneurs, builders, and creators learning from Nnamdi Obi — teacher, founder, and one of Africa&apos;s most intentional thinkers.
+            </motion.p>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, delay: 0.3 }}
-            className="flex flex-col sm:flex-row items-center gap-3 justify-center lg:justify-start"
-          >
-            <Link href="/signup" className="flex items-center gap-2 px-6 py-3 rounded-xl bg-[#DC5B17] text-white font-semibold hover:bg-[#c44f13] transition-colors">
-              Start for free <ArrowRight size={16} />
-            </Link>
-            <button className="flex items-center gap-2 px-6 py-3 rounded-xl border border-black/10 text-[#555] text-sm font-medium hover:border-black/20 hover:text-black transition-colors">
-              <Play size={14} weight="fill" /> Watch intro
-            </button>
-          </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55, delay: 0.3 }}
+              className="flex flex-col sm:flex-row items-center gap-3 justify-center"
+            >
+              <Link href="/signup" className="flex items-center gap-2 px-6 py-3 rounded-xl bg-[#DC5B17] text-white font-semibold hover:bg-[#c44f13] transition-colors">
+                Start for free <ArrowRight size={16} />
+              </Link>
+              <button className="flex items-center gap-2 px-6 py-3 rounded-xl border border-white/10 text-[#aaa] text-sm font-medium hover:border-white/20 hover:text-white transition-colors">
+                <Play size={14} weight="fill" /> Watch intro
+              </button>
+            </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.5 }}
-            className="flex items-center gap-3 mt-8 justify-center lg:justify-start"
-          >
-            <div className="flex -space-x-2">
-              {['A', 'E', 'C', 'T'].map((l, i) => (
-                <div key={i} className="w-8 h-8 rounded-full bg-[#DC5B17]/20 border-2 border-white flex items-center justify-center text-[#DC5B17] text-xs font-semibold">
-                  {l}
-                </div>
-              ))}
-            </div>
-            <p className="text-[#555] text-sm">
-              <span className="text-[#0a0a0a] font-semibold">1,200+</span> members already inside
-            </p>
-          </motion.div>
-        </div>
-
-        {/* Photo */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="relative w-full max-w-sm lg:max-w-none lg:w-[420px] shrink-0"
-        >
-          <div className="relative rounded-3xl overflow-hidden aspect-[4/5] bg-[#111]">
-            <Image
-              src="/nnamdi.jpg"
-              alt="Nnamdi Obi"
-              fill
-              className="object-cover object-[50%_20%]"
-              priority
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-
-            {/* Floating stat */}
-            <div className="absolute bottom-5 left-5 right-5 flex gap-3">
-              <div className="flex-1 bg-black/60 backdrop-blur-md rounded-2xl px-4 py-3 border border-white/10">
-                <p className="text-white text-xl font-bold">1,200+</p>
-                <p className="text-[#888] text-xs">Active members</p>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.5 }}
+              className="flex items-center gap-3 mt-8 justify-center"
+            >
+              <div className="flex -space-x-2">
+                {['A', 'E', 'C', 'T'].map((l, i) => (
+                  <div key={i} className="w-8 h-8 rounded-full bg-[#DC5B17]/20 border-2 border-[#0d0d0d] flex items-center justify-center text-[#DC5B17] text-xs font-semibold">
+                    {l}
+                  </div>
+                ))}
               </div>
-              <div className="flex-1 bg-black/60 backdrop-blur-md rounded-2xl px-4 py-3 border border-white/10">
-                <p className="text-white text-xl font-bold">8</p>
-                <p className="text-[#888] text-xs">Live courses</p>
-              </div>
-            </div>
+              <p className="text-[#666] text-sm">
+                <span className="text-white font-semibold">1,200+</span> members already inside
+              </p>
+            </motion.div>
           </div>
-        </motion.div>
         </div>
       </section>
 
