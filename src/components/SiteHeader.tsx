@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight, List, X } from 'phosphor-react';
+import { ArrowRight, SquaresFour, X } from 'phosphor-react';
 import { LogoMark } from '@/components/Logo';
 
 type NavLink = { label: string; href: string };
@@ -46,7 +46,7 @@ export function SiteHeader({ nav = [], showSignIn = true }: { nav?: NavLink[]; s
             aria-label="Toggle menu"
             aria-expanded={open}
           >
-            {open ? <X size={20} /> : <List size={20} />}
+            {open ? <X size={20} /> : <SquaresFour size={20} weight="bold" />}
           </button>
         </div>
 
