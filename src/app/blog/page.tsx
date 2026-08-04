@@ -1,9 +1,8 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { categoryLabel } from '@/lib/categories';
 import { BlogIndexClient } from '@/components/blog/BlogIndexClient';
-import { LogoMark } from '@/components/Logo';
+import { SiteHeader } from '@/components/SiteHeader';
 
 export const metadata: Metadata = {
   title: 'Blog — Nnamdi Obi',
@@ -28,17 +27,7 @@ export default async function BlogIndexPage() {
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
-      <header className="fixed top-0 inset-x-0 z-50 flex justify-center px-4 sm:px-6 pt-4">
-        <div className="flex items-center gap-8 rounded-xl bg-black border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.5)] pl-5 pr-2 py-2">
-          <Link href="/" className="flex items-center gap-2 shrink-0">
-            <LogoMark size={26} />
-            <span className="text-white font-semibold text-sm">Nnamdi Obi</span>
-          </Link>
-          <Link href="/signup" className="flex items-center gap-1.5 px-5 py-2.5 rounded-lg bg-white text-black text-sm font-semibold hover:bg-white/90 transition-colors">
-            Join now
-          </Link>
-        </div>
-      </header>
+      <SiteHeader showSignIn={false} />
 
       <main className="max-w-6xl mx-auto px-6 pt-28 pb-16">
         <div className="mb-12">

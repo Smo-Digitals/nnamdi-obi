@@ -5,6 +5,14 @@ import Image from 'next/image';
 import { motion, type Variants } from 'framer-motion';
 import { ArrowRight, CheckCircle, BookOpen, Users, Lightning, Play, Quotes } from 'phosphor-react';
 import { Logo, LogoMark } from '@/components/Logo';
+import { SiteHeader } from '@/components/SiteHeader';
+
+const nav = [
+  { label: 'Courses',   href: '#courses' },
+  { label: 'Community', href: '#community' },
+  { label: 'Stories',   href: '#testimonials' },
+  { label: 'Blog',      href: '/blog' },
+];
 
 const features = [
   { icon: BookOpen,  title: 'World-class courses',      desc: 'Practical, no-fluff content built for African entrepreneurs and builders.' },
@@ -33,27 +41,7 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white overflow-x-hidden">
 
-      {/* Nav */}
-      <header className="fixed top-0 inset-x-0 z-50 flex justify-center px-4 sm:px-6 pt-4">
-        <div className="flex items-center gap-8 rounded-xl bg-black border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.5)] pl-5 pr-2 py-2">
-          <Link href="/" className="flex items-center gap-2 shrink-0">
-            <LogoMark size={26} />
-            <span className="text-white font-semibold text-sm">Nnamdi Obi</span>
-          </Link>
-          <nav className="hidden md:flex items-center gap-6 text-sm text-[#999]">
-            <a href="#courses"      className="hover:text-white transition-colors">Courses</a>
-            <a href="#community"    className="hover:text-white transition-colors">Community</a>
-            <a href="#testimonials" className="hover:text-white transition-colors">Stories</a>
-            <Link href="/blog"      className="hover:text-white transition-colors">Blog</Link>
-          </nav>
-          <div className="flex items-center gap-3 shrink-0">
-            <Link href="/login"  className="hidden sm:block text-sm text-[#999] hover:text-white transition-colors px-2">Sign in</Link>
-            <Link href="/signup" className="flex items-center gap-1.5 px-5 py-2.5 rounded-lg bg-white text-black text-sm font-semibold hover:bg-white/90 transition-colors">
-              Join now <ArrowRight size={14} />
-            </Link>
-          </div>
-        </div>
-      </header>
+      <SiteHeader nav={nav} />
 
       {/* Hero */}
       <section className="relative bg-white text-[#0a0a0a]">
