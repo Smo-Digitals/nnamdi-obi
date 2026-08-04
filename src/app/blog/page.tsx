@@ -27,7 +27,7 @@ export default async function BlogIndexPage() {
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
-      <SiteHeader showSignIn={false} />
+      <SiteHeader />
 
       <main className="max-w-6xl mx-auto px-6 pt-28 pb-16">
         <div className="mb-12">

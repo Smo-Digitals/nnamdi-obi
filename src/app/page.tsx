@@ -7,13 +7,6 @@ import { ArrowRight, CheckCircle, BookOpen, Users, Lightning, Play, Quotes } fro
 import { Logo, LogoMark } from '@/components/Logo';
 import { SiteHeader } from '@/components/SiteHeader';
 
-const nav = [
-  { label: 'Courses',   href: '#courses' },
-  { label: 'Community', href: '#community' },
-  { label: 'Stories',   href: '#testimonials' },
-  { label: 'Blog',      href: '/blog' },
-];
-
 const features = [
   { icon: BookOpen,  title: 'World-class courses',      desc: 'Practical, no-fluff content built for African entrepreneurs and builders.' },
   { icon: Users,     title: 'Thriving community',        desc: 'Connect with thousands of like-minded people on the same journey as you.' },
@@ -41,7 +34,7 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white overflow-x-hidden">
 
-      <SiteHeader nav={nav} />
+      <SiteHeader />
 
       {/* Hero */}
       <section className="relative bg-white text-[#0a0a0a]">
