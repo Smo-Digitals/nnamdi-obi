@@ -24,9 +24,14 @@ export function SiteHeader() {
             <span className="text-white font-semibold text-sm">Nnamdi Obi</span>
           </Link>
 
-          <nav className="hidden md:flex items-center gap-6 text-sm text-[#999]">
+          <nav className="hidden md:flex items-center gap-6 text-sm">
             {NAV.map((link) => (
-              <Link key={link.href} href={link.href} className="hover:text-white transition-colors">{link.label}</Link>
+              <Link key={link.href} href={link.href} className="group relative h-5 overflow-hidden">
+                <span className="flex flex-col transition-transform duration-300 ease-[cubic-bezier(0.65,0,0.35,1)] group-hover:-translate-y-1/2">
+                  <span className="text-[#999]">{link.label}</span>
+                  <span className="text-white">{link.label}</span>
+                </span>
+              </Link>
             ))}
           </nav>
 
