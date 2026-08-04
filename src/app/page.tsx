@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion, type Variants } from 'framer-motion';
 import { ArrowRight, CheckCircle, BookOpen, Users, Lightning, Play, Quotes } from 'phosphor-react';
 import { Logo, LogoMark } from '@/components/Logo';
@@ -34,18 +35,21 @@ export default function LandingPage() {
     <div className="min-h-screen bg-[#0a0a0a] text-white overflow-x-hidden">
 
       {/* Hero */}
-      <section className="px-4 pt-4">
-        <div className="rounded-[28px] overflow-hidden bg-[#0d0d0d] border border-white/10">
-          <div className="flex justify-center px-4 sm:px-6 pt-4">
+      <section className="px-4 pt-4 pb-4">
+        <div className="relative rounded-xl overflow-hidden">
+          <Image src="/hero-bg.jpg" alt="" fill priority className="object-cover" />
+          <div className="absolute inset-0 bg-black/35" />
+
+          <div className="relative flex justify-center px-4 sm:px-6 pt-6">
             <NavBar />
           </div>
 
-          <div className="px-6 py-28 sm:py-32 flex flex-col items-center text-center">
+          <div className="relative px-6 py-28 sm:py-32 flex flex-col items-center text-center">
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#DC5B17]/10 border border-[#DC5B17]/20 text-[#DC5B17] text-xs font-semibold mb-6"
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-black border border-[#DC5B17]/30 text-[#DC5B17] text-xs font-semibold mb-6"
             >
               <Lightning size={12} weight="fill" /> Africa&apos;s future starts here
             </motion.div>
@@ -54,7 +58,7 @@ export default function LandingPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.55, delay: 0.1 }}
-              className="text-5xl lg:text-6xl font-bold leading-[1.1] mb-6"
+              className="text-5xl lg:text-6xl font-bold leading-[1.1] mb-6 text-white"
             >
               Build the life<br />
               <span className="text-[#DC5B17]">Africa needs</span><br />
@@ -65,7 +69,7 @@ export default function LandingPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.55, delay: 0.2 }}
-              className="text-[#888] text-lg leading-relaxed max-w-lg mx-auto mb-8"
+              className="text-[#ccc] text-lg leading-relaxed max-w-lg mx-auto mb-8"
             >
               Join thousands of entrepreneurs, builders, and creators learning from Nnamdi Obi — teacher, founder, and one of Africa&apos;s most intentional thinkers.
             </motion.p>
@@ -79,7 +83,7 @@ export default function LandingPage() {
               <Link href="/signup" className="flex items-center gap-2 px-6 py-3 rounded-xl bg-[#DC5B17] text-white font-semibold hover:bg-[#c44f13] transition-colors">
                 Start for free <ArrowRight size={16} />
               </Link>
-              <button className="flex items-center gap-2 px-6 py-3 rounded-xl border border-white/10 text-[#aaa] text-sm font-medium hover:border-white/20 hover:text-white transition-colors">
+              <button className="flex items-center gap-2 px-6 py-3 rounded-xl border border-white/20 text-white/80 text-sm font-medium hover:border-white/40 hover:text-white transition-colors">
                 <Play size={14} weight="fill" /> Watch intro
               </button>
             </motion.div>
@@ -92,12 +96,12 @@ export default function LandingPage() {
             >
               <div className="flex -space-x-2">
                 {['A', 'E', 'C', 'T'].map((l, i) => (
-                  <div key={i} className="w-8 h-8 rounded-full bg-[#DC5B17]/20 border-2 border-[#0d0d0d] flex items-center justify-center text-[#DC5B17] text-xs font-semibold">
+                  <div key={i} className="w-8 h-8 rounded-full bg-black border-2 border-[#DC5B17] flex items-center justify-center text-[#DC5B17] text-xs font-semibold">
                     {l}
                   </div>
                 ))}
               </div>
-              <p className="text-[#666] text-sm">
+              <p className="text-[#ccc] text-sm">
                 <span className="text-white font-semibold">1,200+</span> members already inside
               </p>
             </motion.div>
