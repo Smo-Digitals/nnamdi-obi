@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion, type Variants } from 'framer-motion';
 import { ArrowRight, CheckCircle, BookOpen, Users, Lightning, Play, Quotes } from 'phosphor-react';
+import { Logo, LogoMark } from '@/components/Logo';
 
 const features = [
   { icon: BookOpen,  title: 'World-class courses',      desc: 'Practical, no-fluff content built for African entrepreneurs and builders.' },
@@ -35,12 +36,9 @@ export default function LandingPage() {
       {/* Nav */}
       <header className="sticky top-0 z-50 border-b border-white/5 bg-[#0a0a0a]/80 backdrop-blur-md">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-lg bg-[#DC5B17] flex items-center justify-center">
-              <span className="text-white text-xs font-bold font-[family-name:var(--font-dm-mono)]">N</span>
-            </div>
-            <span className="text-white font-semibold text-sm">Nnamdi Obi</span>
-          </div>
+          <Link href="/" className="flex items-center">
+            <Logo />
+          </Link>
           <nav className="hidden md:flex items-center gap-6 text-sm text-[#666]">
             <a href="#courses"      className="hover:text-white transition-colors">Courses</a>
             <a href="#community"    className="hover:text-white transition-colors">Community</a>
@@ -301,9 +299,7 @@ export default function LandingPage() {
       <footer className="border-t border-white/5 py-8">
         <div className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#444]">
           <div className="flex items-center gap-2">
-            <div className="w-5 h-5 rounded bg-[#DC5B17] flex items-center justify-center">
-              <span className="text-white text-[9px] font-bold">N</span>
-            </div>
+            <LogoMark size={16} />
             <span>© 2025 Nnamdi Obi</span>
           </div>
           <div className="flex gap-5">

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { categoryLabel } from '@/lib/categories';
 import { BlogIndexClient } from '@/components/blog/BlogIndexClient';
+import { Logo } from '@/components/Logo';
 
 export const metadata: Metadata = {
   title: 'Blog — Nnamdi Obi',
@@ -29,11 +30,8 @@ export default async function BlogIndexPage() {
     <div className="min-h-screen bg-[#0a0a0a] text-white">
       <header className="sticky top-0 z-50 border-b border-white/5 bg-[#0a0a0a]/80 backdrop-blur-md">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-lg bg-[#DC5B17] flex items-center justify-center">
-              <span className="text-white text-xs font-bold">N</span>
-            </div>
-            <span className="text-white font-semibold text-sm">Nnamdi Obi</span>
+          <Link href="/" className="flex items-center">
+            <Logo />
           </Link>
           <Link href="/signup" className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#DC5B17] text-white text-sm font-semibold hover:bg-[#c44f13] transition-colors">
             Join now
