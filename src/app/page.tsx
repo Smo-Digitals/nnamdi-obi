@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { motion, type Variants } from 'framer-motion';
 import { ArrowRight, CheckCircle, BookOpen, Users, Lightning, Play, Quotes } from 'phosphor-react';
 import { Logo, LogoMark } from '@/components/Logo';
-import { SiteHeader } from '@/components/SiteHeader';
+import { NavBar } from '@/components/SiteHeader';
 
 const features = [
   { icon: BookOpen,  title: 'World-class courses',      desc: 'Practical, no-fluff content built for African entrepreneurs and builders.' },
@@ -33,15 +33,14 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white overflow-x-hidden">
 
-      <SiteHeader />
-
       {/* Hero */}
-      <section className="relative px-4 sm:px-6 pt-24">
-        <div className="relative max-w-6xl mx-auto rounded-[32px] overflow-hidden bg-[#0d0d0d] border border-white/5">
-          {/* Glow */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[500px] bg-[#DC5B17]/15 rounded-full blur-[140px] pointer-events-none" />
+      <section className="px-3 sm:px-4 pt-4">
+        <div className="max-w-[1600px] mx-auto rounded-[28px] overflow-hidden bg-[#0d0d0d] border border-white/10">
+          <div className="flex justify-center px-4 sm:px-6 pt-4">
+            <NavBar />
+          </div>
 
-          <div className="relative px-6 py-28 sm:py-32 flex flex-col items-center text-center">
+          <div className="px-6 py-28 sm:py-32 flex flex-col items-center text-center">
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
@@ -159,8 +158,8 @@ export default function LandingPage() {
             >
               <div className="h-36 flex items-center justify-center relative" style={{ background: `${color}15` }}>
                 <BookOpen size={40} style={{ color }} weight="duotone" />
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40">
-                  <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 backdrop-blur text-white text-sm font-medium">
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black">
+                  <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-black text-sm font-medium">
                     <Play size={13} weight="fill" /> Preview
                   </div>
                 </div>
@@ -222,11 +221,10 @@ export default function LandingPage() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           viewport={{ once: true }}
-          className="relative bg-gradient-to-br from-[#DC5B17]/20 via-[#111] to-[#111] border border-[#DC5B17]/20 rounded-3xl px-8 py-16 overflow-hidden"
+          className="bg-[#111] border border-white/10 rounded-3xl px-8 py-16 overflow-hidden"
         >
-          <div className="absolute inset-0 bg-[#DC5B17]/5 rounded-3xl blur-3xl pointer-events-none" />
-          <h2 className="relative text-4xl font-bold mb-4">Ready to build your future?</h2>
-          <p className="relative text-[#666] text-lg mb-8 max-w-md mx-auto">
+          <h2 className="text-4xl font-bold mb-4">Ready to build your future?</h2>
+          <p className="text-[#666] text-lg mb-8 max-w-md mx-auto">
             Join 1,200+ members already learning, growing, and building with Nnamdi Obi.
           </p>
           <div className="relative flex flex-col sm:flex-row gap-3 justify-center">
