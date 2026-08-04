@@ -35,7 +35,7 @@ export default function LandingPage() {
 
       {/* Nav */}
       <header className="fixed top-0 inset-x-0 z-50 flex justify-center px-4 sm:px-6 pt-4">
-        <div className="flex items-center gap-8 bg-black border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.5)] pl-5 pr-2 py-2">
+        <div className="flex items-center gap-8 rounded-xl bg-black border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.5)] pl-5 pr-2 py-2">
           <Link href="/" className="flex items-center gap-2 shrink-0">
             <LogoMark size={26} />
             <span className="text-white font-semibold text-sm">Nnamdi Obi</span>
