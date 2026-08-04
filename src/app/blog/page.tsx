@@ -34,7 +34,7 @@ export default async function BlogIndexPage() {
             <LogoMark size={26} />
             <span className="text-white font-semibold text-sm">Nnamdi Obi</span>
           </Link>
-          <Link href="/signup" className="flex items-center gap-1.5 px-5 py-2.5 bg-white text-black text-sm font-semibold hover:bg-white/90 transition-colors">
+          <Link href="/signup" className="flex items-center gap-1.5 px-5 py-2.5 rounded-lg bg-white text-black text-sm font-semibold hover:bg-white/90 transition-colors">
             Join now
           </Link>
         </div>

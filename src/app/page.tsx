@@ -48,7 +48,7 @@ export default function LandingPage() {
           </nav>
           <div className="flex items-center gap-3 shrink-0">
             <Link href="/login"  className="hidden sm:block text-sm text-[#999] hover:text-white transition-colors px-2">Sign in</Link>
-            <Link href="/signup" className="flex items-center gap-1.5 px-5 py-2.5 bg-white text-black text-sm font-semibold hover:bg-white/90 transition-colors">
+            <Link href="/signup" className="flex items-center gap-1.5 px-5 py-2.5 rounded-lg bg-white text-black text-sm font-semibold hover:bg-white/90 transition-colors">
               Join now <ArrowRight size={14} />
             </Link>
           </div>
