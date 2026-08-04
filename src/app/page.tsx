@@ -34,7 +34,7 @@ export default function LandingPage() {
     <div className="min-h-screen bg-[#0a0a0a] text-white overflow-x-hidden">
 
       {/* Nav */}
-      <header className="sticky top-0 z-50 flex justify-center px-4 sm:px-6 pt-4">
+      <header className="fixed top-0 inset-x-0 z-50 flex justify-center px-4 sm:px-6 pt-4">
         <div className="flex items-center gap-8 bg-black border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.5)] pl-5 pr-2 py-2">
           <Link href="/" className="flex items-center gap-2 shrink-0">
             <LogoMark size={26} />
@@ -60,7 +60,7 @@ export default function LandingPage() {
         {/* Glow */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-[#DC5B17]/15 rounded-full blur-[120px] pointer-events-none" />
 
-        <div className="relative max-w-6xl mx-auto px-6 pt-24 pb-32 flex flex-col lg:flex-row items-center gap-16">
+        <div className="relative max-w-6xl mx-auto px-6 pt-36 pb-32 flex flex-col lg:flex-row items-center gap-16">
         <div className="relative flex-1 text-center lg:text-left">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
