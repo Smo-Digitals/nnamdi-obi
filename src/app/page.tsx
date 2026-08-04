@@ -34,8 +34,8 @@ export default function LandingPage() {
     <div className="min-h-screen bg-[#0a0a0a] text-white overflow-x-hidden">
 
       {/* Hero */}
-      <section className="px-3 sm:px-4 pt-4">
-        <div className="max-w-[1600px] mx-auto rounded-[28px] overflow-hidden bg-[#0d0d0d] border border-white/10">
+      <section className="px-4 pt-4">
+        <div className="rounded-[28px] overflow-hidden bg-[#0d0d0d] border border-white/10">
           <div className="flex justify-center px-4 sm:px-6 pt-4">
             <NavBar />
           </div>
