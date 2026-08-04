@@ -35,7 +35,7 @@ export default function LandingPage() {
 
       {/* Nav */}
       <header className="sticky top-0 z-50 flex justify-center px-4 sm:px-6 pt-4">
-        <div className="flex items-center gap-8 rounded-full bg-black border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.5)] pl-5 pr-2 py-2">
+        <div className="flex items-center gap-8 bg-black border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.5)] pl-5 pr-2 py-2">
           <Link href="/" className="flex items-center gap-2 shrink-0">
             <LogoMark size={26} />
             <span className="text-white font-semibold text-sm">Nnamdi Obi</span>
@@ -48,7 +48,7 @@ export default function LandingPage() {
           </nav>
           <div className="flex items-center gap-3 shrink-0">
             <Link href="/login"  className="hidden sm:block text-sm text-[#999] hover:text-white transition-colors px-2">Sign in</Link>
-            <Link href="/signup" className="flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-white text-black text-sm font-semibold hover:bg-white/90 transition-colors">
+            <Link href="/signup" className="flex items-center gap-1.5 px-5 py-2.5 bg-white text-black text-sm font-semibold hover:bg-white/90 transition-colors">
               Join now <ArrowRight size={14} />
             </Link>
           </div>
@@ -56,10 +56,11 @@ export default function LandingPage() {
       </header>
 
       {/* Hero */}
-      <section className="relative max-w-6xl mx-auto px-6 pt-24 pb-32 flex flex-col lg:flex-row items-center gap-16">
+      <section className="relative bg-white text-[#0a0a0a]">
         {/* Glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-[#DC5B17]/10 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-[#DC5B17]/15 rounded-full blur-[120px] pointer-events-none" />
 
+        <div className="relative max-w-6xl mx-auto px-6 pt-24 pb-32 flex flex-col lg:flex-row items-center gap-16">
         <div className="relative flex-1 text-center lg:text-left">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -85,7 +86,7 @@ export default function LandingPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.2 }}
-            className="text-[#666] text-lg leading-relaxed max-w-lg mx-auto lg:mx-0 mb-8"
+            className="text-[#555] text-lg leading-relaxed max-w-lg mx-auto lg:mx-0 mb-8"
           >
             Join thousands of entrepreneurs, builders, and creators learning from Nnamdi Obi — teacher, founder, and one of Africa&apos;s most intentional thinkers.
           </motion.p>
@@ -99,7 +100,7 @@ export default function LandingPage() {
             <Link href="/signup" className="flex items-center gap-2 px-6 py-3 rounded-xl bg-[#DC5B17] text-white font-semibold hover:bg-[#c44f13] transition-colors">
               Start for free <ArrowRight size={16} />
             </Link>
-            <button className="flex items-center gap-2 px-6 py-3 rounded-xl border border-white/10 text-[#aaa] text-sm font-medium hover:border-white/20 hover:text-white transition-colors">
+            <button className="flex items-center gap-2 px-6 py-3 rounded-xl border border-black/10 text-[#555] text-sm font-medium hover:border-black/20 hover:text-black transition-colors">
               <Play size={14} weight="fill" /> Watch intro
             </button>
           </motion.div>
@@ -112,13 +113,13 @@ export default function LandingPage() {
           >
             <div className="flex -space-x-2">
               {['A', 'E', 'C', 'T'].map((l, i) => (
-                <div key={i} className="w-8 h-8 rounded-full bg-[#DC5B17]/20 border-2 border-[#0a0a0a] flex items-center justify-center text-[#DC5B17] text-xs font-semibold">
+                <div key={i} className="w-8 h-8 rounded-full bg-[#DC5B17]/20 border-2 border-white flex items-center justify-center text-[#DC5B17] text-xs font-semibold">
                   {l}
                 </div>
               ))}
             </div>
             <p className="text-[#555] text-sm">
-              <span className="text-white font-semibold">1,200+</span> members already inside
+              <span className="text-[#0a0a0a] font-semibold">1,200+</span> members already inside
             </p>
           </motion.div>
         </div>
@@ -153,6 +154,7 @@ export default function LandingPage() {
             </div>
           </div>
         </motion.div>
+        </div>
       </section>
 
       {/* Features */}
