@@ -34,20 +34,21 @@ export default function LandingPage() {
     <div className="min-h-screen bg-[#0a0a0a] text-white overflow-x-hidden">
 
       {/* Nav */}
-      <header className="sticky top-0 z-50 border-b border-white/5 bg-[#0a0a0a]/80 backdrop-blur-md">
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center">
-            <Logo />
+      <header className="sticky top-0 z-50 px-4 sm:px-6 pt-4">
+        <div className="max-w-4xl mx-auto flex items-center justify-between gap-6 rounded-full bg-[#131313]/90 backdrop-blur-md border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.5)] pl-5 pr-2 py-2">
+          <Link href="/" className="flex items-center gap-2 shrink-0">
+            <LogoMark size={26} />
+            <span className="text-white font-semibold text-sm">Nnamdi Obi</span>
           </Link>
-          <nav className="hidden md:flex items-center gap-6 text-sm text-[#666]">
+          <nav className="hidden md:flex items-center gap-6 text-sm text-[#999]">
             <a href="#courses"      className="hover:text-white transition-colors">Courses</a>
             <a href="#community"    className="hover:text-white transition-colors">Community</a>
             <a href="#testimonials" className="hover:text-white transition-colors">Stories</a>
             <Link href="/blog"      className="hover:text-white transition-colors">Blog</Link>
           </nav>
-          <div className="flex items-center gap-3">
-            <Link href="/login"  className="text-sm text-[#666] hover:text-white transition-colors">Sign in</Link>
-            <Link href="/signup" className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#DC5B17] text-white text-sm font-semibold hover:bg-[#c44f13] transition-colors">
+          <div className="flex items-center gap-3 shrink-0">
+            <Link href="/login"  className="hidden sm:block text-sm text-[#999] hover:text-white transition-colors px-2">Sign in</Link>
+            <Link href="/signup" className="flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-white text-black text-sm font-semibold hover:bg-white/90 transition-colors">
               Join now <ArrowRight size={14} />
             </Link>
           </div>
