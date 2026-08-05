@@ -37,8 +37,8 @@ export default function LandingPage() {
       {/* Hero */}
       <section className="px-4 pt-4 pb-4">
         <div className="relative rounded-xl overflow-hidden">
-          <Image src="/hero-bg.jpg" alt="" fill priority className="object-cover" />
-          <div className="absolute inset-0 bg-black/35" />
+          <Image src="/nnamdi.jpg" alt="" fill priority className="object-cover object-[50%_20%]" />
+          <div className="absolute inset-0 bg-black/50" />
 
           <div className="relative flex justify-center px-4 sm:px-6 pt-6">
             <NavBar />
