@@ -2,6 +2,8 @@
 
 import Link from 'next/link';
 import { ArrowLeft, BookOpen, Clock, Users } from 'phosphor-react';
+import { EnrollButton } from './EnrollButton';
+import { LiveSessionsSection } from './LiveSessionsSection';
 
 type RubricItem = { max_score: number };
 
@@ -14,6 +16,11 @@ type Assignment = {
   reviews_required: number;
 };
 
+type Session = {
+  id: string; title: string; description: string | null;
+  start_time: string; end_time: string; meet_link: string | null;
+};
+
 type Course = {
   id: string;
   title: string;
@@ -21,9 +28,15 @@ type Course = {
   cover_image_url: string | null;
 };
 
-interface Props { course: Course; assignments: Assignment[] }
+interface Props {
+  course: Course;
+  assignments: Assignment[];
+  sessions: Session[];
+  isLoggedIn: boolean;
+  isEnrolled: boolean;
+}
 
-export function PortalCourseDetailClient({ course, assignments }: Props) {
+export function PortalCourseDetailClient({ course, assignments, sessions, isLoggedIn, isEnrolled }: Props) {
   return (
     <div className="p-8 max-w-2xl">
       <Link href="/home/courses" className="inline-flex items-center gap-1.5 text-xs font-semibold mb-6 transition-colors" style={{ color: 'var(--adm-muted)' }}>
@@ -36,7 +49,17 @@ export function PortalCourseDetailClient({ course, assignments }: Props) {
       )}
 
       <h1 className="font-bold text-2xl mb-2" style={{ color: 'var(--adm-text)' }}>{course.title}</h1>
-      {course.description && <p className="text-sm mb-8" style={{ color: 'var(--adm-muted)' }}>{course.description}</p>}
+      {course.description && <p className="text-sm mb-6" style={{ color: 'var(--adm-muted)' }}>{course.description}</p>}
+
+      {isLoggedIn ? (
+        <EnrollButton courseId={course.id} initiallyEnrolled={isEnrolled} />
+      ) : (
+        <Link href="/login" className="inline-block px-5 py-2.5 rounded-xl bg-[#DC5B17] text-white text-sm font-semibold hover:bg-[#c44f13] transition-colors mb-8">
+          Log in to enroll
+        </Link>
+      )}
+
+      {isEnrolled && <LiveSessionsSection sessions={sessions} />}
 
       <h2 className="font-bold text-base mb-4" style={{ color: 'var(--adm-text)' }}>Assignments</h2>
 

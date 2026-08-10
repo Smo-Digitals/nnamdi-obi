@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { ArrowLeft, PushPin } from 'phosphor-react';
 
 type Announcement = {
@@ -39,17 +39,18 @@ const proseStyle = {
 const proseClass = 'prose prose-sm max-w-none prose-headings:font-bold prose-a:no-underline hover:prose-a:underline prose-blockquote:border-[#DC5B17] prose-iframe:w-full prose-iframe:aspect-video prose-iframe:rounded-xl';
 
 export function PortalAnnouncementDetail({ announcement: a }: Props) {
+  const router = useRouter();
   const embedUrl = a.cover_video_url ? getYoutubeEmbedUrl(a.cover_video_url) : null;
   const hasCover = !!embedUrl || !!a.cover_image_url;
 
   if (!hasCover) {
     return (
       <div className="p-8 max-w-2xl">
-        <Link href="/home/announcements"
+        <button type="button" onClick={() => router.back()}
           className="inline-flex items-center gap-1.5 text-xs font-semibold mb-8 transition-colors"
           style={{ color: 'var(--adm-muted)' }}>
           <ArrowLeft size={13} weight="bold" /> All Announcements
-        </Link>
+        </button>
         <h1 className="font-bold text-2xl leading-snug mb-2" style={{ color: 'var(--adm-text)' }}>{a.title}</h1>
         <p className="text-xs mb-6" style={{ color: 'var(--adm-muted)' }}>
           {new Date(a.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
@@ -65,11 +66,11 @@ export function PortalAnnouncementDetail({ announcement: a }: Props) {
 
       {/* Back button — fixed at top */}
       <div className="shrink-0 px-8 pt-8 pb-4">
-        <Link href="/home/announcements"
+        <button type="button" onClick={() => router.back()}
           className="inline-flex items-center gap-1.5 text-xs font-semibold transition-colors"
           style={{ color: 'var(--adm-muted)' }}>
           <ArrowLeft size={13} weight="bold" /> All Announcements
-        </Link>
+        </button>
       </div>
 
       {/* Two-panel: left image fixed, right content scrolls */}

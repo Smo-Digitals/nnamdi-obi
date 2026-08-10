@@ -1,7 +1,15 @@
 import { createClient } from '@/lib/supabase/server';
 import { PortalAnnouncementsClient } from '@/components/portal/announcements/PortalAnnouncementsClient';
+import { type ViewMode } from '@/components/portal/announcements/announcementUtils';
 
-export default async function PortalAnnouncementsPage() {
+interface PageProps {
+  searchParams: Promise<{ view?: string }>;
+}
+
+export default async function PortalAnnouncementsPage({ searchParams }: PageProps) {
+  const { view } = await searchParams;
+  const initialViewMode: ViewMode = view === 'list' ? 'list' : 'grid';
+
   const supabase = await createClient();
 
   const { data } = await supabase
@@ -11,5 +19,5 @@ export default async function PortalAnnouncementsPage() {
     .order('pinned', { ascending: false })
     .order('created_at', { ascending: false });
 
-  return <PortalAnnouncementsClient announcements={data ?? []} />;
+  return <PortalAnnouncementsClient announcements={data ?? []} initialViewMode={initialViewMode} />;
 }

@@ -8,7 +8,7 @@ import {
   UsersThree, ChatCircle, Bell, Gear, User, PencilSimpleLine,
   Storefront, CalendarBlank, CalendarCheck, CurrencyDollar,
   EnvelopeSimple, Users, Megaphone, Image, House, TextAlignLeft,
-  FolderSimple, Star, ChatDots, PencilCircle, Signpost, Package,
+  FolderSimple, Star, ChatDots, PencilCircle, Package,
   ShoppingCart, Handshake, Radio, Lock, UsersFour, Tag,
   ChartLine, Money,
 } from 'phosphor-react';
@@ -30,7 +30,6 @@ const ALL_ITEMS: Item[] = [
   { label: 'Comments',          description: 'Moderate reader comments',               href: '/admin/writing/comments',       icon: ChatDots,         group: 'Writing'     },
   { label: 'Editors',           description: 'Manage writing collaborators',           href: '/admin/writing/editors',        icon: PencilCircle,     group: 'Writing'     },
   // Courses
-  { label: 'Roadmaps',          description: 'Structured learning paths',              href: '/admin/courses/roadmaps',       icon: Signpost,         group: 'Courses'     },
   { label: 'All Courses',       description: 'Manage all courses',                     href: '/admin/courses/all',            icon: BookOpen,         group: 'Courses'     },
   { label: 'Curated Content',   description: 'Featured course picks',                  href: '/admin/courses/curated',        icon: Star,             group: 'Courses'     },
   { label: 'Course Categories', description: 'Organise courses by topic',              href: '/admin/courses/categories',     icon: Tag,              group: 'Courses'     },
@@ -133,58 +132,61 @@ export function SearchModal({ open, onClose }: Props) {
             transition={{ duration: 0.15, ease: [0.22, 1, 0.36, 1] }}
             className="fixed top-[16%] left-1/2 -translate-x-1/2 w-full max-w-lg z-50"
           >
-            <div className="bg-[#111] border border-white/[0.1] rounded-2xl shadow-2xl shadow-black/80 overflow-hidden">
+            <div className="border rounded-2xl shadow-2xl shadow-black/40 overflow-hidden"
+              style={{ backgroundColor: 'var(--adm-card)', borderColor: 'var(--adm-border)' }}>
 
               {/* Input */}
-              <div className="flex items-center gap-3 px-4 py-3.5 border-b border-white/[0.06]">
-                <MagnifyingGlass size={16} className="text-[#555] shrink-0" />
+              <div className="flex items-center gap-3 px-4 py-3.5 border-b" style={{ borderColor: 'var(--adm-border)' }}>
+                <MagnifyingGlass size={16} className="shrink-0" style={{ color: 'var(--adm-muted)' }} />
                 <input
                   ref={inputRef}
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   onKeyDown={onKey}
                   placeholder="Search pages, sections…"
-                  className="flex-1 bg-transparent text-white text-sm placeholder:text-[#444] outline-none"
+                  className="flex-1 bg-transparent text-sm placeholder:text-[var(--adm-muted)] outline-none"
+                  style={{ color: 'var(--adm-text)' }}
                 />
                 {query && (
-                  <button onClick={() => setQuery('')} className="text-[#444] hover:text-white transition-colors">
+                  <button onClick={() => setQuery('')} className="hover-brighten transition-colors" style={{ color: 'var(--adm-muted)' }}>
                     <X size={14} />
                   </button>
                 )}
-                <kbd className="text-[10px] bg-white/[0.05] border border-white/[0.08] px-1.5 py-0.5 rounded text-[#444]">ESC</kbd>
+                <kbd className="text-[10px] border px-1.5 py-0.5 rounded" style={{ backgroundColor: 'var(--adm-surface)', borderColor: 'var(--adm-border)', color: 'var(--adm-muted)' }}>ESC</kbd>
               </div>
 
               {/* Results */}
               <div className="max-h-80 overflow-y-auto py-1.5">
                 {!query.trim() && (
-                  <p className="px-4 pt-1 pb-2 text-[10px] font-semibold uppercase tracking-widest text-[#333]">Quick nav</p>
+                  <p className="px-4 pt-1 pb-2 text-[10px] font-semibold uppercase tracking-widest" style={{ color: 'var(--adm-muted)' }}>Quick nav</p>
                 )}
                 {results.length === 0 ? (
-                  <p className="text-[#444] text-sm text-center py-8">No results for &quot;{query}&quot;</p>
+                  <p className="text-sm text-center py-8" style={{ color: 'var(--adm-muted)' }}>No results for &quot;{query}&quot;</p>
                 ) : (
                   results.map((item, i) => {
                     const Icon = item.icon;
+                    const isActive = active === i;
                     return (
                       <button
                         key={item.href}
                         onClick={() => go(item.href)}
                         onMouseEnter={() => setActive(i)}
-                        className={`w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors ${
-                          active === i ? 'bg-white/[0.05]' : ''
-                        }`}
+                        className="w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors"
+                        style={{ backgroundColor: isActive ? 'var(--adm-surface)' : 'transparent' }}
                       >
-                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors ${
-                          active === i ? 'bg-[#DC5B17]/15 text-[#DC5B17]' : 'bg-white/[0.04] text-[#555]'
-                        }`}>
+                        <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors"
+                          style={isActive
+                            ? { backgroundColor: 'rgba(220,91,23,0.15)', color: '#DC5B17' }
+                            : { backgroundColor: 'var(--adm-surface)', color: 'var(--adm-muted)' }}>
                           <Icon size={15} />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className={`text-sm font-medium ${active === i ? 'text-white' : 'text-[#888]'}`}>{item.label}</p>
-                          <p className="text-[#444] text-xs truncate">{item.description}</p>
+                          <p className="text-sm font-medium" style={{ color: isActive ? 'var(--adm-text)' : 'var(--adm-muted)' }}>{item.label}</p>
+                          <p className="text-xs truncate" style={{ color: 'var(--adm-muted)' }}>{item.description}</p>
                         </div>
-                        <span className="text-[10px] text-[#333] shrink-0">{item.group}</span>
-                        {active === i && (
-                          <kbd className="text-[9px] bg-white/[0.05] border border-white/[0.08] px-1.5 py-0.5 rounded text-[#555]">↵</kbd>
+                        <span className="text-[10px] shrink-0" style={{ color: 'var(--adm-muted)' }}>{item.group}</span>
+                        {isActive && (
+                          <kbd className="text-[9px] border px-1.5 py-0.5 rounded" style={{ backgroundColor: 'var(--adm-surface)', borderColor: 'var(--adm-border)', color: 'var(--adm-muted)' }}>↵</kbd>
                         )}
                       </button>
                     );
@@ -193,10 +195,10 @@ export function SearchModal({ open, onClose }: Props) {
               </div>
 
               {/* Footer */}
-              <div className="flex items-center gap-4 px-4 py-2.5 border-t border-white/[0.06] text-[#333] text-[10px]">
-                <span><kbd className="bg-white/[0.04] px-1 py-0.5 rounded mr-1">↑↓</kbd>Navigate</span>
-                <span><kbd className="bg-white/[0.04] px-1 py-0.5 rounded mr-1">↵</kbd>Open</span>
-                <span><kbd className="bg-white/[0.04] px-1 py-0.5 rounded mr-1">ESC</kbd>Close</span>
+              <div className="flex items-center gap-4 px-4 py-2.5 border-t text-[10px]" style={{ borderColor: 'var(--adm-border)', color: 'var(--adm-muted)' }}>
+                <span><kbd className="px-1 py-0.5 rounded mr-1" style={{ backgroundColor: 'var(--adm-surface)' }}>↑↓</kbd>Navigate</span>
+                <span><kbd className="px-1 py-0.5 rounded mr-1" style={{ backgroundColor: 'var(--adm-surface)' }}>↵</kbd>Open</span>
+                <span><kbd className="px-1 py-0.5 rounded mr-1" style={{ backgroundColor: 'var(--adm-surface)' }}>ESC</kbd>Close</span>
                 {query.trim() && <span className="ml-auto">{results.length} result{results.length !== 1 ? 's' : ''}</span>}
               </div>
             </div>

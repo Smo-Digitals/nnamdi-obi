@@ -1,11 +1,47 @@
 'use client';
 
-import { BookOpen, Play, Users, ArrowRight, Fire, Clock, CheckCircle } from 'phosphor-react';
+import { BookOpen, Play, Users, ArrowRight, Fire, Clock, CheckCircle, Trophy, ChartBar } from 'phosphor-react';
 
 const inProgress = [
   { title: 'Business Growth Masterclass', progress: 65, lessons: 24, done: 15, color: '#DC5B17' },
   { title: 'Tech Foundations',            progress: 30, lessons: 18, done: 5,  color: '#22c55e' },
   { title: 'Leadership 101',              progress: 10, lessons: 12, done: 1,  color: '#eab308' },
+];
+
+const achievements = [
+  { label: 'First Course',    desc: 'Enrolled in your first course',   done: true  },
+  { label: 'Halfway There',   desc: 'Reached 50% on any course',       done: true  },
+  { label: 'Community Pro',   desc: 'Made 10 community contributions', done: false },
+  { label: 'Course Complete', desc: 'Finished your first full course', done: false },
+];
+
+const summary = [
+  {
+    label: 'Courses in progress',
+    value: inProgress.length,
+    icon:  BookOpen,
+    color: '#DC5B17',
+  },
+  {
+    label: 'Lessons completed',
+    value: inProgress.reduce((n, c) => n + c.done, 0),
+    sub:   `of ${inProgress.reduce((n, c) => n + c.lessons, 0)} total`,
+    icon:  CheckCircle,
+    color: '#22c55e',
+  },
+  {
+    label: 'Day streak',
+    value: 12,
+    sub:   'Keep it up',
+    icon:  Fire,
+    color: '#eab308',
+  },
+  {
+    label: 'Achievements',
+    value: `${achievements.filter((a) => a.done).length}/${achievements.length}`,
+    icon:  Trophy,
+    color: '#8b5cf6',
+  },
 ];
 
 const explore = [
@@ -32,24 +68,27 @@ export default function HomePage() {
   return (
     <div className="flex flex-col gap-12 p-8 max-w-6xl">
 
-      {/* Welcome banner */}
-      <div className="relative rounded-2xl overflow-hidden border px-8 py-10"
-        style={{
-          background: 'linear-gradient(135deg, color-mix(in srgb, #DC5B17 15%, var(--adm-card)), var(--adm-card))',
-          borderColor: 'color-mix(in srgb, #DC5B17 25%, var(--adm-border))',
-        }}>
-        <div className="relative z-10">
-          <p className="text-[#DC5B17] text-sm font-semibold mb-1">Good morning 👋</p>
-          <h1 className="text-3xl font-bold mb-2" style={{ color: 'var(--adm-text)' }}>Welcome back, Nnamdi</h1>
-          <p className="text-sm max-w-md" style={{ color: 'var(--adm-muted)' }}>
-            You have <span className="font-semibold" style={{ color: 'var(--adm-text)' }}>2 courses in progress</span>. Pick up where you left off.
-          </p>
-          <button className="mt-6 flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#DC5B17] text-white text-sm font-semibold hover:bg-[#c44f13] transition-colors">
-            <Play size={14} weight="fill" /> Continue learning
-          </button>
+      {/* Overview */}
+      <section>
+        <div className="flex items-center gap-2 mb-5">
+          <ChartBar size={17} weight="fill" className="text-[#DC5B17]" />
+          <h2 className="font-semibold" style={{ color: 'var(--adm-text)' }}>Overview</h2>
         </div>
-        <div className="absolute right-8 top-1/2 -translate-y-1/2 w-40 h-40 rounded-full bg-[#DC5B17]/10 blur-3xl pointer-events-none" />
-      </div>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          {summary.map(({ label, value, sub, icon: Icon, color }) => (
+            <div key={label} className="rounded-2xl p-5 border"
+              style={{ backgroundColor: 'var(--adm-card)', borderColor: 'var(--adm-border)' }}>
+              <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-4"
+                style={{ backgroundColor: `${color}20` }}>
+                <Icon size={18} style={{ color }} weight="fill" />
+              </div>
+              <p className="text-2xl font-bold mb-1" style={{ color: 'var(--adm-text)' }}>{value}</p>
+              <p className="text-xs" style={{ color: 'var(--adm-muted)' }}>{label}</p>
+              {sub && <p className="text-[10px] mt-1" style={{ color: 'var(--adm-muted)' }}>{sub}</p>}
+            </div>
+          ))}
+        </div>
+      </section>
 
       {/* Continue learning */}
       <section>
@@ -164,12 +203,7 @@ export default function HomePage() {
           <h2 className="font-semibold" style={{ color: 'var(--adm-text)' }}>Your Achievements</h2>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {[
-            { label: 'First Course',    desc: 'Enrolled in your first course',   done: true  },
-            { label: 'Halfway There',   desc: 'Reached 50% on any course',       done: true  },
-            { label: 'Community Pro',   desc: 'Made 10 community contributions', done: false },
-            { label: 'Course Complete', desc: 'Finished your first full course', done: false },
-          ].map(({ label, desc, done }) => (
+          {achievements.map(({ label, desc, done }) => (
             <div key={label} className="rounded-xl p-4 border text-center transition-colors"
               style={{
                 backgroundColor: done ? 'rgba(34,197,94,0.08)' : 'var(--adm-card)',

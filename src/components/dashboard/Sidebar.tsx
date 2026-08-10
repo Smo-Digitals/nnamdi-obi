@@ -45,7 +45,7 @@ const NAV: NavGroup[] = [
   {
     id: 'courses', label: 'Courses', icon: BookOpen, basePath: '/admin/courses',
     items: [
-      { label: 'Roadmaps',        href: '/admin/courses/roadmaps' },
+      { label: 'Add New',         href: '/admin/courses/all/new' },
       { label: 'All Courses',     href: '/admin/courses/all' },
       { label: 'Assignments',     href: '/admin/courses/assignments' },
       { label: 'Curated Content', href: '/admin/courses/curated' },
