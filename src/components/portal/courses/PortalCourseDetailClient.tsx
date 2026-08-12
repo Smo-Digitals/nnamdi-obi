@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { ArrowLeft, BookOpen, Clock, Users } from 'phosphor-react';
 import { EnrollButton } from './EnrollButton';
 import { LiveSessionsSection } from './LiveSessionsSection';
+import { CurriculumSection } from './CurriculumSection';
+import type { Lesson } from '@/components/dashboard/courses/courseTypes';
 
 type RubricItem = { max_score: number };
 
@@ -21,6 +23,10 @@ type Session = {
   start_time: string; end_time: string; meet_link: string | null;
 };
 
+type Topic = {
+  id: string; title: string; description: string | null; sort_order: number; lessons: Lesson[];
+};
+
 type Course = {
   id: string;
   title: string;
@@ -32,11 +38,13 @@ interface Props {
   course: Course;
   assignments: Assignment[];
   sessions: Session[];
+  topics: Topic[];
   isLoggedIn: boolean;
   isEnrolled: boolean;
+  completedLessonIds: string[];
 }
 
-export function PortalCourseDetailClient({ course, assignments, sessions, isLoggedIn, isEnrolled }: Props) {
+export function PortalCourseDetailClient({ course, assignments, sessions, topics, isLoggedIn, isEnrolled, completedLessonIds }: Props) {
   return (
     <div className="p-8 max-w-2xl">
       <Link href="/home/courses" className="inline-flex items-center gap-1.5 text-xs font-semibold mb-6 transition-colors" style={{ color: 'var(--adm-muted)' }}>
@@ -60,6 +68,8 @@ export function PortalCourseDetailClient({ course, assignments, sessions, isLogg
       )}
 
       {isEnrolled && <LiveSessionsSection sessions={sessions} />}
+
+      <CurriculumSection courseId={course.id} topics={topics} isEnrolled={isEnrolled} completedLessonIds={completedLessonIds} />
 
       <h2 className="font-bold text-base mb-4" style={{ color: 'var(--adm-text)' }}>Assignments</h2>
 

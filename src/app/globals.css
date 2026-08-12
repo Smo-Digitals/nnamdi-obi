@@ -158,3 +158,11 @@ html.light .admin-ui [class*="bg-\[#DC5B17\]"],
 html.light .admin-ui [class*="bg-\[#DC5B17\]"] * {
   color: #ffffff;
 }
+
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}

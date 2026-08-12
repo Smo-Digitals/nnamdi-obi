@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { categoryLabel } from '@/lib/categories';
 import { BlogIndexClient } from '@/components/blog/BlogIndexClient';
 import { SiteHeader } from '@/components/SiteHeader';
 
@@ -13,7 +12,7 @@ async function getPosts() {
   const admin = createAdminClient();
   const { data } = await admin
     .from('posts')
-    .select('id, title, slug, subtitle, cover_image_url, category, created_at')
+    .select('id, title, slug, subtitle, cover_image_url, category, created_at, read_time_minutes, access, views')
     .eq('status', 'published')
     .order('created_at', { ascending: false });
   return data ?? [];
@@ -22,20 +21,17 @@ async function getPosts() {
 export default async function BlogIndexPage() {
   const posts = await getPosts();
 
-  const categories = Array.from(new Set(posts.map((p) => p.category).filter((c): c is string => !!c)))
-    .map((id) => ({ id, label: categoryLabel(id) ?? id }));
-
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
       <SiteHeader />
 
-      <main className="max-w-6xl mx-auto px-6 pt-28 pb-16">
-        <div className="mb-12">
+      <main className="max-w-7xl mx-auto px-6 pt-28 pb-16">
+        <div className="mb-10">
           <h1 className="text-4xl sm:text-5xl font-bold mb-3">Blog</h1>
           <p className="text-[#666] text-lg">Writing on building in public, entrepreneurship, and tech.</p>
         </div>
 
-        <BlogIndexClient posts={posts} categories={categories} />
+        <BlogIndexClient posts={posts} />
       </main>
     </div>
   );

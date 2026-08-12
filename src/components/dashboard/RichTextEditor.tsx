@@ -60,7 +60,22 @@ export function RichTextEditor({ value, onChange }: Props) {
     content: value,
     editorProps: {
       attributes: {
-        class: 'prose prose-invert prose-sm max-w-none min-h-[260px] px-4 py-3 focus:outline-none',
+        class: 'prose prose-sm max-w-none min-h-[260px] px-4 py-3 focus:outline-none rte-content',
+        style: [
+          '--tw-prose-body: var(--adm-muted)',
+          '--tw-prose-headings: var(--adm-text)',
+          '--tw-prose-bold: var(--adm-text)',
+          '--tw-prose-links: #DC5B17',
+          '--tw-prose-bullets: var(--adm-muted)',
+          '--tw-prose-counters: var(--adm-muted)',
+          '--tw-prose-quotes: var(--adm-text)',
+          '--tw-prose-quote-borders: #DC5B17',
+          '--tw-prose-hr: var(--adm-border)',
+          '--tw-prose-code: var(--adm-text)',
+          '--tw-prose-pre-bg: var(--adm-surface)',
+          '--tw-prose-th-borders: var(--adm-border)',
+          '--tw-prose-td-borders: var(--adm-border)',
+        ].join('; '),
       },
     },
     onUpdate({ editor }) {
