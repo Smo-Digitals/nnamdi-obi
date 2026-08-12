@@ -13,7 +13,7 @@ export function CourseCardCinematic({ course, index }: { course: CourseCardData;
     : { label: 'Price: ', value: course.price === 0 ? 'Free' : `₦${course.price.toLocaleString()}` };
 
   return (
-    <Link href={`/home/courses/${course.id}`} className="group flex flex-col rounded-[32px] p-4 bg-white shadow-sm hover:shadow-md transition-shadow">
+    <Link href={`/home/courses/${course.id}`} className="group flex flex-col rounded-[28px] p-2 bg-white shadow-sm hover:shadow-md transition-shadow">
       <div className="relative rounded-[22px] p-5" style={{ backgroundColor: box }}>
         <div className="flex items-start justify-between">
           <span className="px-3.5 py-2 rounded-full text-sm" style={{ backgroundColor: `${meta.color}22`, color: '#120f0f' }}>
@@ -36,7 +36,7 @@ export function CourseCardCinematic({ course, index }: { course: CourseCardData;
         </div>
       </div>
 
-      <div className="flex items-center justify-between px-2 pt-4 pb-1">
+      <div className="flex items-center justify-between px-5 pt-4 pb-2">
         <span className="text-sm" style={{ color: '#1a1a1a' }}>
           {footer.label}<span className="font-bold">{footer.value}</span>
         </span>
