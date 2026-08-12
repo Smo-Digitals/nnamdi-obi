@@ -1,59 +1,58 @@
 import Link from 'next/link';
-import { PlayCircle, Users, Medal } from 'phosphor-react';
+import { ClipboardText, Users } from 'phosphor-react';
 import type { CourseCardData } from './courseCardTypes';
-import { categoryMeta, ctaLabel } from './courseCardTypes';
+import { ctaLabel, pastelFor, badgeLabel } from './courseCardTypes';
 
-export function CourseCardInfo({ course }: { course: CourseCardData }) {
-  const meta = categoryMeta(course.category);
-  const Icon = meta.icon;
+export function CourseCardInfo({ course, index }: { course: CourseCardData; index: number }) {
+  const bg = pastelFor(index);
+  const displayPrice = course.sale_price ?? course.price;
+  const footerLeft = course.isEnrolled
+    ? `Lessons: ${Math.round((course.progressPct / 100) * course.lessonCount)}/${course.lessonCount}`
+    : displayPrice === 0 ? 'Free' : `₦${displayPrice.toLocaleString()}`;
 
   return (
-    <Link href={`/home/courses/${course.id}`}
-      className="group flex flex-col p-5 rounded-2xl border hover:border-white/15 transition-colors"
-      style={{ backgroundColor: 'var(--adm-card)', borderColor: 'var(--adm-border)' }}>
-      <div className="flex items-start justify-between mb-3">
-        <div className="flex items-center gap-1.5 flex-wrap">
-          <span className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide"
-            style={{ backgroundColor: `${meta.color}1f`, color: meta.color }}>
-            {course.category ?? 'Course'}
-          </span>
-          {course.certification && (
-            <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-bold" style={{ backgroundColor: 'rgba(250,204,21,0.12)', color: '#facc15' }}>
-              <Medal size={11} weight="fill" /> Certificate
-            </span>
-          )}
-        </div>
-        <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: `${meta.color}1f`, color: meta.color }}>
-          <Icon size={17} weight="bold" />
-        </div>
-      </div>
-
-      <h2 className="font-bold text-base mb-1" style={{ color: 'var(--adm-text)' }}>{course.title}</h2>
-      {course.description && <p className="text-xs line-clamp-2 mb-3" style={{ color: 'var(--adm-muted)' }}>{course.description}</p>}
-
-      <div className="flex items-center gap-4 text-[11px] mb-4" style={{ color: 'var(--adm-muted)' }}>
-        <span className="flex items-center gap-1"><PlayCircle size={13} />{course.lessonCount} lessons</span>
-        <span className="flex items-center gap-1"><Users size={13} />{course.enrolledCount} enrolled</span>
-        <span className="capitalize">{course.difficulty}</span>
-      </div>
-
-      <div className="mb-4">
-        <div className="flex items-center justify-between text-[11px] mb-1" style={{ color: 'var(--adm-muted)' }}>
-          <span>Progress</span>
-          <span className="font-semibold" style={{ color: 'var(--adm-text)' }}>{course.progressPct}%</span>
-        </div>
-        <div className="h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: 'var(--adm-border)' }}>
-          <div className="h-full rounded-full transition-all" style={{ width: `${course.progressPct}%`, backgroundColor: meta.color }} />
-        </div>
-      </div>
-
-      <div className="flex items-center justify-between pt-3 border-t" style={{ borderColor: 'var(--adm-border)' }}>
-        <span className="text-sm font-bold" style={{ color: 'var(--adm-text)' }}>
-          {course.sale_price != null ? (
-            <>₦{course.sale_price.toLocaleString()} <span className="line-through font-normal text-[11px]" style={{ color: 'var(--adm-muted)' }}>₦{course.price.toLocaleString()}</span></>
-          ) : course.price === 0 ? 'Free' : `₦${course.price.toLocaleString()}`}
+    <Link href={`/home/courses/${course.id}`} className="group flex flex-col rounded-[28px] overflow-hidden">
+      <div className="relative p-7" style={{ backgroundColor: bg }}>
+        <span className="inline-block px-4 py-2 rounded-full text-sm font-medium" style={{ backgroundColor: 'rgba(0,0,0,0.06)', color: '#1a1a1a' }}>
+          {badgeLabel(course)}
         </span>
-        <span className="px-4 py-1.5 rounded-xl text-xs font-semibold text-white group-hover:bg-[#c44f13] transition-colors" style={{ backgroundColor: '#DC5B17' }}>
+
+        {course.cover_image_url && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={course.cover_image_url} alt="" aria-hidden
+            className="absolute top-5 right-5 w-24 h-24 rounded-[40%] object-cover shadow-lg" />
+        )}
+
+        <h2 className="text-3xl font-bold mt-5 mb-3" style={{ color: '#111' }}>{course.title}</h2>
+        {course.description && (
+          <p className="text-base leading-snug mb-6 pr-24" style={{ color: 'rgba(0,0,0,0.55)' }}>{course.description}</p>
+        )}
+
+        <div className="flex items-center gap-2.5 mb-8 text-base font-medium" style={{ color: '#1a1a1a' }}>
+          <ClipboardText size={20} />
+          <span>{course.lessonCount} lessons</span>
+          <span style={{ color: 'rgba(0,0,0,0.35)' }}>&bull;</span>
+          <Users size={20} />
+          <span>{course.enrolledCount} enrolled</span>
+        </div>
+
+        <div className="flex items-center justify-between text-base mb-2" style={{ color: 'rgba(0,0,0,0.6)' }}>
+          <span>Progress</span>
+          <span className="font-semibold" style={{ color: '#111' }}>{course.progressPct}%</span>
+        </div>
+        <div className="h-1.5 rounded-full w-full" style={{ backgroundColor: 'rgba(0,0,0,0.1)' }}>
+          <div className="h-1.5 rounded-full" style={{ width: `max(${course.progressPct}%, 12px)`, backgroundColor: '#111' }} />
+        </div>
+      </div>
+
+      <div className="flex items-center justify-between px-7 py-5 bg-white">
+        <span className="text-base font-semibold" style={{ color: '#111' }}>
+          {footerLeft}
+          {!course.isEnrolled && course.sale_price != null && (
+            <span className="ml-2 text-sm font-normal line-through" style={{ color: 'rgba(0,0,0,0.4)' }}>₦{course.price.toLocaleString()}</span>
+          )}
+        </span>
+        <span className="px-6 py-3 rounded-full text-base font-semibold text-white transition-colors group-hover:bg-[#222]" style={{ backgroundColor: '#111' }}>
           {ctaLabel(course)}
         </span>
       </div>
