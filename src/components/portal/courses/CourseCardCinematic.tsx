@@ -13,7 +13,8 @@ export function CourseCardCinematic({ course, index }: { course: CourseCardData;
     : { label: 'Price: ', value: course.price === 0 ? 'Free' : `₦${course.price.toLocaleString()}` };
 
   return (
-    <Link href={`/home/courses/${course.id}`} className="group flex flex-col rounded-[28px] p-2 bg-white shadow-sm hover:shadow-md transition-shadow">
+    <Link href={`/home/courses/${course.id}`} className="group flex flex-col rounded-[28px] p-2 border shadow-sm hover:shadow-md transition-shadow"
+      style={{ backgroundColor: 'var(--adm-card)', borderColor: 'var(--adm-border)' }}>
       <div className="relative rounded-[22px] p-5" style={{ backgroundColor: box }}>
         <div className="flex items-start justify-between">
           <span className="px-3.5 py-2 rounded-full text-sm" style={{ backgroundColor: `${meta.color}22`, color: '#120f0f' }}>
@@ -37,10 +38,11 @@ export function CourseCardCinematic({ course, index }: { course: CourseCardData;
       </div>
 
       <div className="flex items-center justify-between px-5 pt-4 pb-2">
-        <span className="text-sm" style={{ color: '#1a1a1a' }}>
+        <span className="text-sm" style={{ color: 'var(--adm-text)' }}>
           {footer.label}<span className="font-bold">{footer.value}</span>
         </span>
-        <span className="px-6 py-3 rounded-full text-sm font-medium text-white transition-colors group-hover:bg-[#000]" style={{ backgroundColor: '#120f0f' }}>
+        <span className="px-6 py-3 rounded-full text-sm font-medium transition-opacity group-hover:opacity-85"
+          style={{ backgroundColor: 'var(--adm-text)', color: 'var(--adm-card)' }}>
           {ctaLabel(course)}
         </span>
       </div>

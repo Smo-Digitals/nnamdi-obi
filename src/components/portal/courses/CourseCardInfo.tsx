@@ -11,7 +11,8 @@ export function CourseCardInfo({ course, index }: { course: CourseCardData; inde
     : displayPrice === 0 ? 'Free' : `₦${displayPrice.toLocaleString()}`;
 
   return (
-    <Link href={`/home/courses/${course.id}`} className="group flex flex-col rounded-[28px] overflow-hidden">
+    <Link href={`/home/courses/${course.id}`} className="group flex flex-col rounded-[28px] overflow-hidden border shadow-sm hover:shadow-md transition-shadow"
+      style={{ borderColor: 'var(--adm-border)' }}>
       <div className="relative p-7" style={{ backgroundColor: bg }}>
         <span className="inline-block px-4 py-2 rounded-full text-sm font-medium" style={{ backgroundColor: 'rgba(0,0,0,0.06)', color: '#1a1a1a' }}>
           {badgeLabel(course)}
@@ -45,14 +46,15 @@ export function CourseCardInfo({ course, index }: { course: CourseCardData; inde
         </div>
       </div>
 
-      <div className="flex items-center justify-between px-7 py-5 bg-white">
-        <span className="text-base font-semibold" style={{ color: '#111' }}>
+      <div className="flex items-center justify-between px-7 py-5" style={{ backgroundColor: 'var(--adm-card)', borderTop: '1px solid var(--adm-border)' }}>
+        <span className="text-base font-semibold" style={{ color: 'var(--adm-text)' }}>
           {footerLeft}
           {!course.isEnrolled && course.sale_price != null && (
-            <span className="ml-2 text-sm font-normal line-through" style={{ color: 'rgba(0,0,0,0.4)' }}>₦{course.price.toLocaleString()}</span>
+            <span className="ml-2 text-sm font-normal line-through" style={{ color: 'var(--adm-muted)' }}>₦{course.price.toLocaleString()}</span>
           )}
         </span>
-        <span className="px-6 py-3 rounded-full text-base font-semibold text-white transition-colors group-hover:bg-[#222]" style={{ backgroundColor: '#111' }}>
+        <span className="px-6 py-3 rounded-full text-base font-semibold transition-opacity group-hover:opacity-85"
+          style={{ backgroundColor: 'var(--adm-text)', color: 'var(--adm-card)' }}>
           {ctaLabel(course)}
         </span>
       </div>
