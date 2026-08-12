@@ -8,9 +8,10 @@ export function CourseCardCinematic({ course, index }: { course: CourseCardData;
   const box = pastelFor(index);
   const completedLessons = Math.round((course.progressPct / 100) * course.lessonCount);
 
+  const displayPrice = course.sale_price ?? course.price;
   const footer = course.isEnrolled
     ? { label: 'Lessons: ', value: `${completedLessons}/${course.lessonCount}` }
-    : { label: 'Price: ', value: course.price === 0 ? 'Free' : `₦${course.price.toLocaleString()}` };
+    : { label: 'Price: ', value: displayPrice === 0 ? 'Free' : `₦${displayPrice.toLocaleString()}` };
 
   return (
     <Link href={`/home/courses/${course.id}`} className="group flex flex-col rounded-[28px] p-2 border shadow-sm hover:shadow-md transition-shadow"

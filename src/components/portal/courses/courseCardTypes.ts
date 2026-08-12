@@ -41,9 +41,3 @@ const PASTELS = ['#FADCE9', '#D7EBFB', '#FBF0B2', '#D7F5DE'];
 export function pastelFor(index: number) {
   return PASTELS[index % PASTELS.length];
 }
-
-export function badgeLabel(card: CourseCardData): string {
-  if (card.isEnrolled) return 'Student';
-  if (card.enrolledCount >= 5) return 'Popular';
-  return card.category ?? 'New';
-}
