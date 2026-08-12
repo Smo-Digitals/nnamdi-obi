@@ -45,7 +45,7 @@ export function PortalAnnouncementDetail({ announcement: a }: Props) {
 
   if (!hasCover) {
     return (
-      <div className="p-8 max-w-2xl">
+      <div className="p-8 max-w-2xl mx-auto">
         <button type="button" onClick={() => router.back()}
           className="inline-flex items-center gap-1.5 text-xs font-semibold mb-8 transition-colors"
           style={{ color: 'var(--adm-muted)' }}>

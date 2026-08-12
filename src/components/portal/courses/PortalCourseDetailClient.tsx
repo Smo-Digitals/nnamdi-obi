@@ -46,7 +46,7 @@ export function PortalCourseDetailClient({ course, assignments, sessions, topics
   const firstLessonId = topics[0]?.lessons[0]?.id ?? null;
 
   return (
-    <div className="p-8 max-w-6xl">
+    <div className="p-8 max-w-6xl mx-auto">
       <div className="flex items-center gap-1.5 text-xs mb-5" style={{ color: 'var(--adm-muted)' }}>
         <Browser size={14} />
         <Link href="/home/courses" className="hover:underline">Courses</Link>

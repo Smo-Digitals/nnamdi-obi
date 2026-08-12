@@ -36,7 +36,7 @@ export function PortalLessonClient({ courseId, courseTitle, topicTitle, lesson, 
   }
 
   return (
-    <div className="p-8 max-w-2xl">
+    <div className="p-8 max-w-2xl mx-auto">
       <Link href={`/home/courses/${courseId}`} className="inline-flex items-center gap-1.5 text-xs font-semibold mb-6 transition-colors" style={{ color: 'var(--adm-muted)' }}>
         <ArrowLeft size={13} weight="bold" /> {courseTitle}
       </Link>

@@ -29,7 +29,7 @@ export function CuratedReadsPage() {
   }, []);
 
   return (
-    <div className="p-8 max-w-4xl">
+    <div className="p-8 max-w-4xl mx-auto">
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center gap-2 mb-2">
