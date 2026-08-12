@@ -92,24 +92,22 @@ export function PortalCourseDetailClient({ course, assignments, sessions, topics
       </div>
 
       <div className="grid lg:grid-cols-[1fr_360px] gap-8">
-        <div>
-          <CourseHeroMedia courseId={course.id} introVideoUrl={course.intro_video_url} coverImageUrl={course.cover_image_url}
-            title={course.title} isEnrolled={isEnrolled} firstLessonId={firstLessonId} />
+        <CourseHeroMedia courseId={course.id} introVideoUrl={course.intro_video_url} coverImageUrl={course.cover_image_url}
+          title={course.title} isEnrolled={isEnrolled} firstLessonId={firstLessonId} />
 
-          <CourseTabs description={course.description} whatYoudGet={course.what_youd_get}
-            materialsNeeded={course.materials_needed} instructor={course.instructor} />
-
-          {isEnrolled && <div className="mt-8"><LiveSessionsSection sessions={sessions} /></div>}
-
-          <div className="mt-8">
-            <CourseAssignmentsList courseId={course.id} assignments={assignments} />
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-4 lg:sticky lg:top-8 h-fit">
+        <div className="flex flex-col gap-4">
           <CurriculumSection courseId={course.id} topics={topics} isEnrolled={isEnrolled} completedLessonIds={completedLessonIds} />
           <CourseInstructorCard instructor={course.instructor} />
         </div>
+      </div>
+
+      <CourseTabs description={course.description} whatYoudGet={course.what_youd_get}
+        materialsNeeded={course.materials_needed} instructor={course.instructor} />
+
+      {isEnrolled && <div className="mt-8"><LiveSessionsSection sessions={sessions} /></div>}
+
+      <div className="mt-8">
+        <CourseAssignmentsList courseId={course.id} assignments={assignments} />
       </div>
     </div>
   );
