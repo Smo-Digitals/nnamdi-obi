@@ -1,37 +1,34 @@
 'use client';
 
+import type { ComponentProps } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, BookOpen, Clock, Users } from 'phosphor-react';
+import { ArrowLeft, CaretRight, Browser, PlayCircle, BookOpen, Medal } from 'phosphor-react';
 import { EnrollButton } from './EnrollButton';
+import { ShareButton } from './ShareButton';
 import { LiveSessionsSection } from './LiveSessionsSection';
 import { CurriculumSection } from './CurriculumSection';
+import { CourseHeroMedia } from './CourseHeroMedia';
+import { CourseTabs } from './CourseTabs';
+import { CourseInstructorCard } from './CourseInstructorCard';
+import { CourseAssignmentsList } from './CourseAssignmentsList';
 import type { Lesson } from '@/components/dashboard/courses/courseTypes';
 
-type RubricItem = { max_score: number };
-
-type Assignment = {
-  id: string;
-  title: string;
-  description: string | null;
-  due_date: string | null;
-  rubric: RubricItem[];
-  reviews_required: number;
-};
-
-type Session = {
-  id: string; title: string; description: string | null;
-  start_time: string; end_time: string; meet_link: string | null;
-};
-
-type Topic = {
-  id: string; title: string; description: string | null; sort_order: number; lessons: Lesson[];
-};
+type Assignment = ComponentProps<typeof CourseAssignmentsList>['assignments'][number];
+type Session = ComponentProps<typeof LiveSessionsSection>['sessions'][number];
+type Topic = { id: string; title: string; description: string | null; sort_order: number; lessons: Lesson[] };
 
 type Course = {
   id: string;
   title: string;
   description: string | null;
   cover_image_url: string | null;
+  intro_video_url: string | null;
+  category: string | null;
+  difficulty: 'beginner' | 'intermediate' | 'advanced';
+  instructor: string | null;
+  what_youd_get: string;
+  materials_needed: string;
+  certification: boolean;
 };
 
 interface Props {
@@ -45,64 +42,75 @@ interface Props {
 }
 
 export function PortalCourseDetailClient({ course, assignments, sessions, topics, isLoggedIn, isEnrolled, completedLessonIds }: Props) {
+  const lessonCount = topics.reduce((n, t) => n + t.lessons.length, 0);
+  const firstLessonId = topics[0]?.lessons[0]?.id ?? null;
+
   return (
-    <div className="p-8 max-w-2xl">
-      <Link href="/home/courses" className="inline-flex items-center gap-1.5 text-xs font-semibold mb-6 transition-colors" style={{ color: 'var(--adm-muted)' }}>
-        <ArrowLeft size={13} weight="bold" /> All Courses
-      </Link>
+    <div className="p-8 max-w-6xl">
+      <div className="flex items-center gap-1.5 text-xs mb-5" style={{ color: 'var(--adm-muted)' }}>
+        <Browser size={14} />
+        <Link href="/home/courses" className="hover:underline">Courses</Link>
+        {course.category && <><CaretRight size={9} /><span>{course.category}</span></>}
+        <CaretRight size={9} />
+        <span style={{ color: 'var(--adm-text)' }}>{course.title}</span>
+      </div>
 
-      {course.cover_image_url && (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={course.cover_image_url} alt={course.title} className="w-full h-48 object-cover rounded-2xl mb-6" />
-      )}
-
-      <h1 className="font-bold text-2xl mb-2" style={{ color: 'var(--adm-text)' }}>{course.title}</h1>
-      {course.description && <p className="text-sm mb-6" style={{ color: 'var(--adm-muted)' }}>{course.description}</p>}
-
-      {isLoggedIn ? (
-        <EnrollButton courseId={course.id} initiallyEnrolled={isEnrolled} />
-      ) : (
-        <Link href="/login" className="inline-block px-5 py-2.5 rounded-xl bg-[#DC5B17] text-white text-sm font-semibold hover:bg-[#c44f13] transition-colors mb-8">
-          Log in to enroll
-        </Link>
-      )}
-
-      {isEnrolled && <LiveSessionsSection sessions={sessions} />}
-
-      <CurriculumSection courseId={course.id} topics={topics} isEnrolled={isEnrolled} completedLessonIds={completedLessonIds} />
-
-      <h2 className="font-bold text-base mb-4" style={{ color: 'var(--adm-text)' }}>Assignments</h2>
-
-      {assignments.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-16 rounded-2xl border"
-          style={{ backgroundColor: 'var(--adm-card)', borderColor: 'var(--adm-border)' }}>
-          <BookOpen size={24} className="text-[#333] mb-3" />
-          <p className="text-sm" style={{ color: 'var(--adm-muted)' }}>No assignments yet.</p>
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
+        <div className="flex items-start gap-3">
+          <Link href="/home/courses" className="w-9 h-9 rounded-full border flex items-center justify-center shrink-0 mt-0.5"
+            style={{ borderColor: 'var(--adm-border)', color: 'var(--adm-muted)' }}>
+            <ArrowLeft size={15} weight="bold" />
+          </Link>
+          <div>
+            <div className="flex items-center gap-2 mb-2 flex-wrap">
+              <h1 className="font-bold text-2xl" style={{ color: 'var(--adm-text)' }}>{course.title}</h1>
+              {course.category && (
+                <span className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase" style={{ backgroundColor: 'var(--adm-pill)', color: 'var(--adm-muted)' }}>
+                  {course.category}
+                </span>
+              )}
+            </div>
+            <div className="flex items-center gap-4 text-xs" style={{ color: 'var(--adm-muted)' }}>
+              <span className="flex items-center gap-1"><PlayCircle size={14} />{lessonCount} lessons</span>
+              <span className="flex items-center gap-1"><BookOpen size={14} />{topics.length} topics</span>
+              <span className="capitalize">{course.difficulty}</span>
+              {course.certification && <span className="flex items-center gap-1"><Medal size={14} weight="fill" className="text-amber-400" />Certificate</span>}
+            </div>
+          </div>
         </div>
-      ) : (
-        <div className="flex flex-col gap-3">
-          {assignments.map((a) => {
-            const maxScore = a.rubric.reduce((s, r) => s + r.max_score, 0);
-            return (
-              <Link key={a.id} href={`/home/courses/${course.id}/assignments/${a.id}`}
-                className="flex flex-col gap-2 p-5 rounded-2xl border hover:border-white/15 transition-colors"
-                style={{ backgroundColor: 'var(--adm-card)', borderColor: 'var(--adm-border)' }}>
-                <h3 className="font-semibold text-sm" style={{ color: 'var(--adm-text)' }}>{a.title}</h3>
-                {a.description && <p className="text-xs line-clamp-2" style={{ color: 'var(--adm-muted)' }}>{a.description}</p>}
-                <div className="flex gap-4 text-[11px]" style={{ color: 'var(--adm-muted)' }}>
-                  {a.due_date && (
-                    <span className="flex items-center gap-1">
-                      <Clock size={11} />Due {new Date(a.due_date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
-                    </span>
-                  )}
-                  <span className="flex items-center gap-1"><Users size={11} />{a.reviews_required} peer reviews</span>
-                  <span>{maxScore} pts max</span>
-                </div>
-              </Link>
-            );
-          })}
+
+        <div className="flex items-center gap-4 shrink-0">
+          <ShareButton />
+          {isLoggedIn ? (
+            <EnrollButton courseId={course.id} initiallyEnrolled={isEnrolled} />
+          ) : (
+            <Link href="/login" className="inline-block px-5 py-2.5 rounded-xl bg-[#DC5B17] text-white text-sm font-semibold hover:bg-[#c44f13] transition-colors">
+              Log in to enroll
+            </Link>
+          )}
         </div>
-      )}
+      </div>
+
+      <div className="grid lg:grid-cols-[1fr_360px] gap-8">
+        <div>
+          <CourseHeroMedia courseId={course.id} introVideoUrl={course.intro_video_url} coverImageUrl={course.cover_image_url}
+            title={course.title} isEnrolled={isEnrolled} firstLessonId={firstLessonId} />
+
+          <CourseTabs description={course.description} whatYoudGet={course.what_youd_get}
+            materialsNeeded={course.materials_needed} instructor={course.instructor} />
+
+          {isEnrolled && <div className="mt-8"><LiveSessionsSection sessions={sessions} /></div>}
+
+          <div className="mt-8">
+            <CourseAssignmentsList courseId={course.id} assignments={assignments} />
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-4 lg:sticky lg:top-8 h-fit">
+          <CurriculumSection courseId={course.id} topics={topics} isEnrolled={isEnrolled} completedLessonIds={completedLessonIds} />
+          <CourseInstructorCard instructor={course.instructor} />
+        </div>
+      </div>
     </div>
   );
 }

@@ -11,7 +11,9 @@ export default async function CourseDetailPage({ params }: Props) {
   const { data: { user } } = await supabase.auth.getUser();
 
   const [{ data: course }, { data: assignments }, { data: sessions }, { data: topics }, enrollment, { data: completions }] = await Promise.all([
-    supabase.from('courses').select('id, title, description, cover_image_url').eq('id', id).single(),
+    supabase.from('courses')
+      .select('id, title, description, cover_image_url, intro_video_url, category, difficulty, price, sale_price, instructor, what_youd_get, materials_needed, certification')
+      .eq('id', id).single(),
     supabase.from('assignments')
       .select('id, title, description, due_date, rubric, reviews_required')
       .eq('course_id', id)
