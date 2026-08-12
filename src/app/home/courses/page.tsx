@@ -23,9 +23,11 @@ export default async function CoursesPage() {
   ]);
 
   const lessonCounts = new Map<string, number>();
+  const topicCounts = new Map<string, number>();
   for (const t of topics ?? []) {
     const n = Array.isArray(t.lessons) ? t.lessons.length : 0;
     lessonCounts.set(t.course_id, (lessonCounts.get(t.course_id) ?? 0) + n);
+    topicCounts.set(t.course_id, (topicCounts.get(t.course_id) ?? 0) + 1);
   }
 
   const enrolledCounts = new Map<string, number>();
@@ -47,6 +49,7 @@ export default async function CoursesPage() {
     return {
       ...c,
       lessonCount,
+      topicCount: topicCounts.get(c.id) ?? 0,
       enrolledCount: enrolledCounts.get(c.id) ?? 0,
       isEnrolled,
       progressPct: isEnrolled && lessonCount > 0 ? Math.round((completed / lessonCount) * 100) : 0,

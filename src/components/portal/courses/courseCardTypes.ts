@@ -11,6 +11,7 @@ export type CourseCardData = {
   difficulty: 'beginner' | 'intermediate' | 'advanced';
   certification: boolean;
   lessonCount: number;
+  topicCount: number;
   enrolledCount: number;
   isEnrolled: boolean;
   progressPct: number;
